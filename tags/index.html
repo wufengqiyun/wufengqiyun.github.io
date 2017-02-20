@@ -1,10 +1,10 @@
 
-  <!DOCTYPE HTML>
+ <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   
-    <title>归档: 2017 | 舞风起云</title>
+    <title>tags | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
@@ -13,12 +13,13 @@
     
     <meta name="description" content="人生总没有重来的机会">
 <meta property="og:type" content="website">
-<meta property="og:title" content="舞风起云">
-<meta property="og:url" content="http://yoursite.com/archives/2017/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://yoursite.com/tags/index.html">
 <meta property="og:site_name" content="舞风起云">
 <meta property="og:description" content="人生总没有重来的机会">
+<meta property="og:updated_time" content="2017-02-20T13:30:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="舞风起云">
+<meta name="twitter:title" content="tags">
 <meta name="twitter:description" content="人生总没有重来的机会">
 
     
@@ -69,48 +70,19 @@
 </div>
       </header>
       <div id="container">
-        
-
+          
 <div class="archive-title" >
-  <h2 class="archive-icon">2017</h2>
-  
-  <div class="archiveslist archive-float clearfix">
-   <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">2017 年 01 月</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">2016 年 12 月</a><span class="archive-list-count">1</span></li></ul>
- </div>
-  
+<h2 class="tag-icon">标签</h2>
+
+<a data-src="/tags/JavaWeb/" href="#JavaWeb" title="JavaWeb">JavaWeb<sup>2</sup></a>
+
 </div>
-<div id="main" class="archive-part clearfix">
-  <div id="archive-page">
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2017/01/03/Servlet的请求转发和重定向/" title="Servlet的请求转发和重定向" itemprop="url">
-  
-
-    <time datetime="2017-01-03T14:28:30.000Z" itemprop="datePublished">2017-01-03</time>
-
-
-    <h1 itemprop="name">Servlet的请求转发和重定向</h1>
-
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2017/01/03/Servlet的实现方式/" title="从Servlet开始认识JavaWeb" itemprop="url">
-  
-
-    <time datetime="2017-01-03T12:10:33.000Z" itemprop="datePublished">2017-01-03</time>
-
-
-    <h1 itemprop="name">从Servlet开始认识JavaWeb</h1>
-
-  </a>
-</section>
-
-
-  </div>
+<div id="main" class="archive-part">
+<div class="all-list-box"></div>
 </div>
+
+
+
 
       </div>
       <footer><div id="footer" >
@@ -207,10 +179,40 @@ $(document).ready(function(){
 
 
 
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wufengqiyun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
 
 
 
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var list    = $('.archive-title a'),
+      box     = $('.all-list-box'),
+      first   = $('.archive-title a:first-of-type');
+      box.load(first.attr('data-src').toString()+' #archive-page');
+      first.addClass('current');
+  list.each(function(){
+    $(this).click(function(){
+      var listSrc=$(this).attr('data-src').toString()+' #archive-page';
+      box.load(listSrc);
+      list.removeClass('current');
+      $(this).addClass('current');
+     });  
+    });
+  }); 
+</script>
 
 
 <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
