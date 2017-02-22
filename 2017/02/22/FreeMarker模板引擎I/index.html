@@ -4,23 +4,41 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Servlet的请求转发和重定向 | 舞风起云</title>
+    <title>FreeMarker模板引擎I | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
     
 
     
-    <meta name="description" content="1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &amp;#123;    int id=Integer.parseInt(request.getParameter(&quot;i">
+    <meta name="description" content="1.FreeMarker是什么？
+数据模型+模板输出=HTML（输出）
+
+模板方便了从数据模型中取数据并且展示出来的过程。
+2.FreeMarker的取值（插值）数据分为基本数据类型（Integer等），封装的对象类型（User类等）与集合类型（List、Map等）。
+
+常用的取值方法：1* 对null、不存在对象的取值：```$&amp;#123;val!&amp;apos;我是默认值&amp;apos;&amp;#125;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Servlet的请求转发和重定向">
-<meta property="og:url" content="http://yoursite.com/2017/01/03/Servlet的请求转发和重定向/index.html">
+<meta property="og:title" content="FreeMarker模板引擎I">
+<meta property="og:url" content="http://yoursite.com/2017/02/22/FreeMarker模板引擎I/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &amp;#123;    int id=Integer.parseInt(request.getParameter(&quot;i">
-<meta property="og:updated_time" content="2017-02-20T13:38:45.000Z">
+<meta property="og:description" content="1.FreeMarker是什么？
+数据模型+模板输出=HTML（输出）
+
+模板方便了从数据模型中取数据并且展示出来的过程。
+2.FreeMarker的取值（插值）数据分为基本数据类型（Integer等），封装的对象类型（User类等）与集合类型（List、Map等）。
+
+常用的取值方法：1* 对null、不存在对象的取值：```$&amp;#123;val!&amp;apos;我是默认值&amp;apos;&amp;#125;">
+<meta property="og:updated_time" content="2017-02-22T02:15:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Servlet的请求转发和重定向">
-<meta name="twitter:description" content="1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &amp;#123;    int id=Integer.parseInt(request.getParameter(&quot;i">
+<meta name="twitter:title" content="FreeMarker模板引擎I">
+<meta name="twitter:description" content="1.FreeMarker是什么？
+数据模型+模板输出=HTML（输出）
+
+模板方便了从数据模型中取数据并且展示出来的过程。
+2.FreeMarker的取值（插值）数据分为基本数据类型（Integer等），封装的对象类型（User类等）与集合类型（List、Map等）。
+
+常用的取值方法：1* 对null、不存在对象的取值：```$&amp;#123;val!&amp;apos;我是默认值&amp;apos;&amp;#125;">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -76,14 +94,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/01/03/Servlet的请求转发和重定向/" title="Servlet的请求转发和重定向" itemprop="url">Servlet的请求转发和重定向</a>
+      <a href="/2017/02/22/FreeMarker模板引擎I/" title="FreeMarker模板引擎I" itemprop="url">FreeMarker模板引擎I</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
 		
   <p class="article-time">
-    <time datetime="2017-01-03T14:28:30.000Z" itemprop="datePublished"> 发表于 2017-01-03</time>
+    <time datetime="2017-02-22T02:14:08.000Z" itemprop="datePublished"> 发表于 2017-02-22</time>
     
   </p>
 </header>
@@ -92,23 +110,27 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-上一篇blog中的代码"><span class="toc-number">1.</span> <span class="toc-text">1.上一篇blog中的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RequestDispatcher：请求转发和请求包含"><span class="toc-number">2.</span> <span class="toc-text">2.RequestDispatcher：请求转发和请求包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-与sendRedirect-重定向的区别"><span class="toc-number">3.</span> <span class="toc-text">3.与sendRedirect( )重定向的区别</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-FreeMarker是什么？"><span class="toc-number">1.</span> <span class="toc-text">1.FreeMarker是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-FreeMarker的取值（插值）"><span class="toc-number">2.</span> <span class="toc-text">2.FreeMarker的取值（插值）</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="1-上一篇blog中的代码"><a href="#1-上一篇blog中的代码" class="headerlink" title="1.上一篇blog中的代码"></a>1.上一篇blog中的代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line"><span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">    <span class="keyword">int</span> id=Integer.parseInt(request.getParameter(<span class="string">"id"</span>));</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">new</span> problemservice().delProblemById(id)) &#123;</div><div class="line">    response.sendRedirect(<span class="string">"../success.jsp?state=delete"</span>);</div><div class="line">	&#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">		response.sendRedirect(<span class="string">"../modifyinfo.jsp"</span>);</div><div class="line">	&#125;</div><div class="line">    request.setAttribute(<span class="string">"name"</span>, bieming);</div><div class="line">    RequestDispatcher view = request.getRequestDispatcher(<span class="string">"result.jsp"</span>);</div><div class="line">    view.forward(request, response); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2-RequestDispatcher：请求转发和请求包含"><a href="#2-RequestDispatcher：请求转发和请求包含" class="headerlink" title="2.RequestDispatcher：请求转发和请求包含"></a>2.RequestDispatcher：请求转发和请求包含</h2><p>getRequestDispatcher( )属于request的一个方法，上述代码中使用forward进行了请求转发，若是想要请求包含，则改为调用include即可。请求转发和请求包含的区别为：</p>
+		<h2 id="1-FreeMarker是什么？"><a href="#1-FreeMarker是什么？" class="headerlink" title="1.FreeMarker是什么？"></a>1.FreeMarker是什么？</h2><blockquote>
+<p>数据模型+模板输出=HTML（输出）</p>
+</blockquote>
+<p>模板方便了从数据模型中取数据并且展示出来的过程。</p>
+<h2 id="2-FreeMarker的取值（插值）"><a href="#2-FreeMarker的取值（插值）" class="headerlink" title="2.FreeMarker的取值（插值）"></a>2.FreeMarker的取值（插值）</h2><p>数据分为基本数据类型（Integer等），封装的对象类型（User类等）与集合类型（List、Map等）。</p>
 <ul>
-<li>请求转发:由当前Servlet设置响应头(该Servlet的相应体并不会显示)，下一个Servlet既可设置响应头也可设置响应体。</li>
-<li>请求包含:当前Servlet和下一个Servlet共同完成相应头和响应体。</li>
+<li><p>常用的取值方法：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 对null、不存在对象的取值：```$&#123;val!&apos;我是默认值&apos;&#125;</div></pre></td></tr></table></figure></p>
+</li>
+<li><p>取包装对象的值：使用点语法，如<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* Date类型格式：```$&#123;date?String(&apos;yyyy-MM-dd&apos;)&#125;</div></pre></td></tr></table></figure></p>
+</li>
+<li><p>转义HTML内容：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">注：</div><div class="line">1.boolean型一般转为yes/no: ```$&#123;val?string(&apos;yes&apos;,&apos;no&apos;)&#125;</div></pre></td></tr></table></figure></p>
+</li>
 </ul>
-<h2 id="3-与sendRedirect-重定向的区别"><a href="#3-与sendRedirect-重定向的区别" class="headerlink" title="3.与sendRedirect( )重定向的区别"></a>3.与sendRedirect( )重定向的区别</h2><ul>
-<li>请求转发是一次请求一次响应，因为只发出一个请求所以效率高些，而重定向是两次请求两次响应。</li>
-<li>请求转发地址栏不变化，而重定向会显示后一个请求的地址。</li>
-<li>请求转发只能转发到本项目其他Servlet，而重定向不只能重定向到本项目的其它Servlet，还能定向到其它项目。</li>
-<li>请求转发是服务器端行为，只需各处转发的Servlet路径，而重定向需要给出requestURI。</li>
-<li>如果需要在下一个Servlet中获取request域中的数据，那么就必须使用请求转发</li>
-</ul>
+<p>或者在配置文件中声明<br><figure class="highlight plain"><figcaption><span>key="boolean_format">’true,false```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">2.取包装对象值时，用括号括起来加上！避免空值报错</div><div class="line"></div><div class="line">## 3.FreeMarker集合遍历</div><div class="line">List遍历:</div></pre></td></tr></table></figure></p>
+<p>&lt;#list mylist as item&gt;<br>    ${item}<br><br>&lt;/#list&gt;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Map遍历:</div></pre></td></tr></table></figure></p>
+<p>&lt;#list mymap?keys as key&gt;<br>    ${key}:${mymap[key]}<br><br>&lt;/#list&gt;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">## 4.FreeMarker逻辑判断</div><div class="line">判断是否存在：```&lt;#if mylist??&gt;``` 或将第二个？改成exists</div><div class="line">条件分支：```&lt;#elseif&gt;</div></pre></td></tr></table></figure></p>
+<p>多条件时：与java语法相同<br>switch语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;#switch var&gt;</div><div class="line">  &lt;case 10&gt; </div><div class="line">    10&lt;/br&gt;</div><div class="line">    &lt;#break&gt;</div><div class="line">  &lt;#default&gt; </div><div class="line">    other&lt;/br&gt;</div><div class="line">&lt;/#switch&gt;</div></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -116,13 +138,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/JSP-Servlet/">JSP+Servlet</a>
+  <a class="article-category-link" href="/categories/视图模板/">视图模板</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/JavaWeb/">JavaWeb</a>
+  <span></span> <a href="/tags/freemarker/">freemarker</a>
   </div>
 
 </div>
@@ -131,7 +153,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/01/03/Servlet的请求转发和重定向/" data-title="Servlet的请求转发和重定向 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/02/22/FreeMarker模板引擎I/" data-title="FreeMarker模板引擎I | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -144,19 +166,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2017/02/22/FreeMarker模板引擎II/" title="FreeMarker模板引擎II">
-  <strong>上一篇：</strong><br/>
-  <span>
-  FreeMarker模板引擎II</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2017/01/03/Servlet的实现方式/"  title="从Servlet开始认识JavaWeb">
+<a href="/2017/02/22/FreeMarker模板引擎II/"  title="FreeMarker模板引擎II">
  <strong>下一篇：</strong><br/> 
- <span>从Servlet开始认识JavaWeb
+ <span>FreeMarker模板引擎II
 </span>
 </a>
 </div>
@@ -165,7 +179,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/01/03/Servlet的请求转发和重定向/" data-title="Servlet的请求转发和重定向" data-url="http://yoursite.com/2017/01/03/Servlet的请求转发和重定向/"></div>
+	<div class="ds-thread" data-thread-key="2017/02/22/FreeMarker模板引擎I/" data-title="FreeMarker模板引擎I" data-url="http://yoursite.com/2017/02/22/FreeMarker模板引擎I/"></div>
 </section>
 
 
@@ -175,7 +189,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-上一篇blog中的代码"><span class="toc-number">1.</span> <span class="toc-text">1.上一篇blog中的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RequestDispatcher：请求转发和请求包含"><span class="toc-number">2.</span> <span class="toc-text">2.RequestDispatcher：请求转发和请求包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-与sendRedirect-重定向的区别"><span class="toc-number">3.</span> <span class="toc-text">3.与sendRedirect( )重定向的区别</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-FreeMarker是什么？"><span class="toc-number">1.</span> <span class="toc-text">1.FreeMarker是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-FreeMarker的取值（插值）"><span class="toc-number">2.</span> <span class="toc-text">2.FreeMarker的取值（插值）</span></a></li></ol>
  
   </div>
 
