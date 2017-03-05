@@ -37,7 +37,7 @@
 实际操作：针对接口编程的思想，在基类中声明接口，然后new成继承了该接口的类。
 
 12345678910111213141516171">
-<meta property="og:updated_time" content="2017-03-05T12:41:14.000Z">
+<meta property="og:updated_time" content="2017-03-05T12:45:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式（策略模式、观察者模式）">
 <meta name="twitter:description" content="策略模式
@@ -122,7 +122,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#策略模式"><span class="toc-number">1.</span> <span class="toc-text">策略模式</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#策略模式"><span class="toc-number">1.</span> <span class="toc-text">策略模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#观察者模式"><span class="toc-number">2.</span> <span class="toc-text">观察者模式</span></a></li></ol>
 		
 		</div>
 		
@@ -137,8 +137,7 @@
 <li>实际操作：针对接口编程的思想，在基类中声明接口，然后new成继承了该接口的类。</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 策略模式 </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="comment">//传入枝叶产生多样性</span></div><div class="line">		Man m = <span class="keyword">new</span> Man(<span class="keyword">new</span> SwordBehavior());</div><div class="line">		m.performUseWeapon();</div><div class="line">		Man n = <span class="keyword">new</span> Man(<span class="keyword">new</span> KnifeBehavior());</div><div class="line">		n.performUseWeapon();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">WeaponBehavior</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">useWeapon</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//行为接口扩展(树根长成枝叶)</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SwordBehavior</span> <span class="keyword">implements</span> <span class="title">WeaponBehavior</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">useWeapon</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"用宝剑"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">KnifeBehavior</span> <span class="keyword">implements</span> <span class="title">WeaponBehavior</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">useWeapon</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"用小刀"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//类中定义行为(树根)</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Man</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> WeaponBehavior weaponBehavior;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Man</span><span class="params">(WeaponBehavior w)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.weaponBehavior = w;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">performUseWeapon</span><span class="params">()</span> </span>&#123;</div><div class="line">		weaponBehavior.useWeapon();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>##观察者模式</p>
-<blockquote>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><blockquote>
 <p>合适在一起聆听你，不合适就分开，不再联系。</p>
 </blockquote>
 <ul>
@@ -205,7 +204,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#策略模式"><span class="toc-number">1.</span> <span class="toc-text">策略模式</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#策略模式"><span class="toc-number">1.</span> <span class="toc-text">策略模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#观察者模式"><span class="toc-number">2.</span> <span class="toc-text">观察者模式</span></a></li></ol>
  
   </div>
 
