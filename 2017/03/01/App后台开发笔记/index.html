@@ -4,23 +4,56 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Servlet的请求转发和重定向 | 舞风起云</title>
+    <title>App后台开发笔记 | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
     
 
     
-    <meta name="description" content="1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &amp;#123;    int id=Integer.parseInt(request.getParameter(&quot;i">
+    <meta name="description" content="1.关于API
+RESTful API设计，参见阮一峰的blog
+根据对象来设计：比如“对象名称/操作名称”，如“user/delete”
+返回正确值和空值的类型保持一致（不要各种null）
+
+2.用户登录
+简单方法
+
+
+APP后台接收到用户名和密码，验证正确后生成一串token，在Redis中建立token字符串和用户信息的对应关系
+后台将token传回
+需要验证用户身份的操作必须传回token">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Servlet的请求转发和重定向">
-<meta property="og:url" content="http://yoursite.com/2017/01/03/Servlet的请求转发和重定向/index.html">
+<meta property="og:title" content="App后台开发笔记">
+<meta property="og:url" content="http://yoursite.com/2017/03/01/App后台开发笔记/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &amp;#123;    int id=Integer.parseInt(request.getParameter(&quot;i">
-<meta property="og:updated_time" content="2017-02-20T13:38:45.000Z">
+<meta property="og:description" content="1.关于API
+RESTful API设计，参见阮一峰的blog
+根据对象来设计：比如“对象名称/操作名称”，如“user/delete”
+返回正确值和空值的类型保持一致（不要各种null）
+
+2.用户登录
+简单方法
+
+
+APP后台接收到用户名和密码，验证正确后生成一串token，在Redis中建立token字符串和用户信息的对应关系
+后台将token传回
+需要验证用户身份的操作必须传回token">
+<meta property="og:updated_time" content="2017-03-08T01:12:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Servlet的请求转发和重定向">
-<meta name="twitter:description" content="1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &amp;#123;    int id=Integer.parseInt(request.getParameter(&quot;i">
+<meta name="twitter:title" content="App后台开发笔记">
+<meta name="twitter:description" content="1.关于API
+RESTful API设计，参见阮一峰的blog
+根据对象来设计：比如“对象名称/操作名称”，如“user/delete”
+返回正确值和空值的类型保持一致（不要各种null）
+
+2.用户登录
+简单方法
+
+
+APP后台接收到用户名和密码，验证正确后生成一串token，在Redis中建立token字符串和用户信息的对应关系
+后台将token传回
+需要验证用户身份的操作必须传回token">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -76,14 +109,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/01/03/Servlet的请求转发和重定向/" title="Servlet的请求转发和重定向" itemprop="url">Servlet的请求转发和重定向</a>
+      <a href="/2017/03/01/App后台开发笔记/" title="App后台开发笔记" itemprop="url">App后台开发笔记</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
 		
   <p class="article-time">
-    <time datetime="2017-01-03T14:28:30.000Z" itemprop="datePublished"> 发表于 2017-01-03</time>
+    <time datetime="2017-03-01T02:28:09.000Z" itemprop="datePublished"> 发表于 2017-03-01</time>
     
   </p>
 </header>
@@ -92,23 +125,91 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-上一篇blog中的代码"><span class="toc-number">1.</span> <span class="toc-text">1.上一篇blog中的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RequestDispatcher：请求转发和请求包含"><span class="toc-number">2.</span> <span class="toc-text">2.RequestDispatcher：请求转发和请求包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-与sendRedirect-重定向的区别"><span class="toc-number">3.</span> <span class="toc-text">3.与sendRedirect( )重定向的区别</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-关于API"><span class="toc-number">1.</span> <span class="toc-text">1.关于API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-用户登录"><span class="toc-number">2.</span> <span class="toc-text">2.用户登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-数据更新"><span class="toc-number">3.</span> <span class="toc-text">3.数据更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-数据库"><span class="toc-number">4.</span> <span class="toc-text">4.数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Redis"><span class="toc-number">5.</span> <span class="toc-text">5.Redis</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="1-上一篇blog中的代码"><a href="#1-上一篇blog中的代码" class="headerlink" title="1.上一篇blog中的代码"></a>1.上一篇blog中的代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line"><span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">    <span class="keyword">int</span> id=Integer.parseInt(request.getParameter(<span class="string">"id"</span>));</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">new</span> problemservice().delProblemById(id)) &#123;</div><div class="line">    response.sendRedirect(<span class="string">"../success.jsp?state=delete"</span>);</div><div class="line">	&#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">		response.sendRedirect(<span class="string">"../modifyinfo.jsp"</span>);</div><div class="line">	&#125;</div><div class="line">    request.setAttribute(<span class="string">"name"</span>, bieming);</div><div class="line">    RequestDispatcher view = request.getRequestDispatcher(<span class="string">"result.jsp"</span>);</div><div class="line">    view.forward(request, response); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2-RequestDispatcher：请求转发和请求包含"><a href="#2-RequestDispatcher：请求转发和请求包含" class="headerlink" title="2.RequestDispatcher：请求转发和请求包含"></a>2.RequestDispatcher：请求转发和请求包含</h2><p>getRequestDispatcher( )属于request的一个方法，上述代码中使用forward进行了请求转发，若是想要请求包含，则改为调用include即可。请求转发和请求包含的区别为：</p>
+		<h2 id="1-关于API"><a href="#1-关于API" class="headerlink" title="1.关于API"></a>1.关于API</h2><ul>
+<li>RESTful API设计，参见阮一峰的blog</li>
+<li>根据对象来设计：比如“对象名称/操作名称”，如“user/delete”</li>
+<li>返回正确值和空值的类型保持一致（不要各种null）</li>
+</ul>
+<h2 id="2-用户登录"><a href="#2-用户登录" class="headerlink" title="2.用户登录"></a>2.用户登录</h2><blockquote>
+<p>简单方法</p>
+</blockquote>
+<ol>
+<li>APP后台接收到用户名和密码，验证正确后生成一串token，在Redis中建立token字符串和用户信息的对应关系</li>
+<li>后台将token传回</li>
+<li>需要验证用户身份的操作必须传回token（token字符串附加在URL上）</li>
+<li>退出登录时，后台将该用户对应的token删除</li>
+</ol>
+<blockquote>
+<p>安全性修改</p>
+</blockquote>
+<ol>
+<li>Redis中建立token字符串和用户id的对应关系</li>
+<li>API请求不直接附加token字符串，而是附加原“URL+token”的md5值作为签名，同时附加用户id而后再传</li>
+</ol>
+<blockquote>
+<p>防止攻击者重放</p>
+</blockquote>
+<ol>
+<li>加入时间戳</li>
+<li>客户端和服务端进行时间校准</li>
+</ol>
+<blockquote>
+<p>更进一步</p>
+</blockquote>
+<ol>
+<li>使用自定义通信协议</li>
+<li>使用加密算法</li>
+<li>支付密码永远不在APP端保存</li>
+</ol>
+<h2 id="3-数据更新"><a href="#3-数据更新" class="headerlink" title="3.数据更新"></a>3.数据更新</h2><ol>
+<li>轮询（典型的”拉“），每隔一段时间向App后台发送请求</li>
+<li>服务端推送，客户端接收消息后再拉取</li>
+<li>使用”updateTime“增量更新，设置since（从何时开始）和latest（想要取得的最新时间），取得两者之间服务器端更新的内容。</li>
+<li>（增量更新中的删除）在后台把需要删除内容的updateTime更新到最新，设置delete字段为1，则APP本地获取后，就进行删除。</li>
+</ol>
+<h2 id="4-数据库"><a href="#4-数据库" class="headerlink" title="4.数据库"></a>4.数据库</h2><blockquote>
+<p>MySQL的两种引擎：InnoDB和MyISAM</p>
+</blockquote>
+<p>InnoDB支持行锁和外键，事务安全<br>MyISAM支持表锁，不支持外键，事务不安全</p>
+<blockquote>
+<p>索引</p>
+</blockquote>
 <ul>
-<li>请求转发:由当前Servlet设置响应头(该Servlet的相应体并不会显示)，下一个Servlet既可设置响应头也可设置响应体。</li>
-<li>请求包含:当前Servlet和下一个Servlet共同完成相应头和响应体。</li>
+<li>给合适的列简历索引</li>
+<li>索引列的值尽可能不同</li>
+<li>使用短索引（字符类型指定长度）</li>
+<li>利用最左前缀</li>
 </ul>
-<h2 id="3-与sendRedirect-重定向的区别"><a href="#3-与sendRedirect-重定向的区别" class="headerlink" title="3.与sendRedirect( )重定向的区别"></a>3.与sendRedirect( )重定向的区别</h2><ul>
-<li>请求转发是一次请求一次响应，因为只发出一个请求所以效率高些，而重定向是两次请求两次响应。</li>
-<li>请求转发地址栏不变化，而重定向会显示后一个请求的地址。</li>
-<li>请求转发只能转发到本项目其他Servlet，而重定向不只能重定向到本项目的其它Servlet，还能定向到其它项目。</li>
-<li>请求转发是服务器端行为，只需各处转发的Servlet路径，而重定向需要给出requestURI。</li>
-<li>如果需要在下一个Servlet中获取request域中的数据，那么就必须使用请求转发</li>
+<blockquote>
+<p>优化建议</p>
+</blockquote>
+<ol>
+<li>避免使用select * （传输量过大，耗费时间）</li>
+<li>字段设置为NOT NULL（除非需要严格区分未填和空）</li>
+<li>缓存（系统缓存、MySQL缓存和Redis应用缓存）</li>
+<li>分库分表（详见李智慧《大型网站技术架构核心原理与案例分析》）</li>
+<li>分析慢查询记录</li>
+</ol>
+<h2 id="5-Redis"><a href="#5-Redis" class="headerlink" title="5.Redis"></a>5.Redis</h2><ul>
+<li>全部数据操作在内存，保证了高速</li>
+<li>提供了丰富多样的数据类型</li>
+<li>AOF和RDB两种数据持久化方式</li>
+<li>所有操作都是原子性</li>
 </ul>
+<blockquote>
+<p>数据类型</p>
+</blockquote>
+<ol>
+<li>String：比较灵活（缓存商品分类等）</li>
+<li>hash：类似数据库，存储对象的数据（根据id获取信息等）</li>
+<li>list：按照插入顺序排序的字符串列表（消息队列、发送短信等）</li>
+<li>set：无序且不重复的集合（共同好友等）</li>
+<li>sorted list：有序且不重复</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -116,14 +217,9 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/JSP-Servlet/">JSP+Servlet</a>
+  <a class="article-category-link" href="/categories/APP后台/">APP后台</a>
 </div>
 
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/JavaWeb/">JavaWeb</a>
-  </div>
 
 </div>
 
@@ -131,7 +227,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/01/03/Servlet的请求转发和重定向/" data-title="Servlet的请求转发和重定向 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/03/01/App后台开发笔记/" data-title="App后台开发笔记 | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -144,19 +240,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2017/02/22/FreeMarker模板引擎II/" title="FreeMarker模板引擎II">
-  <strong>上一篇：</strong><br/>
-  <span>
-  FreeMarker模板引擎II</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2017/01/03/Servlet的实现方式/"  title="从Servlet开始认识JavaWeb">
+<a href="/2017/02/25/设计模式：装饰者模式、单例模式/"  title="设计模式（装饰者模式、单例模式）">
  <strong>下一篇：</strong><br/> 
- <span>从Servlet开始认识JavaWeb
+ <span>设计模式（装饰者模式、单例模式）
 </span>
 </a>
 </div>
@@ -165,7 +253,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/01/03/Servlet的请求转发和重定向/" data-title="Servlet的请求转发和重定向" data-url="http://yoursite.com/2017/01/03/Servlet的请求转发和重定向/"></div>
+	<div class="ds-thread" data-thread-key="2017/03/01/App后台开发笔记/" data-title="App后台开发笔记" data-url="http://yoursite.com/2017/03/01/App后台开发笔记/"></div>
 </section>
 
 
@@ -175,7 +263,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-上一篇blog中的代码"><span class="toc-number">1.</span> <span class="toc-text">1.上一篇blog中的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RequestDispatcher：请求转发和请求包含"><span class="toc-number">2.</span> <span class="toc-text">2.RequestDispatcher：请求转发和请求包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-与sendRedirect-重定向的区别"><span class="toc-number">3.</span> <span class="toc-text">3.与sendRedirect( )重定向的区别</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-关于API"><span class="toc-number">1.</span> <span class="toc-text">1.关于API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-用户登录"><span class="toc-number">2.</span> <span class="toc-text">2.用户登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-数据更新"><span class="toc-number">3.</span> <span class="toc-text">3.数据更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-数据库"><span class="toc-number">4.</span> <span class="toc-text">4.数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Redis"><span class="toc-number">5.</span> <span class="toc-text">5.Redis</span></a></li></ol>
  
   </div>
 
