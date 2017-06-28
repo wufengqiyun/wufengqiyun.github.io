@@ -1,0 +1,523 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>6.13-SQL优化相关 | 舞风起云</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="wufengqiyun">
+    
+
+    
+    <meta name="description" content="SQL优化方法一、异步写数据库
+新开线程
+
+12345678910ThreadPoolExecutor executor = new ThreadPoolExecutor(1,    1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue&amp;lt;Runnable&amp;gt;());executor.execute(new Runnable() &amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6.13-SQL优化相关">
+<meta property="og:url" content="http://yoursite.com/2017/06/13/6.13-SQL优化/index.html">
+<meta property="og:site_name" content="舞风起云">
+<meta property="og:description" content="SQL优化方法一、异步写数据库
+新开线程
+
+12345678910ThreadPoolExecutor executor = new ThreadPoolExecutor(1,    1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue&amp;lt;Runnable&amp;gt;());executor.execute(new Runnable() &amp;#1">
+<meta property="og:updated_time" content="2017-06-28T01:16:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="6.13-SQL优化相关">
+<meta name="twitter:description" content="SQL优化方法一、异步写数据库
+新开线程
+
+12345678910ThreadPoolExecutor executor = new ThreadPoolExecutor(1,    1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue&amp;lt;Runnable&amp;gt;());executor.execute(new Runnable() &amp;#1">
+
+    
+    <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="舞风起云">舞风起云</a></h1>
+				<h2 class="blog-motto">You will never walk alone.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/06/13/6.13-SQL优化/" title="6.13-SQL优化相关" itemprop="url">6.13-SQL优化相关</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-06-13T11:27:54.000Z" itemprop="datePublished"> 发表于 2017-06-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL优化方法"><span class="toc-number">1.</span> <span class="toc-text">SQL优化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、异步写数据库"><span class="toc-number">1.1.</span> <span class="toc-text">一、异步写数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、SQL语句优化"><span class="toc-number">1.2.</span> <span class="toc-text">二、SQL语句优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、二级缓存-减少SQL访问次数"><span class="toc-number">1.3.</span> <span class="toc-text">三、二级缓存,减少SQL访问次数</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="SQL优化方法"><a href="#SQL优化方法" class="headerlink" title="SQL优化方法"></a>SQL优化方法</h2><h3 id="一、异步写数据库"><a href="#一、异步写数据库" class="headerlink" title="一、异步写数据库"></a>一、异步写数据库</h3><blockquote>
+<p>新开线程</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>,</div><div class="line">    <span class="number">1</span>, <span class="number">0L</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());</div><div class="line">executor.execute(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">        res = favoriteItemMapper.insertFavoriteItem(favoriteItem);</div><div class="line">        log.info(<span class="string">"添加喜欢商品结束：受影响行数：&#123;&#125;"</span>,res);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>主要问题：</p>
+<ul>
+<li>每次操作都新开线程池，资源消耗很大</li>
+<li>线程池设置的存活时间极短，没有体现池的优势</li>
+</ul>
+<blockquote>
+<p>消息队列ActiveMQ</p>
+</blockquote>
+<h3 id="二、SQL语句优化"><a href="#二、SQL语句优化" class="headerlink" title="二、SQL语句优化"></a>二、SQL语句优化</h3><ol>
+<li>避免select * 的存在</li>
+<li>动态SQL  </li>
+</ol>
+<p>例如一个插入语句，可以根据参数包含属性的不同，有选择的进行属性插入：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertFavoriteItem"</span> <span class="attr">parameterType</span>=<span class="string">"com.jcloud.b2c.favoriteItem.domain.FavoriteItem"</span> &gt;</span></div><div class="line">        insert into user_favorite_item</div><div class="line">        <span class="tag">&lt;<span class="name">trim</span> <span class="attr">prefix</span>=<span class="string">"("</span> <span class="attr">suffix</span>=<span class="string">")"</span> <span class="attr">suffixOverrides</span>=<span class="string">","</span> &gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"tenantId != null"</span> &gt;</span></div><div class="line">                tenant_id,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"shopId != null"</span> &gt;</span></div><div class="line">                shop_id,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"skuId != null"</span> &gt;</span></div><div class="line">                sku_id,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"userId != null"</span> &gt;</span></div><div class="line">                user_id,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"addTime != null"</span> &gt;</span></div><div class="line">                add_time,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"skuName != null"</span> &gt;</span></div><div class="line">                sku_name,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"skuPictureUrl != null"</span> &gt;</span></div><div class="line">                sku_picture_url,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">trim</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">trim</span> <span class="attr">prefix</span>=<span class="string">"values ("</span> <span class="attr">suffix</span>=<span class="string">")"</span> <span class="attr">suffixOverrides</span>=<span class="string">","</span> &gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"tenantId != null"</span> &gt;</span></div><div class="line">                #&#123;tenantId,jdbcType=BIGINT&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"shopId != null"</span> &gt;</span></div><div class="line">                #&#123;shopId,jdbcType=BIGINT&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"skuId != null"</span> &gt;</span></div><div class="line">                #&#123;skuId,jdbcType=BIGINT&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"userId != null"</span> &gt;</span></div><div class="line">                #&#123;userId,jdbcType=BIGINT&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"addTime != null"</span> &gt;</span></div><div class="line">                #&#123;addTime,jdbcType=TIMESTAMP&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"skuName != null"</span> &gt;</span></div><div class="line">                #&#123;skuName,jdbcType=VARCHAR&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">"skuPictureUrl != null"</span> &gt;</span></div><div class="line">                #&#123;skuPictureUrl,jdbcType=VARCHAR&#125;,</div><div class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">trim</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">insert</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="三、二级缓存-减少SQL访问次数"><a href="#三、二级缓存-减少SQL访问次数" class="headerlink" title="三、二级缓存,减少SQL访问次数"></a>三、二级缓存,减少SQL访问次数</h3><p>例如BatchPrices批价格的获取，设置一个30s的缓存，可以提高刷新操作的效率。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    Long tenantId = ControllerContext.getTenantId();</div><div class="line">    <span class="comment">//静态方法拼装Redis的Key</span></div><div class="line">    String key = CacheKeyUtils.getProductpPriceKey(B2C_BATCH_PRICE_KEY + tenantId + itemIds + priceArea);</div><div class="line">    <span class="comment">//Guava一级缓存（get方法）</span></div><div class="line">    result = CACHE_PRICE.get(key, <span class="keyword">new</span> Callable&lt;BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt;&gt;() &#123;</div><div class="line">        <span class="keyword">public</span> BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt; call() &#123;</div><div class="line">            <span class="comment">//从Redis中获取值，拼装成返回值BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt;</span></div><div class="line">            String json = cacheFeignClient.get(tenantId, key);</div><div class="line">            BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt; priceRes = <span class="keyword">new</span> BaseResponseVo();</div><div class="line">            priceRes.setData(Collections.EMPTY_LIST);</div><div class="line">            <span class="keyword">if</span> (StringUtils.isEmpty(json)) &#123;</div><div class="line">            <span class="comment">//Redis未命中，访问数据库</span></div><div class="line">                riceRes = itemClient.findItemsPrice(ControllerContext.getTenantId(),ControllerContext.getShopId(), itemIds, priceArea);</div><div class="line">                    <span class="keyword">try</span> &#123;</div><div class="line">                        <span class="comment">//写入缓存，存活时间30s</span></div><div class="line">                        cacheFeignClient.saveBytes2Cache(tenantId, key, JSON.toJSONString(priceRes).getBytes(<span class="string">"UTF-8"</span>), <span class="number">30</span>);</div><div class="line">                    &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</div><div class="line">                        e.printStackTrace();</div><div class="line">                    &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">//Redis命中，从缓存中取数据</span></div><div class="line">                priceRes =  JSON.parseObject(json, <span class="keyword">new</span> TypeReference&lt;List&lt;ItemPriceVo&gt;&gt;() &#123;&#125;.getType());</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> priceRes;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/实习/">实习</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2017/06/13/6.13-SQL优化/" data-title="6.13-SQL优化相关 | 舞风起云" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/06/14/6.14-Redis分布式锁/" title="6.14-Redis分布式锁">
+  <strong>上一篇：</strong><br/>
+  <span>
+  6.14-Redis分布式锁</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/06/12/6.12-缓存/"  title="6.12-项目中缓存的使用">
+ <strong>下一篇：</strong><br/> 
+ <span>6.12-项目中缓存的使用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2017/06/13/6.13-SQL优化/" data-title="6.13-SQL优化相关" data-url="http://yoursite.com/2017/06/13/6.13-SQL优化/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL优化方法"><span class="toc-number">1.</span> <span class="toc-text">SQL优化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、异步写数据库"><span class="toc-number">1.1.</span> <span class="toc-text">一、异步写数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、SQL语句优化"><span class="toc-number">1.2.</span> <span class="toc-text">二、SQL语句优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、二级缓存-减少SQL访问次数"><span class="toc-number">1.3.</span> <span class="toc-text">三、二级缓存,减少SQL访问次数</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/APP后台/" title="APP后台">APP后台<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JSP-Servlet/" title="JSP+Servlet">JSP+Servlet<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习/" title="实习">实习<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/视图模板/" title="视图模板">视图模板<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/设计模式/" title="设计模式">设计模式<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/freemarker/" title="freemarker">freemarker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 很喜欢这句话： <br/>
+			后来一切都好</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/luuuki" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/wufengqiyun" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> © 2017 
+		
+		<a href="/about" target="_blank" title="wufengqiyun">wufengqiyun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wufengqiyun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

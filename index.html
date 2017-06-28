@@ -74,24 +74,25 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/03/01/App后台开发笔记/" title="App后台开发笔记" itemprop="url">
+    <a href="/2017/06/27/6.27-MySQL优化/" title="6.27-MySQL优化" itemprop="url">
   
-    <h1 itemprop="name">App后台开发笔记</h1>
+    <h1 itemprop="name">6.27-MySQL优化</h1>
     
      
-           <p itemprop="description" >1.关于API
-RESTful API设计，参见阮一峰的blog
-根据对象来设计：比如“对象名称/操作名称”，如“user/delete”
-返回正确值和空值的类型保持一致（不要各种null）
-
-2.用户登录
-简单方法
+           <p itemprop="description" >一、 库表优化1. 数据类型
+类型选择原则：
+更小的通常更好，但要确保没有低估
+尽可能使用简单数据类型（ip用整型）
+尽可能不使用null
 
 
-APP后台接收到用户名和密码，验证正确后生成一串token</p>
+浮点类型：
+DECIMAL存储精确的小数
+FLOAT和DOUBLE使用更少空间
+对于需要高精度的财务类数据，可以乘以一定倍数后采用BIG</p>
         
     
-    <time datetime="2017-03-01T02:28:09.000Z" itemprop="datePublished">2017-03-01</time>
+    <time datetime="2017-06-27T10:45:21.000Z" itemprop="datePublished">2017-06-27</time>
   </a>
 </section>
 
@@ -103,21 +104,24 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/02/25/设计模式：装饰者模式、单例模式/" title="设计模式（装饰者模式、单例模式）" itemprop="url">
+    <a href="/2017/06/26/6.26-MySQL基础/" title="6.26-MySQL基础" itemprop="url">
   
-    <h1 itemprop="name">设计模式（装饰者模式、单例模式）</h1>
+    <h1 itemprop="name">6.26-MySQL基础</h1>
     
      
-           <p itemprop="description" >装饰者模式
-我就是我，“装饰”后颜色不一样的烟火。
+           <p itemprop="description" >一、MySQL架构1. 并发控制（服务器+存储引擎）
+共享锁和排他锁（读写锁）
+锁粒度：
+表锁：服务器会为ALTER TABLE这样的语句加表锁
+行级锁：只在存储引擎实现
 
 
-定义：动态地将责任附加到对象上，若要扩展功能，装饰着提供了比继承更有弹性的方案
-实际操作：定义抽象组件，继承了抽象组件的抽象装饰者，和相应的实际组件和实际装饰者，将组件对象作为参数放入装饰者类中，得到一个装饰过的对象
-实际应</p>
+事务的ACID：
+原子性：一个事务必须被视为不可分割的最小单元
+一致性：数据库总是从一个一致的状态转到另</p>
         
     
-    <time datetime="2017-02-25T07:21:01.000Z" itemprop="datePublished">2017-02-25</time>
+    <time datetime="2017-06-26T11:03:12.000Z" itemprop="datePublished">2017-06-26</time>
   </a>
 </section>
 
@@ -129,23 +133,17 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/02/25/设计模式：策略模式、观察者模式/" title="设计模式（策略模式、观察者模式）" itemprop="url">
+    <a href="/2017/06/24/6.24-Maven父子模块/" title="6.24-Maven父子模块" itemprop="url">
   
-    <h1 itemprop="name">设计模式（策略模式、观察者模式）</h1>
+    <h1 itemprop="name">6.24-Maven父子模块</h1>
     
      
-           <p itemprop="description" >策略模式
-“叶子”有很多种，对“根”的情意不变。
-
-
-每个子类中该方法都相同——方法实现放在基类中
-每个子类的该方法都不同——方法改写为抽象方法，在各个子类中实现
-每个子类的该方法有的相同有的不同——策略模式
-定义：“策略模式”定义了算法族，使算法变化独立于客户。
-实际操作：针对</p>
+           <p itemprop="description" >maven父子模块
+父模块配置
+123456&amp;lt;groupId&amp;gt;com.jcloud.b2c&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;jcloud-b2c-mall-web&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;1.</p>
         
     
-    <time datetime="2017-02-25T05:12:58.000Z" itemprop="datePublished">2017-02-25</time>
+    <time datetime="2017-06-24T07:20:33.000Z" itemprop="datePublished">2017-06-24</time>
   </a>
 </section>
 
@@ -157,21 +155,17 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/02/22/FreeMarker模板引擎I/" title="FreeMarker模板引擎I" itemprop="url">
+    <a href="/2017/06/23/6.23-前后端交互/" title="6.23-前后端交互逻辑" itemprop="url">
   
-    <h1 itemprop="name">FreeMarker模板引擎I</h1>
+    <h1 itemprop="name">6.23-前后端交互逻辑</h1>
     
      
-           <p itemprop="description" >1.FreeMarker是什么？
-数据模型+模板输出=HTML（输出）
-
-模板方便了从数据模型中取数据并且展示出来的过程。
-2.FreeMarker的取值（插值）数据分为基本数据类型（Integer等），封装的对象类型（User类等）与集合类型（List、Map等）。
-
-常用的取</p>
+           <p itemprop="description" >一、根据优惠券逻辑学习Ajax前后交互的流程
+mall-service模块中的html页面,id和class都是js可选择绑定实现操作的对象
+12345&amp;lt;div id=&quot;leftsub&quot;&amp;gt;  &amp;lt;ul&amp;gt;    &amp;lt;li class=&quot;coupontip </p>
         
     
-    <time datetime="2017-02-22T02:14:08.000Z" itemprop="datePublished">2017-02-22</time>
+    <time datetime="2017-06-23T10:15:09.000Z" itemprop="datePublished">2017-06-23</time>
   </a>
 </section>
 
@@ -183,19 +177,15 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/02/22/FreeMarker模板引擎II/" title="FreeMarker模板引擎II" itemprop="url">
+    <a href="/2017/06/22/6.22-Ajax/" title="6.22-Ajax学习" itemprop="url">
   
-    <h1 itemprop="name">FreeMarker模板引擎II</h1>
+    <h1 itemprop="name">6.22-Ajax学习</h1>
     
      
-           <p itemprop="description" >1.FreeMarker的方法调用
-方法一般都写成小写形式
-调用方法使用？而不是.
-若方法不需要参数，则不需要加（）
-使用下划线而非驼峰命名法，如字符串的123456789101112131415161718## 2.自定义函数以下是一个自定义的排序函数，调用了TemplateM</p>
+           <p itemprop="description" >一、ajax方法参数详解12345678910111213141516171819202122$.ajax(&amp;#123;    //url:发送请求的地址    url: &quot;/shop/isFavor&quot;,    //type:请求方式默认为get    type: &quot;post&quot;,</p>
         
     
-    <time datetime="2017-02-22T01:07:11.000Z" itemprop="datePublished">2017-02-22</time>
+    <time datetime="2017-06-22T11:01:23.000Z" itemprop="datePublished">2017-06-22</time>
   </a>
 </section>
 
@@ -207,15 +197,18 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/01/03/Servlet的请求转发和重定向/" title="Servlet的请求转发和重定向" itemprop="url">
+    <a href="/2017/06/19/6.19-并发编程复习/" title="6.19-并发编程复习" itemprop="url">
   
-    <h1 itemprop="name">Servlet的请求转发和重定向</h1>
+    <h1 itemprop="name">6.19-并发编程复习</h1>
     
      
-           <p itemprop="description" >1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOExcepti</p>
+           <p itemprop="description" >一、进程和线程
+进程对应的是程序，每个进程对应一定的地址空间，暂停时保存当前的状态，为进程切换提供了可能
+单核CPU的话任一时间只有一个进程在占用CPU
+针对进程子任务只能串行的问题，出现了线程的概念。每个线程对应一个子任务。（为什么不多进程？分配进程成本高，进程切换消耗大，进程</p>
         
     
-    <time datetime="2017-01-03T14:28:30.000Z" itemprop="datePublished">2017-01-03</time>
+    <time datetime="2017-06-19T08:31:59.000Z" itemprop="datePublished">2017-06-19</time>
   </a>
 </section>
 
@@ -227,20 +220,15 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2017/01/03/Servlet的实现方式/" title="从Servlet开始认识JavaWeb" itemprop="url">
+    <a href="/2017/06/18/6.18-Spring Boot自定义starter/" title="6.18-Spring Boot自定义Starter" itemprop="url">
   
-    <h1 itemprop="name">从Servlet开始认识JavaWeb</h1>
+    <h1 itemprop="name">6.18-Spring Boot自定义Starter</h1>
     
      
-           <p itemprop="description" >1.Servlet需要容器——Tomcat等
-通信支持：轻松让servlet与Web服务器对话
-生命周期管理：控制servlet的实例化、初始化、生与死
-多线程支持：自动为每个servlet请求创建新的java线程
-声明方式实现安全：使用XML描述文件配置和修改安全性
-JSP支持</p>
+           <p itemprop="description" >一、maven依赖123456&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;        &amp;lt;artifact</p>
         
     
-    <time datetime="2017-01-03T12:10:33.000Z" itemprop="datePublished">2017-01-03</time>
+    <time datetime="2017-06-18T06:20:35.000Z" itemprop="datePublished">2017-06-18</time>
   </a>
 </section>
 
@@ -252,15 +240,18 @@ JSP支持</p>
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2016/12/29/hello-world/" title="Hello World" itemprop="url">
+    <a href="/2017/06/17/6.17-添加异步方法/" title="6.17-同步改异步" itemprop="url">
   
-    <h1 itemprop="name">Hello World</h1>
+    <h1 itemprop="name">6.17-同步改异步</h1>
     
      
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
+           <p itemprop="description" >一、优惠券改为异步方法
+启动Application类中添加异步注解@EnableAsync
+Controller中改写相应方法，返回Future类型
+12345678 //可领取的券Future&amp;lt;BaseResponseVo&amp;lt;List&amp;lt;CouponBatchAc</p>
         
     
-    <time datetime="2016-12-29T12:03:55.000Z" itemprop="datePublished">2016-12-29</time>
+    <time datetime="2017-06-17T09:04:09.000Z" itemprop="datePublished">2017-06-17</time>
   </a>
 </section>
 
@@ -269,6 +260,59 @@ JSP支持</p>
 
 
 
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/16/6.16-MyBatis复习/" title="6.16-MyBatis复习" itemprop="url">
+  
+    <h1 itemprop="name">6.16-MyBatis复习</h1>
+    
+     
+           <p itemprop="description" >一、备忘常识
+ResultMap和ResultType：ResultType直接表示返回类型，ResultMap则是外部引用。相比ResultType，ResultMap适用于配置较为复杂的查询。
+1234567891011&amp;lt;resultMap type=&quot;Comment&quot;</p>
+        
+    
+    <time datetime="2017-06-16T11:09:20.000Z" itemprop="datePublished">2017-06-16</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/15/6.15-消息队列/" title="6.15-消息队列" itemprop="url">
+  
+    <h1 itemprop="name">6.15-消息队列</h1>
+    
+     
+           <p itemprop="description" >一、主要应用方案
+异步处理
+
+场景：用户注册时，先将注册信息写入数据库，然后发送短信和邮件方案：使用消息队列，将发送短信和邮件任务写入队列中，直接返回
+
+应用解耦
+
+场景：用户下单后，订单系统需要通知库存系统减库存。也就意味着订单和库存系统耦合了。方案：用户下单后，订单系统完成持</p>
+        
+    
+    <time datetime="2017-06-15T09:56:21.000Z" itemprop="datePublished">2017-06-15</time>
+  </a>
+</section>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix unexpand">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+  </nav>
 
 </div>
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
@@ -292,6 +336,10 @@ JSP支持</p>
 		
 		  
 			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习/" title="实习">实习<sup>17</sup></a></li>
 		  
 		
 		  
