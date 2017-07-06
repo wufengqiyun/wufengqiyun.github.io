@@ -181,7 +181,7 @@
     <url>%2F2017%2F06%2F08%2F6.8-360mall%E5%95%86%E5%93%81%E9%A1%B5%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90%2F</url>
     <content type="text"><![CDATA[一、商品详情页面controller集合 getCartNum（购物车中物品数量）使用了Guava Cache hotword（热门搜索词）使用了b2c.mall.service中的ES搜索 batchPrice（缓存的一批价格） existsSkuList（是否存在SkuList） promotion（赠品）调用了开普勒接口 isFavor（是否是收藏） itemDescribe（获取规格参数） getByLocationId ==location的接口位置没找到== getProductType（商品类型） price（商品价格） stock（商品可售状态） add（点按收藏）与del（取消收藏） coupons（优惠券） 二、常用类简介 ControllerContext类（包含多个ThreadLocal） httpServletRequest httpServletResponse currentDomain userId userName jdUserId avatar 头像 tenantId 租户id cookieEncryptKy shopId bridgetoken fingerprint 指纹 staticDomain BaseResponseVo类(返回实体) isSuccess message clientMessage errorCode data (泛型T) errStrSet (Set类型) pageInfo (PageInfo类型，用于分页：currentPage,pageSize,totalRecord,totalPage) token 三、点按收藏的流程实例 Controller-Service-Client-Controller-Service-DAO-Cache mall-web-Controller调用mall-web-Service中的方法 mall-web-Service调用item-service-Client中的方法 组装item-service中的FavoriteItemParam实体 通过favorClient调用addFavoriteItem，传入FavoriteItemParam 由Feign的Client进入item-service-Controller，调用item-service-Sercive中的addFavoriteItem方法 通过item-service-Service中注入的favoriteItemMapper进行DAO操作 cacheClient处理缓存,删除RedisKey]]></content>
       <categories>
-        <category>实习、分析</category>
+        <category>实习</category>
       </categories>
   </entry>
   <entry>
@@ -189,7 +189,8 @@
     <url>%2F2017%2F06%2F07%2F6.7-Spring%20Cloud%E5%AD%A6%E4%B9%A0%2F</url>
     <content type="text"><![CDATA[一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。 服务注册与发现 服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。 服务间调用通过向服务中心发起请求进行（服务端负载均衡）。 Eureka模块简介 Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式 高可用注册中心：将自己作为服务向其他中心注册自己（在registered-replicas项可以看到），形成互相注册的服务注册中心，实现服务清单的互相同步，以达到高可用的效果。客户端需要重新配置defaultZone加上两个注册中心。 Eureka客户端（提供者）：向注册中心注册自身提供的服务，并且周期性发送心跳来更新租约，也能够从服务端查询当前注册的服务信息缓存到本地，并更新服务状态。 服务消费者 Rest+Ribbon：使用RestTemplate远程调用 Feign(自带断路器) 具体功能实现 服务提供者 服务注册：Server接收到服务提供者的REST请求后，用一个双层结构Map存储。第一层Key是服务名，第二层Key是具体服务实例名 服务同步：请求转发 服务续约：服务提供者维护一个心跳，可通过参数定义调用间隔时间和服务失效时间 服务消费者 获取服务清单：发送REST请求，需要保证eureka.client.fetch-registry=true 服务调用：Eureka中有Region和Zone的概念，一个Region包含多个Zone，每个客户端对应一个Region和一个Zone 服务下线：发送REST请求告知服务注册中心 服务注册中心 失效剔除：Server启动时就会创建相应的定时任务 自我保护：维护的实例不准确 与Zookeeper的区别 Eureka强调了CAP原理中的AP，即可用性和可靠性 Zookeeper更加强调CP，即一致性和可靠性]]></content>
       <categories>
-        <category>实习；Spring Cloud</category>
+        <category>实习</category>
+        <category>Spring</category>
       </categories>
   </entry>
   <entry>
