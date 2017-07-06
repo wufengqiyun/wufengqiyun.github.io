@@ -1,0 +1,619 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>6.29-Java并发包 | 舞风起云</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="wufengqiyun">
+    
+
+    
+    <meta name="description" content="本文为《分布式Java应用于实践》笔记。
+一、集合包1. ArrayList
+默认构造为实例化一个Object类型的数组
+add时数组已满：Arrays.copyOf
+add插入指定位置：index后对象逐个往后复制
+remove删除：对象非null则使用equals，删除使用fastRemove方法，将index后对象逐个往前复制
+iterator遍历：先比较创建时的modCount与现有mod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6.29-Java并发包">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/6.29-Java并发包/index.html">
+<meta property="og:site_name" content="舞风起云">
+<meta property="og:description" content="本文为《分布式Java应用于实践》笔记。
+一、集合包1. ArrayList
+默认构造为实例化一个Object类型的数组
+add时数组已满：Arrays.copyOf
+add插入指定位置：index后对象逐个往后复制
+remove删除：对象非null则使用equals，删除使用fastRemove方法，将index后对象逐个往前复制
+iterator遍历：先比较创建时的modCount与现有mod">
+<meta property="og:updated_time" content="2017-07-06T09:00:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="6.29-Java并发包">
+<meta name="twitter:description" content="本文为《分布式Java应用于实践》笔记。
+一、集合包1. ArrayList
+默认构造为实例化一个Object类型的数组
+add时数组已满：Arrays.copyOf
+add插入指定位置：index后对象逐个往后复制
+remove删除：对象非null则使用equals，删除使用fastRemove方法，将index后对象逐个往前复制
+iterator遍历：先比较创建时的modCount与现有mod">
+
+    
+    <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="舞风起云">舞风起云</a></h1>
+				<h2 class="blog-motto">You will never walk alone.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/06/29/6.29-Java并发包/" title="6.29-Java并发包" itemprop="url">6.29-Java并发包</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-06-29T12:01:23.000Z" itemprop="datePublished"> 发表于 2017-06-29</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、集合包"><span class="toc-number">1.</span> <span class="toc-text">一、集合包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ArrayList"><span class="toc-number">1.1.</span> <span class="toc-text">1. ArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-LinkedArrayList"><span class="toc-number">1.2.</span> <span class="toc-text">2. LinkedArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Vector"><span class="toc-number">1.3.</span> <span class="toc-text">3. Vector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Stack"><span class="toc-number">1.4.</span> <span class="toc-text">4. Stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-HashSet"><span class="toc-number">1.5.</span> <span class="toc-text">5. HashSet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-TreeSet"><span class="toc-number">1.6.</span> <span class="toc-text">6. TreeSet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-HashMap"><span class="toc-number">1.7.</span> <span class="toc-text">7. HashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-TreeMap"><span class="toc-number">1.8.</span> <span class="toc-text">8. TreeMap</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、并发包"><span class="toc-number">2.</span> <span class="toc-text">二、并发包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ConcurrentHashMap"><span class="toc-number">2.1.</span> <span class="toc-text">1. ConcurrentHashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-CopyOnWriteArrayList"><span class="toc-number">2.2.</span> <span class="toc-text">2. CopyOnWriteArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-ArrayBlockingQueue"><span class="toc-number">2.3.</span> <span class="toc-text">3. ArrayBlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-LinkedBlockingQueue"><span class="toc-number">2.4.</span> <span class="toc-text">4. LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Atomic原子类"><span class="toc-number">2.5.</span> <span class="toc-text">5. Atomic原子类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-ThreadPoolExecutor"><span class="toc-number">2.6.</span> <span class="toc-text">6. ThreadPoolExecutor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-Executors"><span class="toc-number">2.7.</span> <span class="toc-text">7. Executors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-FutureTask"><span class="toc-number">2.8.</span> <span class="toc-text">8. FutureTask</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-其他并发工具"><span class="toc-number">2.9.</span> <span class="toc-text">9. 其他并发工具</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>本文为《分布式Java应用于实践》笔记。</p>
+<h2 id="一、集合包"><a href="#一、集合包" class="headerlink" title="一、集合包"></a>一、集合包</h2><h3 id="1-ArrayList"><a href="#1-ArrayList" class="headerlink" title="1. ArrayList"></a>1. ArrayList</h3><ul>
+<li>默认构造为实例化一个Object类型的数组</li>
+<li>add时数组已满：Arrays.copyOf</li>
+<li>add插入指定位置：index后对象逐个往后复制</li>
+<li>remove删除：对象非null则使用equals，删除使用fastRemove方法，将index后对象逐个往前复制</li>
+<li>iterator遍历：先比较创建时的modCount与现有modCount，如不同抛出异常，相同则用get获取</li>
+<li>contains：通过遍历实现</li>
+</ul>
+<h3 id="2-LinkedArrayList"><a href="#2-LinkedArrayList" class="headerlink" title="2. LinkedArrayList"></a>2. LinkedArrayList</h3><ul>
+<li>基于双向链表实现：先生成Entry赋值给header，然后header的pre与next指向自身，形成闭环</li>
+<li>add：创建Entry对象，next指向header，pre指向header的pre</li>
+<li>get：选择从头开始遍历还是从未到头遍历</li>
+<li>iterator遍历：可以调用hasPrevious</li>
+<li>contains：通过遍历实现</li>
+</ul>
+<h3 id="3-Vector"><a href="#3-Vector" class="headerlink" title="3. Vector"></a>3. Vector</h3><ul>
+<li>容量策略更可控：基于capacityIncrement</li>
+<li>线程安全：add，remove，get等加上了synchronized关键字</li>
+</ul>
+<h3 id="4-Stack"><a href="#4-Stack" class="headerlink" title="4. Stack"></a>4. Stack</h3><ul>
+<li>基于Vector实现</li>
+<li>peek方法：先获取数组大小，再获取最后一个元素</li>
+</ul>
+<h3 id="5-HashSet"><a href="#5-HashSet" class="headerlink" title="5. HashSet"></a>5. HashSet</h3><ul>
+<li>基于HashMap实现</li>
+<li>不支持get方法获取指定位置元素</li>
+</ul>
+<h3 id="6-TreeSet"><a href="#6-TreeSet" class="headerlink" title="6. TreeSet"></a>6. TreeSet</h3><ul>
+<li>支持排序，传入Comparator</li>
+</ul>
+<h3 id="7-HashMap"><a href="#7-HashMap" class="headerlink" title="7. HashMap"></a>7. HashMap</h3><ul>
+<li>put：如果key为null，基于Entry的next方法遍历查找；如果不为null，先取得key的HashCode，然后做Hash操作，再与Entry数组-1的值按位与得到位置</li>
+<li>哈希冲突：不同的key找到相同的存储位置——链地址法。</li>
+<li>get：寻找hash值相等，且key满足equals的Entry</li>
+</ul>
+<h3 id="8-TreeMap"><a href="#8-TreeMap" class="headerlink" title="8. TreeMap"></a>8. TreeMap</h3><ul>
+<li>put：基于红黑树实现，必须要有key比较的方法</li>
+<li>先判断root是否为null，如是则创建一个Entry赋值给root，然后根据Comparator基于红黑树遍历</li>
+</ul>
+<h2 id="二、并发包"><a href="#二、并发包" class="headerlink" title="二、并发包"></a>二、并发包</h2><h3 id="1-ConcurrentHashMap"><a href="#1-ConcurrentHashMap" class="headerlink" title="1. ConcurrentHashMap"></a>1. ConcurrentHashMap</h3><ul>
+<li>put：根据Hash值计算并获取Segment对象，先进行lock操作，判断是否扩容，然后进行与HashMap基本相同的操作，完成之后释放锁</li>
+<li>默认分为16段，各自都持有锁</li>
+<li>get：读数据时，仅在value为null时才加锁</li>
+<li>实现读取不加锁：HashEntry对象数组对应的变量是volatile的，hash、key以及next属性都是final的</li>
+<li>size：不加锁情况下遍历所有段，读取volatile的count和modCount，统计完毕后再遍历，比较modCount是否有改变。如果执行三次还有问题，那么分段加锁计算</li>
+</ul>
+<h3 id="2-CopyOnWriteArrayList"><a href="#2-CopyOnWriteArrayList" class="headerlink" title="2. CopyOnWriteArrayList"></a>2. CopyOnWriteArrayList</h3><ul>
+<li>add：使用ReetrantLock保证线程安全，每次都创建一个新的Object数组，将新增加的对象放入数组末尾后，引用切换</li>
+<li>remove：创建一个比当前数组小1的数组，没有使用Arrays.copyOf</li>
+<li>get：没有加锁保护，可能读脏数据</li>
+<li>iterator：仅对快照数组进行遍历</li>
+<li>小结：增删性能较差</li>
+</ul>
+<h3 id="3-ArrayBlockingQueue"><a href="#3-ArrayBlockingQueue" class="headerlink" title="3. ArrayBlockingQueue"></a>3. ArrayBlockingQueue</h3><ul>
+<li>构造器：传入参数即为初始化数组的大小，同时初始化锁和两个Condition，notEmpty和notFull</li>
+<li>offer：插入时加锁，如数组已满，进入等待。如等待超时，返回false，未超时则调用notFull条件的await进行等待，唤醒后继续判断数组是否已满。</li>
+<li>poll：调用notEMpty条件的await进行等待</li>
+<li>iterator：调用next方法时先进行加锁</li>
+</ul>
+<h3 id="4-LinkedBlockingQueue"><a href="#4-LinkedBlockingQueue" class="headerlink" title="4. LinkedBlockingQueue"></a>4. LinkedBlockingQueue</h3><ul>
+<li>put/offer一把锁，take/poll一把锁，避免读写时相互竞争锁</li>
+</ul>
+<h3 id="5-Atomic原子类"><a href="#5-Atomic原子类" class="headerlink" title="5. Atomic原子类"></a>5. Atomic原子类</h3><ul>
+<li>incrementAndGet：关键方法为compareAndSet，调用unsafe的compareAndSwapInt方法（native方法），基于CPU的CAS元语实现</li>
+</ul>
+<h3 id="6-ThreadPoolExecutor"><a href="#6-ThreadPoolExecutor" class="headerlink" title="6. ThreadPoolExecutor"></a>6. ThreadPoolExecutor</h3><ul>
+<li><p>execute：如当前线程数小于corePoolSize，调用addIfUnderCorePoolSize方法：</p>
+<ul>
+<li>先对mainLock加锁</li>
+<li>然后addThread增加线程</li>
+<li>addThread方法创建Worker对象，调用threadFactory创建线程，放入Workers中</li>
+<li>增加线程数，释放mainLock，完成方法执行</li>
+</ul>
+</li>
+<li><p>启动新线程执行Runnable任务，Worker的Run方法先执行Runnable任务，执行完毕后Task后，通过WorkQueue的poll或者take方法获取新的Task</p>
+</li>
+<li>线程池配置：<ul>
+<li>高性能：SynchronousQueue作为任务缓冲队列，不在队列缓冲，直接开线程执行</li>
+<li>缓冲执行：使用LinkedBlockingQueue，可以使Runnable任务尽量被corePoolSize范围的线程执行掉</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-Executors"><a href="#7-Executors" class="headerlink" title="7. Executors"></a>7. Executors</h3><ul>
+<li>newFixedThreadPool(int):固定大小线程池</li>
+<li>newSingleThreadExecutor：单线程执行线程池</li>
+<li>newCachedThreadPool：缓存队列使用SynchronousQueue，直到启动线程数量达到整形最大值，报异常</li>
+<li>newScheduledThreadPool</li>
+</ul>
+<h3 id="8-FutureTask"><a href="#8-FutureTask" class="headerlink" title="8. FutureTask"></a>8. FutureTask</h3><ul>
+<li>run：调用Sync的innerRun方法实现，基于CAS将state从0设置为RUNNING。获取当前线程，如果是RUNNING，调用innerSet，首先获取STATE，如果是RAN（已经执行）则返回，CANCELLED则调用releaseShared，最后将runner属性设置为null</li>
+<li>get：若STATE为RAN或者CANCELLED且runner为null，则进入后续步骤，否则等待。后续无异常，则返回result</li>
+<li>cancel：调用Sync的innerCancel，基于CAS将state设置为CANCELLED</li>
+</ul>
+<h3 id="9-其他并发工具"><a href="#9-其他并发工具" class="headerlink" title="9. 其他并发工具"></a>9. 其他并发工具</h3><ul>
+<li>Semaphore信号量：通过CAS操作减，返回剩余个数大于0则完成tryAcquire</li>
+<li>CountDownLatch：减计数到0后才执行</li>
+<li>CyclicBarrier：与CountDownLatch相反，增加到一定计数后执行</li>
+<li>ReetrantLock：CAS操作，可重入。如果未获得锁，则用unsafe.park()方法挂起</li>
+<li>ReetrantReadWriteLock：升级降级机制：<ul>
+<li>持有读锁后，不能直接加写锁的lock，“读锁不可升级”</li>
+<li>持有写锁，可调用读锁的lock，写锁unlock后，当前锁降级为读锁</li>
+</ul>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/实习/">实习</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2017/06/29/6.29-Java并发包/" data-title="6.29-Java并发包 | 舞风起云" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/06/30/6.30-大型网站技术架构学习/" title="6.30-大型网站技术架构学习">
+  <strong>上一篇：</strong><br/>
+  <span>
+  6.30-大型网站技术架构学习</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/06/28/6.28-微服务与SOA/"  title="6.28-微服务与SOA">
+ <strong>下一篇：</strong><br/> 
+ <span>6.28-微服务与SOA
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2017/06/29/6.29-Java并发包/" data-title="6.29-Java并发包" data-url="http://yoursite.com/2017/06/29/6.29-Java并发包/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、集合包"><span class="toc-number">1.</span> <span class="toc-text">一、集合包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ArrayList"><span class="toc-number">1.1.</span> <span class="toc-text">1. ArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-LinkedArrayList"><span class="toc-number">1.2.</span> <span class="toc-text">2. LinkedArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Vector"><span class="toc-number">1.3.</span> <span class="toc-text">3. Vector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Stack"><span class="toc-number">1.4.</span> <span class="toc-text">4. Stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-HashSet"><span class="toc-number">1.5.</span> <span class="toc-text">5. HashSet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-TreeSet"><span class="toc-number">1.6.</span> <span class="toc-text">6. TreeSet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-HashMap"><span class="toc-number">1.7.</span> <span class="toc-text">7. HashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-TreeMap"><span class="toc-number">1.8.</span> <span class="toc-text">8. TreeMap</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、并发包"><span class="toc-number">2.</span> <span class="toc-text">二、并发包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ConcurrentHashMap"><span class="toc-number">2.1.</span> <span class="toc-text">1. ConcurrentHashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-CopyOnWriteArrayList"><span class="toc-number">2.2.</span> <span class="toc-text">2. CopyOnWriteArrayList</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-ArrayBlockingQueue"><span class="toc-number">2.3.</span> <span class="toc-text">3. ArrayBlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-LinkedBlockingQueue"><span class="toc-number">2.4.</span> <span class="toc-text">4. LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Atomic原子类"><span class="toc-number">2.5.</span> <span class="toc-text">5. Atomic原子类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-ThreadPoolExecutor"><span class="toc-number">2.6.</span> <span class="toc-text">6. ThreadPoolExecutor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-Executors"><span class="toc-number">2.7.</span> <span class="toc-text">7. Executors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-FutureTask"><span class="toc-number">2.8.</span> <span class="toc-text">8. FutureTask</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-其他并发工具"><span class="toc-number">2.9.</span> <span class="toc-text">9. 其他并发工具</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/APP后台/" title="APP后台">APP后台<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JSP-Servlet/" title="JSP+Servlet">JSP+Servlet<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/视图模板/" title="视图模板">视图模板<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/设计模式/" title="设计模式">设计模式<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/freemarker/" title="freemarker">freemarker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 很喜欢这句话： <br/>
+			后来一切都好</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/luuuki" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/wufengqiyun" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> © 2017 
+		
+		<a href="/about" target="_blank" title="wufengqiyun">wufengqiyun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wufengqiyun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

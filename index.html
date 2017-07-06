@@ -74,6 +74,216 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2017/07/07/7.8-项目相关理论问题整理/" title="7.8-项目相关理论问题整理" itemprop="url">
+  
+    <h1 itemprop="name">7.8-项目相关理论问题整理</h1>
+    
+     
+           <p itemprop="description" >Redis
+线程模型：
+
+套接字：套接字操作抽象成文件事件
+I/O多路复用：监听多个套接字，把文件事件放入队列
+文件事件分派：接收并传给相应的事件处理器
+事件处理器：处理事件
+
+
+Redis为什么快:
+
+绝大部分请求是纯粹的内存操作（非常快速）
+采用单线程,避免了不必要的上下文切</p>
+        
+    
+    <time datetime="2017-07-07T11:25:01.000Z" itemprop="datePublished">2017-07-07</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/06/7.6-安全与拦截器/" title="7.6-安全与拦截器" itemprop="url">
+  
+    <h1 itemprop="name">7.6-安全与拦截器</h1>
+    
+     
+           <p itemprop="description" >一、处理信息安全问题：
+CSRF跨站请求伪造：伪装来自受信用户的请求来利用受信网站
+
+
+特性：利用网站对用户标识的信任,依靠用户标识危害网站
+做法：欺骗用户的浏览器发送HTTP请求给目标站点
+实现：可以通过IMG标签触发GET请求，利用它来实现CSRF攻击
+防范（可使用拦截器实现</p>
+        
+    
+    <time datetime="2017-07-06T10:33:22.000Z" itemprop="datePublished">2017-07-06</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/05/7.5-正则表达式/" title="7.5-正则表达式" itemprop="url">
+  
+    <h1 itemprop="name">7.5-正则表达式</h1>
+    
+     
+           <p itemprop="description" >一、相应需求：要求input中输入的必须是//开头的地址（http://与https://也都可以）
+正则表达式：
+/^([hH][tT]{2}[pP]:\\/\\/|[hH][tT]{2}[pP][sS]:\\/\\/|\\/\\/)+/
+解析：
+/^：匹配字符串开始位置
+[h</p>
+        
+    
+    <time datetime="2017-07-05T09:42:41.000Z" itemprop="datePublished">2017-07-05</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/04/7.4-高可用、可伸缩系统/" title="7.4-高可用、高伸缩系统" itemprop="url">
+  
+    <h1 itemprop="name">7.4-高可用、高伸缩系统</h1>
+    
+     
+           <p itemprop="description" >本文为《分布式Java应用与实践》笔记。
+一、负载均衡机器选择
+随机选择
+Hash选择：静态页面加载，常见用于静态图片加载
+Round-Robin：根据地址列表按顺序选择
+按权重选择：静态权重和动态权重
+按负载选择：需要搜集负载状况，实际较少使用
+按连接选择：按连接数多少分配，但</p>
+        
+    
+    <time datetime="2017-07-04T10:03:47.000Z" itemprop="datePublished">2017-07-04</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/" title="7.3-AsyncConfigurer与JDK包中线程池" itemprop="url">
+  
+    <h1 itemprop="name">7.3-AsyncConfigurer与JDK包中线程池</h1>
+    
+     
+           <p itemprop="description" >1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &amp;#123;    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</p>
+        
+    
+    <time datetime="2017-07-03T10:46:11.000Z" itemprop="datePublished">2017-07-03</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/30/6.30-大型网站技术架构学习/" title="6.30-大型网站技术架构学习" itemprop="url">
+  
+    <h1 itemprop="name">6.30-大型网站技术架构学习</h1>
+    
+     
+           <p itemprop="description" >一、书籍信息《大型网站技术架构核心原理与案例分析》
+二、大型网站软件系统特点：
+高并发，大流量
+高可用
+海量数据
+用户分布广泛，网络情况复杂
+安全环境恶劣
+需求快速变更，发布频繁
+
+三、网站架构渐进式发展
+网站架构演进：
+
+初始网站架构（应用程序、文件、数据库在同一服务器上，如租</p>
+        
+    
+    <time datetime="2017-06-30T10:26:51.000Z" itemprop="datePublished">2017-06-30</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/29/6.29-Java并发包/" title="6.29-Java并发包" itemprop="url">
+  
+    <h1 itemprop="name">6.29-Java并发包</h1>
+    
+     
+           <p itemprop="description" >本文为《分布式Java应用于实践》笔记。
+一、集合包1. ArrayList
+默认构造为实例化一个Object类型的数组
+add时数组已满：Arrays.copyOf
+add插入指定位置：index后对象逐个往后复制
+remove删除：对象非null则使用equals，删除使用f</p>
+        
+    
+    <time datetime="2017-06-29T12:01:23.000Z" itemprop="datePublished">2017-06-29</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/28/6.28-微服务与SOA/" title="6.28-微服务与SOA" itemprop="url">
+  
+    <h1 itemprop="name">6.28-微服务与SOA</h1>
+    
+     
+           <p itemprop="description" >一、微服务特点（整理自知乎）
+不同的子系统采用自己的架构，各个服务运行自己的Web容器中。当需要增加计算能力的时候，只需要增加这个子系统或服务的实例就好了，当升级的时候，可以不影响别的子系统。
+微服务与SOA相比，更强调分布式系统的特性，比如横向伸缩性，服务发现，负载均衡，故障转</p>
+        
+    
+    <time datetime="2017-06-28T07:15:20.000Z" itemprop="datePublished">2017-06-28</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2017/06/27/6.27-MySQL优化/" title="6.27-MySQL优化" itemprop="url">
   
     <h1 itemprop="name">6.27-MySQL优化</h1>
@@ -81,15 +291,17 @@
      
            <p itemprop="description" >一、 库表优化1. 数据类型
 类型选择原则：
+
 更小的通常更好，但要确保没有低估
 尽可能使用简单数据类型（ip用整型）
 尽可能不使用null
 
 
 浮点类型：
+
 DECIMAL存储精确的小数
 FLOAT和DOUBLE使用更少空间
-对于需要高精度的财务类数据，可以乘以一定倍数后采用BIG</p>
+对于需要高精度的财务类数据，可以乘以一定倍数后采用B</p>
         
     
     <time datetime="2017-06-27T10:45:21.000Z" itemprop="datePublished">2017-06-27</time>
@@ -112,13 +324,15 @@ FLOAT和DOUBLE使用更少空间
            <p itemprop="description" >一、MySQL架构1. 并发控制（服务器+存储引擎）
 共享锁和排他锁（读写锁）
 锁粒度：
+
 表锁：服务器会为ALTER TABLE这样的语句加表锁
 行级锁：只在存储引擎实现
 
 
 事务的ACID：
+
 原子性：一个事务必须被视为不可分割的最小单元
-一致性：数据库总是从一个一致的状态转到另</p>
+一致性：数据库总是从一个一致的状态转</p>
         
     
     <time datetime="2017-06-26T11:03:12.000Z" itemprop="datePublished">2017-06-26</time>
@@ -130,188 +344,9 @@ FLOAT和DOUBLE使用更少空间
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/24/6.24-Maven父子模块/" title="6.24-Maven父子模块" itemprop="url">
-  
-    <h1 itemprop="name">6.24-Maven父子模块</h1>
-    
-     
-           <p itemprop="description" >maven父子模块
-父模块配置
-123456&amp;lt;groupId&amp;gt;com.jcloud.b2c&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;jcloud-b2c-mall-web&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;1.</p>
-        
-    
-    <time datetime="2017-06-24T07:20:33.000Z" itemprop="datePublished">2017-06-24</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/23/6.23-前后端交互/" title="6.23-前后端交互逻辑" itemprop="url">
-  
-    <h1 itemprop="name">6.23-前后端交互逻辑</h1>
-    
-     
-           <p itemprop="description" >一、根据优惠券逻辑学习Ajax前后交互的流程
-mall-service模块中的html页面,id和class都是js可选择绑定实现操作的对象
-12345&amp;lt;div id=&quot;leftsub&quot;&amp;gt;  &amp;lt;ul&amp;gt;    &amp;lt;li class=&quot;coupontip </p>
-        
-    
-    <time datetime="2017-06-23T10:15:09.000Z" itemprop="datePublished">2017-06-23</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/22/6.22-Ajax/" title="6.22-Ajax学习" itemprop="url">
-  
-    <h1 itemprop="name">6.22-Ajax学习</h1>
-    
-     
-           <p itemprop="description" >一、ajax方法参数详解12345678910111213141516171819202122$.ajax(&amp;#123;    //url:发送请求的地址    url: &quot;/shop/isFavor&quot;,    //type:请求方式默认为get    type: &quot;post&quot;,</p>
-        
-    
-    <time datetime="2017-06-22T11:01:23.000Z" itemprop="datePublished">2017-06-22</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/19/6.19-并发编程复习/" title="6.19-并发编程复习" itemprop="url">
-  
-    <h1 itemprop="name">6.19-并发编程复习</h1>
-    
-     
-           <p itemprop="description" >一、进程和线程
-进程对应的是程序，每个进程对应一定的地址空间，暂停时保存当前的状态，为进程切换提供了可能
-单核CPU的话任一时间只有一个进程在占用CPU
-针对进程子任务只能串行的问题，出现了线程的概念。每个线程对应一个子任务。（为什么不多进程？分配进程成本高，进程切换消耗大，进程</p>
-        
-    
-    <time datetime="2017-06-19T08:31:59.000Z" itemprop="datePublished">2017-06-19</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/18/6.18-Spring Boot自定义starter/" title="6.18-Spring Boot自定义Starter" itemprop="url">
-  
-    <h1 itemprop="name">6.18-Spring Boot自定义Starter</h1>
-    
-     
-           <p itemprop="description" >一、maven依赖123456&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;        &amp;lt;artifact</p>
-        
-    
-    <time datetime="2017-06-18T06:20:35.000Z" itemprop="datePublished">2017-06-18</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/17/6.17-添加异步方法/" title="6.17-同步改异步" itemprop="url">
-  
-    <h1 itemprop="name">6.17-同步改异步</h1>
-    
-     
-           <p itemprop="description" >一、优惠券改为异步方法
-启动Application类中添加异步注解@EnableAsync
-Controller中改写相应方法，返回Future类型
-12345678 //可领取的券Future&amp;lt;BaseResponseVo&amp;lt;List&amp;lt;CouponBatchAc</p>
-        
-    
-    <time datetime="2017-06-17T09:04:09.000Z" itemprop="datePublished">2017-06-17</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/16/6.16-MyBatis复习/" title="6.16-MyBatis复习" itemprop="url">
-  
-    <h1 itemprop="name">6.16-MyBatis复习</h1>
-    
-     
-           <p itemprop="description" >一、备忘常识
-ResultMap和ResultType：ResultType直接表示返回类型，ResultMap则是外部引用。相比ResultType，ResultMap适用于配置较为复杂的查询。
-1234567891011&amp;lt;resultMap type=&quot;Comment&quot;</p>
-        
-    
-    <time datetime="2017-06-16T11:09:20.000Z" itemprop="datePublished">2017-06-16</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/15/6.15-消息队列/" title="6.15-消息队列" itemprop="url">
-  
-    <h1 itemprop="name">6.15-消息队列</h1>
-    
-     
-           <p itemprop="description" >一、主要应用方案
-异步处理
-
-场景：用户注册时，先将注册信息写入数据库，然后发送短信和邮件方案：使用消息队列，将发送短信和邮件任务写入队列中，直接返回
-
-应用解耦
-
-场景：用户下单后，订单系统需要通知库存系统减库存。也就意味着订单和库存系统耦合了。方案：用户下单后，订单系统完成持</p>
-        
-    
-    <time datetime="2017-06-15T09:56:21.000Z" itemprop="datePublished">2017-06-15</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -339,7 +374,7 @@ ResultMap和ResultType：ResultType直接表示返回类型，ResultMap则是外
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>17</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
 		  
 		
 		  

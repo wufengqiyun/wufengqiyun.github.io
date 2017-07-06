@@ -25,7 +25,7 @@
 单核CPU的话任一时间只有一个进程在占用CPU
 针对进程子任务只能串行的问题，出现了线程的概念。每个线程对应一个子任务。（为什么不多进程？分配进程成本高，进程切换消耗大，进程间资源不共享）
 进程让操作系统的并发性成为可能，而线程让进程的内部并发成为可能。进程是操作系统进行资源分配的基本单位，而">
-<meta property="og:updated_time" content="2017-06-28T01:20:23.000Z">
+<meta property="og:updated_time" content="2017-07-05T03:25:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="6.19-并发编程复习">
 <meta name="twitter:description" content="一、进程和线程
@@ -119,27 +119,32 @@
 <li>每个线程都有私有的本地工作内存，本地内存中存储了共享变量的副本，线程对变量的读写操作都在本地进行。</li>
 </ul>
 <h3 id="三、并发编程需要考虑的问题"><a href="#三、并发编程需要考虑的问题" class="headerlink" title="三、并发编程需要考虑的问题"></a>三、并发编程需要考虑的问题</h3><ul>
-<li>共享性<ul>
+<li><p>共享性</p>
+<ul>
 <li>每个线程操作的始终是本地内存中的变量 </li>
 <li>Servlet以单实例多线程的方式工作。只要Servlet中的代码只使用局部变量，Servlet就不会导致同步问题。</li>
 <li>Spring MVC的控制器也是这么做的，从请求中获得的对象都是以方法的参数传入而不是作为类的成员。</li>
 <li>Struts2的做法正好相反，因此Struts2中作为控制器的Action类都是每个请求对应一个实例</li>
 </ul>
 </li>
-<li>互斥性<ul>
+<li><p>互斥性</p>
+<ul>
 <li>加锁（共享锁、排他锁）</li>
 <li>不变模式，用final修饰。Java中的Spring就是具有不变形的代表，所以是线程安全的</li>
 </ul>
 </li>
-<li>原子性<ul>
+<li><p>原子性</p>
+<ul>
 <li>volatile无法保证原子性 </li>
 </ul>
 </li>
-<li>可见性<ul>
+<li><p>可见性</p>
+<ul>
 <li>volatile修饰的变量，更改后会立刻刷新到主内存中，其他线程也会进行同步</li>
 </ul>
 </li>
-<li>有序性<ul>
+<li><p>有序性</p>
+<ul>
 <li>编译级别的重排序，比如编译器的优化</li>
 <li>指令级重排序，比如CPU指令执行的重排序</li>
 <li>内存系统的重排序，比如缓存和读写缓冲区导致的重排序</li>
@@ -147,12 +152,14 @@
 </li>
 </ul>
 <h3 id="四、volatile和synchronized"><a href="#四、volatile和synchronized" class="headerlink" title="四、volatile和synchronized"></a>四、volatile和synchronized</h3><ul>
-<li>实现原理：<ul>
+<li><p>实现原理：</p>
+<ul>
 <li>volatile：lock前缀指令实现内存屏障，防止指令重排，并且把指令直接更新到主存中</li>
 <li>synchronized：在JVM层次实现，使用monitor（<code>每个对象</code>都有一个监视器锁）来实现同步，其中同步代码块采用monitorenter、monitorexit指令显式实现，而同步方法则使用ACC_SYNCHRONIZED标记符隐式实现</li>
 </ul>
 </li>
-<li>修饰对象：<ul>
+<li><p>修饰对象：</p>
+<ul>
 <li>volatile：修饰变量</li>
 <li>synchronized：修饰成员方法（锁该对象），修饰静态方法（锁该类的.Class对象），修饰代码块（可以指定需要哪个对象的锁）。</li>
 </ul>
@@ -254,7 +261,7 @@
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>17</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
 		  
 		
 		  

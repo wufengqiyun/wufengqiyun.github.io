@@ -13,56 +13,65 @@
     
     <meta name="description" content="一、 库表优化1. 数据类型
 类型选择原则：
+
 更小的通常更好，但要确保没有低估
 尽可能使用简单数据类型（ip用整型）
 尽可能不使用null
 
 
 浮点类型：
+
 DECIMAL存储精确的小数
 FLOAT和DOUBLE使用更少空间
 对于需要高精度的财务类数据，可以乘以一定倍数后采用BIGINT计算，避免浮点数计算不精确和DECIMAL计算代价过高的问题
 
 
 字符串类型：
-VARCHAR：可变长字符串，使用">
+
+VARCHAR：可变长字符串">
 <meta property="og:type" content="article">
 <meta property="og:title" content="6.27-MySQL优化">
 <meta property="og:url" content="http://yoursite.com/2017/06/27/6.27-MySQL优化/index.html">
 <meta property="og:site_name" content="舞风起云">
 <meta property="og:description" content="一、 库表优化1. 数据类型
 类型选择原则：
+
 更小的通常更好，但要确保没有低估
 尽可能使用简单数据类型（ip用整型）
 尽可能不使用null
 
 
 浮点类型：
+
 DECIMAL存储精确的小数
 FLOAT和DOUBLE使用更少空间
 对于需要高精度的财务类数据，可以乘以一定倍数后采用BIGINT计算，避免浮点数计算不精确和DECIMAL计算代价过高的问题
 
 
 字符串类型：
-VARCHAR：可变长字符串，使用">
-<meta property="og:updated_time" content="2017-06-28T01:23:04.000Z">
+
+VARCHAR：可变长字符串">
+<meta property="og:updated_time" content="2017-07-05T03:23:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="6.27-MySQL优化">
 <meta name="twitter:description" content="一、 库表优化1. 数据类型
 类型选择原则：
+
 更小的通常更好，但要确保没有低估
 尽可能使用简单数据类型（ip用整型）
 尽可能不使用null
 
 
 浮点类型：
+
 DECIMAL存储精确的小数
 FLOAT和DOUBLE使用更少空间
 对于需要高精度的财务类数据，可以乘以一定倍数后采用BIGINT计算，避免浮点数计算不精确和DECIMAL计算代价过高的问题
 
 
 字符串类型：
-VARCHAR：可变长字符串，使用">
+
+VARCHAR：可变长字符串">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -139,57 +148,66 @@ VARCHAR：可变长字符串，使用">
 		</div>
 		
 		<h2 id="一、-库表优化"><a href="#一、-库表优化" class="headerlink" title="一、 库表优化"></a>一、 库表优化</h2><h3 id="1-数据类型"><a href="#1-数据类型" class="headerlink" title="1. 数据类型"></a>1. 数据类型</h3><ul>
-<li>类型选择原则：<ul>
+<li><p>类型选择原则：</p>
+<ul>
 <li>更小的通常更好，但要确保没有低估</li>
 <li>尽可能使用简单数据类型（ip用整型）</li>
 <li>尽可能不使用null</li>
 </ul>
 </li>
-<li>浮点类型：<ul>
+<li><p>浮点类型：</p>
+<ul>
 <li>DECIMAL存储精确的小数</li>
 <li>FLOAT和DOUBLE使用更少空间</li>
 <li>对于需要高精度的财务类数据，可以乘以一定倍数后采用BIGINT计算，避免浮点数计算不精确和DECIMAL计算代价过高的问题</li>
 </ul>
 </li>
-<li>字符串类型：<ul>
+<li><p>字符串类型：</p>
+<ul>
 <li>VARCHAR：可变长字符串，使用额外字节记录长度，适用于UTF-8数据集</li>
 <li>CHAR：定长，存储密码的md5值</li>
 <li>BLOB/TEXT：BLOB存储二进制大数据，TEXT类型有排序规则</li>
 <li>ENUM：枚举类型，两个ENUM列关联速度很快</li>
 </ul>
 </li>
-<li>时间类型：<ul>
+<li><p>时间类型：</p>
+<ul>
 <li>DATETIME：使用8字节存储空间，将日期和时间装到格式为YYYYMMDDHHMMSS的整数中</li>
 <li>TIMESTAMP：使用4字节存储空间，显示的值依赖于时区</li>
 </ul>
 </li>
 </ul>
 <h3 id="2-范式"><a href="#2-范式" class="headerlink" title="2. 范式"></a>2. 范式</h3><ul>
-<li>优点和缺点：<ul>
+<li><p>优点和缺点：</p>
+<ul>
 <li>范式化的表一般比较小，更新操作快</li>
 <li>重复数据少，更少需要DISTINCT和GROUP BY语句</li>
 <li>缺点是通常需要关联</li>
 </ul>
 </li>
-<li>混用反范式化和范式化：<ul>
+<li><p>混用反范式化和范式化：</p>
+<ul>
 <li>新增一列作为缓存并建立索引，加快排序</li>
 <li>缓存衍生，如论坛中记录发帖数</li>
 </ul>
 </li>
-<li>缓存表和汇总表：<ul>
+<li><p>缓存表和汇总表：</p>
+<ul>
 <li>缓存表：可以较简单从其他表获得的数据</li>
 <li>汇总表：保存GROUP BY语句聚合数据的表</li>
 </ul>
 </li>
 </ul>
 <h2 id="二、索引优化（存储引擎层）"><a href="#二、索引优化（存储引擎层）" class="headerlink" title="二、索引优化（存储引擎层）"></a>二、索引优化（存储引擎层）</h2><h3 id="1-索引类型"><a href="#1-索引类型" class="headerlink" title="1. 索引类型"></a>1. 索引类型</h3><ul>
-<li>B-Tree：<ul>
+<li><p>B-Tree：</p>
+<ul>
 <li>MyISAM通过数据的物理位置引用被索引的行</li>
 <li>InnoDB根据主键引用被索引的行</li>
 <li>存储引擎不再需要进行全表扫描，取而代之是从索引的根节点开始进行搜索</li>
 </ul>
 </li>
-<li>B-Tree索引查询类型：<ul>
+<li><p>B-Tree索引查询类型：</p>
+<ul>
 <li>全值匹配：和索引中所有列进行匹配</li>
 <li>匹配最左前缀：索引从左开始的x列匹配</li>
 <li>匹配列前缀：只匹配某一列值的开头部分</li>
@@ -198,12 +216,14 @@ VARCHAR：可变长字符串，使用">
 <li>只访问索引的查询</li>
 </ul>
 </li>
-<li>B-Tree索引查询限制：<ul>
+<li><p>B-Tree索引查询限制：</p>
+<ul>
 <li>最左开始，无法跳过中间的列(最左前缀)</li>
 <li>如果查询中对某列进行了范围查询，则其右边的所有列都无法使用索引优化查找</li>
 </ul>
 </li>
-<li>哈希索引：<ul>
+<li><p>哈希索引：</p>
+<ul>
 <li>只包含行指针+哈希值，不包含数据</li>
 <li>不按照索引值顺序存储，无法用于排序</li>
 <li>不支持部分索引列匹配查找，必须使用全部</li>
@@ -213,31 +233,37 @@ VARCHAR：可变长字符串，使用">
 </li>
 </ul>
 <h3 id="2-索引策略"><a href="#2-索引策略" class="headerlink" title="2. 索引策略"></a>2. 索引策略</h3><ul>
-<li>索引的优点：<ul>
+<li><p>索引的优点：</p>
+<ul>
 <li>索引可以大大减少数据库表的扫描量</li>
 <li>索引可以帮助服务器避免排序和临时表</li>
 <li>索引可以将随机I/O变成顺序I/O</li>
 </ul>
 </li>
-<li>索引失效：<ul>
+<li><p>索引失效：</p>
+<ul>
 <li>索引不能是表达式的一部分</li>
 <li>索引不能是函数的参数</li>
 </ul>
 </li>
-<li>索引选择：<ul>
+<li><p>索引选择：</p>
+<ul>
 <li>前缀索引：使得索引更小，更快，但是无法做GROUP BY和ORDER BY操作，也无法覆盖扫描</li>
 <li>索引列顺序：经验法则是将选择性最高的放在最前面</li>
 </ul>
 </li>
-<li>聚簇索引：实际上是一种数据的存储方式<ul>
+<li><p>聚簇索引：实际上是一种数据的存储方式</p>
+<ul>
 <li>数据航存放在索引的叶子结点，且数据行和相邻的键值紧凑地存放在一起</li>
-<li>优点：<ul>
+<li><p>优点：</p>
+<ul>
 <li>可以将相关数据保存在一起，减少磁盘I/O</li>
 <li>索引和数据保存在一个B-Tree，数据访问更快</li>
 <li>使用覆盖索引的扫描时可以直接使用主键</li>
 </ul>
 </li>
-<li>缺点：<ul>
+<li><p>缺点：</p>
+<ul>
 <li>插入速度依赖于插入顺序，最好是按照主键顺序插入</li>
 <li>更新列代价很高</li>
 <li>插入行可能导致页分裂</li>
@@ -245,7 +271,8 @@ VARCHAR：可变长字符串，使用">
 </li>
 </ul>
 </li>
-<li>InnoDB和MyISAM的索引：<ul>
+<li><p>InnoDB和MyISAM的索引：</p>
+<ul>
 <li>MyISAM索引中的叶子结点包含了行号</li>
 <li>InnoDB的聚簇索引，叶子结点包含主键，事务ID，回滚指针和所有剩余列</li>
 <li>InnoDB的二级索引存储的是主键值，不是行指针</li>
@@ -255,7 +282,9 @@ VARCHAR：可变长字符串，使用">
 <h2 id="三、-查询优化"><a href="#三、-查询优化" class="headerlink" title="三、 查询优化"></a>三、 查询优化</h2><h3 id="1-优化数据访问"><a href="#1-优化数据访问" class="headerlink" title="1. 优化数据访问"></a>1. 优化数据访问</h3><ul>
 <li>避免查询不需要的记录：添加limit</li>
 <li>避免多表查询查询所有列：不使用select *</li>
-<li>重复查询相同数据：采用缓存即可<h3 id="2-从好到坏的where条件应用"><a href="#2-从好到坏的where条件应用" class="headerlink" title="2. 从好到坏的where条件应用"></a>2. 从好到坏的where条件应用</h3></li>
+<li>重复查询相同数据：采用缓存即可</li>
+</ul>
+<h3 id="2-从好到坏的where条件应用"><a href="#2-从好到坏的where条件应用" class="headerlink" title="2. 从好到坏的where条件应用"></a>2. 从好到坏的where条件应用</h3><ul>
 <li>最佳：存储引擎层在索引中使用where过滤不匹配的记录</li>
 <li>次佳：使用索引覆盖扫描，直接从索引中过滤不需要的记录并返回，在服务器层完成</li>
 <li>最次：先从数据表中返回数据，然后过滤，需要回表查询</li>
@@ -285,7 +314,8 @@ VARCHAR：可变长字符串，使用">
 <li>确保GROUP BY或者ORDER BY只涉及一个表中的列</li>
 </ul>
 </li>
-<li>优化LIMIT分页：使用索引覆盖扫描，然后再进行关联</li>
+<li><p>优化LIMIT分页：使用索引覆盖扫描，然后再进行关联</p>
+</li>
 </ul>
   
 	</div>
@@ -317,6 +347,14 @@ VARCHAR：可变长字符串，使用">
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2017/06/28/6.28-微服务与SOA/" title="6.28-微服务与SOA">
+  <strong>上一篇：</strong><br/>
+  <span>
+  6.28-微服务与SOA</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2017/06/26/6.26-MySQL基础/"  title="6.26-MySQL基础">
@@ -366,7 +404,7 @@ VARCHAR：可变长字符串，使用">
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>17</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
 		  
 		
 		  

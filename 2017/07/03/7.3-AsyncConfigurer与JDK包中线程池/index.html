@@ -1,0 +1,560 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>7.3-AsyncConfigurer与JDK包中线程池 | 舞风起云</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="wufengqiyun">
+    
+
+    
+    <meta name="description" content="1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &amp;#123;    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();    //参数配置    executor.setCorePoolSize(10);    executor.setM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="7.3-AsyncConfigurer与JDK包中线程池">
+<meta property="og:url" content="http://yoursite.com/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/index.html">
+<meta property="og:site_name" content="舞风起云">
+<meta property="og:description" content="1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &amp;#123;    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();    //参数配置    executor.setCorePoolSize(10);    executor.setM">
+<meta property="og:updated_time" content="2017-07-06T09:02:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="7.3-AsyncConfigurer与JDK包中线程池">
+<meta name="twitter:description" content="1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &amp;#123;    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();    //参数配置    executor.setCorePoolSize(10);    executor.setM">
+
+    
+    <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="舞风起云">舞风起云</a></h1>
+				<h2 class="blog-motto">You will never walk alone.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/" title="7.3-AsyncConfigurer与JDK包中线程池" itemprop="url">7.3-AsyncConfigurer与JDK包中线程池</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-07-03T10:46:11.000Z" itemprop="datePublished"> 发表于 2017-07-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Async异步方法线程池配置"><span class="toc-number">1.</span> <span class="toc-text">1. Async异步方法线程池配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ThreadPoolTaskExecutor类"><span class="toc-number">2.</span> <span class="toc-text">2. ThreadPoolTaskExecutor类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-java-util包中的threadPoolExecutor类"><span class="toc-number">3.</span> <span class="toc-text">3. java.util包中的threadPoolExecutor类</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="1-Async异步方法线程池配置"><a href="#1-Async异步方法线程池配置" class="headerlink" title="1. Async异步方法线程池配置"></a>1. Async异步方法线程池配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</div><div class="line">    ThreadPoolTaskExecutor executor = <span class="keyword">new</span> ThreadPoolTaskExecutor();</div><div class="line">    <span class="comment">//参数配置</span></div><div class="line">    executor.setCorePoolSize(<span class="number">10</span>);</div><div class="line">    executor.setMaxPoolSize(<span class="number">300</span>);</div><div class="line">    executor.setQueueCapacity(<span class="number">500</span>);</div><div class="line">    executor.setThreadPriority(Thread.NORM_PRIORITY);</div><div class="line">    executor.setThreadNamePrefix(<span class="string">"customerAsyncExecutor-"</span>);</div><div class="line">    executor.setRejectedExecutionHandler(<span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy());</div><div class="line">    executor.initialize();</div><div class="line">    <span class="keyword">return</span> executor;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-ThreadPoolTaskExecutor类"><a href="#2-ThreadPoolTaskExecutor类" class="headerlink" title="2. ThreadPoolTaskExecutor类"></a>2. ThreadPoolTaskExecutor类</h3><ul>
+<li><p>参数：</p>
+<ul>
+<li>poolSizeMonitor：用于加锁</li>
+<li>corePoolSize</li>
+<li>maxPoolSize</li>
+<li>keepAliveSeconds</li>
+<li>queueCapacity</li>
+<li>allowCoreThreadTimeOut</li>
+<li>threadPoolExecutor：真正的线程池</li>
+</ul>
+</li>
+<li><p>参数的get/set方法都加了synchronized关键字，锁住了poolSizeMonitor对象</p>
+</li>
+<li>队列：传入参数大于0，则为LinkedBlockingQueue，否则使用SynchronousQueue，都强制类型转换成BlockingQueue</li>
+<li>继承了ExecutorConfigurationSupport类</li>
+</ul>
+<h3 id="3-java-util包中的threadPoolExecutor类"><a href="#3-java-util包中的threadPoolExecutor类" class="headerlink" title="3. java.util包中的threadPoolExecutor类"></a>3. java.util包中的threadPoolExecutor类</h3><ul>
+<li><p>线程Size：</p>
+<ul>
+<li>线程数小于corePoolSize，直接新建线程</li>
+<li>大于corePoolSize，小于maximumPoolSize，队列满时才新建线程</li>
+<li>prestartCoreThread方法：预先创建线程</li>
+</ul>
+</li>
+<li><p>ThreadPoolFactory创建线程：可修改线程组名称，优先级等</p>
+</li>
+<li>Keep-alive：线程数大于corePoolSize，等候超过一定时间后中断线程</li>
+<li><p>队列Queue：</p>
+<ul>
+<li>SynchronousQueue：无缓冲队列，生产者直到消费者就位才执行，可以避免任务线程互相等待的情况。一般要求maximumPoolSize设置越大越好</li>
+<li>LinkedBlockingQueue：无界队列，不会有超过corePoolSize数量的线程。适用于线程完全独立的情况，处理瞬态突发请求，Web服务器中常用</li>
+<li>ArrayBlockingQueue：有界队列，可以控制系统资源消耗，但是需要在队列长度和线程数之间做平衡</li>
+</ul>
+</li>
+<li><p>拒绝策略Policy：</p>
+<ul>
+<li>AbortPolicy：抛RejectedExecutionException异常</li>
+<li>CallerRunsPolicy：提供简单的反馈控制机制，能够减缓新任务的提交速度</li>
+<li>DiscardPolicy：直接drop任务</li>
+<li>DiscardOldestPolicy：删除队列头部的任务，重试</li>
+</ul>
+</li>
+<li><p>Hook方法：</p>
+<ul>
+<li>beforeExecute：初始化ThreadLocal，添加Log信息等</li>
+<li>afterExecute：统计数据，收尾处理等</li>
+</ul>
+</li>
+<li><p>ctl：为了包装workerCount和runState为一个int，限制任务线程数量为(2^29)-1，大约500百万个线程。后两位保存线程状态</p>
+</li>
+<li><p>线程池状态：</p>
+<ul>
+<li>RUNNING:接受新的任务，处理队列任务；</li>
+<li>SHUTDOWN：不在接受新的任务，处理队列任务； </li>
+<li>STOP：不在接受新任务，不处理队列任务，中断正在执行的任务线程； </li>
+<li>TIDYING：所有的任务已经结束，任务线程为0，线程转换到TIDYING； </li>
+<li>TERMINATED：线程池已将结束，即terminated()方法执行完。 </li>
+</ul>
+</li>
+<li><p>参数：所有用于控制参数被修饰为volatile，以便正在进行的操作都是基于最新值。</p>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/实习/">实习</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/" data-title="7.3-AsyncConfigurer与JDK包中线程池 | 舞风起云" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/07/04/7.4-高可用、可伸缩系统/" title="7.4-高可用、高伸缩系统">
+  <strong>上一篇：</strong><br/>
+  <span>
+  7.4-高可用、高伸缩系统</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/06/30/6.30-大型网站技术架构学习/"  title="6.30-大型网站技术架构学习">
+ <strong>下一篇：</strong><br/> 
+ <span>6.30-大型网站技术架构学习
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/" data-title="7.3-AsyncConfigurer与JDK包中线程池" data-url="http://yoursite.com/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Async异步方法线程池配置"><span class="toc-number">1.</span> <span class="toc-text">1. Async异步方法线程池配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ThreadPoolTaskExecutor类"><span class="toc-number">2.</span> <span class="toc-text">2. ThreadPoolTaskExecutor类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-java-util包中的threadPoolExecutor类"><span class="toc-number">3.</span> <span class="toc-text">3. java.util包中的threadPoolExecutor类</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/APP后台/" title="APP后台">APP后台<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JSP-Servlet/" title="JSP+Servlet">JSP+Servlet<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/hello/" title="hello">hello<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/视图模板/" title="视图模板">视图模板<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/设计模式/" title="设计模式">设计模式<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/freemarker/" title="freemarker">freemarker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=&dpc=1"></iframe>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 很喜欢这句话： <br/>
+			后来一切都好</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/luuuki" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/wufengqiyun" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> © 2017 
+		
+		<a href="/about" target="_blank" title="wufengqiyun">wufengqiyun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wufengqiyun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

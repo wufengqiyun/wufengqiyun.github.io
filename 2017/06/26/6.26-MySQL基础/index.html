@@ -14,18 +14,20 @@
     <meta name="description" content="一、MySQL架构1. 并发控制（服务器+存储引擎）
 共享锁和排他锁（读写锁）
 锁粒度：
+
 表锁：服务器会为ALTER TABLE这样的语句加表锁
 行级锁：只在存储引擎实现
 
 
 事务的ACID：
+
 原子性：一个事务必须被视为不可分割的最小单元
 一致性：数据库总是从一个一致的状态转到另一个一致的状态
 隔离性：事务在最终提交之前对其他事务不可见
 持久性：一旦事务提交，就会永久保存到数据库中
 
 
-隔离级别：">
+隔离级">
 <meta property="og:type" content="article">
 <meta property="og:title" content="6.26-MySQL基础">
 <meta property="og:url" content="http://yoursite.com/2017/06/26/6.26-MySQL基础/index.html">
@@ -33,36 +35,40 @@
 <meta property="og:description" content="一、MySQL架构1. 并发控制（服务器+存储引擎）
 共享锁和排他锁（读写锁）
 锁粒度：
+
 表锁：服务器会为ALTER TABLE这样的语句加表锁
 行级锁：只在存储引擎实现
 
 
 事务的ACID：
+
 原子性：一个事务必须被视为不可分割的最小单元
 一致性：数据库总是从一个一致的状态转到另一个一致的状态
 隔离性：事务在最终提交之前对其他事务不可见
 持久性：一旦事务提交，就会永久保存到数据库中
 
 
-隔离级别：">
-<meta property="og:updated_time" content="2017-06-28T01:22:33.000Z">
+隔离级">
+<meta property="og:updated_time" content="2017-07-05T03:24:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="6.26-MySQL基础">
 <meta name="twitter:description" content="一、MySQL架构1. 并发控制（服务器+存储引擎）
 共享锁和排他锁（读写锁）
 锁粒度：
+
 表锁：服务器会为ALTER TABLE这样的语句加表锁
 行级锁：只在存储引擎实现
 
 
 事务的ACID：
+
 原子性：一个事务必须被视为不可分割的最小单元
 一致性：数据库总是从一个一致的状态转到另一个一致的状态
 隔离性：事务在最终提交之前对其他事务不可见
 持久性：一旦事务提交，就会永久保存到数据库中
 
 
-隔离级别：">
+隔离级">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -140,37 +146,43 @@
 		
 		<h2 id="一、MySQL架构"><a href="#一、MySQL架构" class="headerlink" title="一、MySQL架构"></a>一、MySQL架构</h2><h3 id="1-并发控制（服务器-存储引擎）"><a href="#1-并发控制（服务器-存储引擎）" class="headerlink" title="1. 并发控制（服务器+存储引擎）"></a>1. 并发控制（服务器+存储引擎）</h3><ul>
 <li>共享锁和排他锁（读写锁）</li>
-<li>锁粒度：<ul>
+<li><p>锁粒度：</p>
+<ul>
 <li>表锁：服务器会为ALTER TABLE这样的语句加表锁</li>
 <li>行级锁：只在存储引擎实现</li>
 </ul>
 </li>
-<li>事务的ACID：<ul>
+<li><p>事务的ACID：</p>
+<ul>
 <li>原子性：一个事务必须被视为不可分割的最小单元</li>
 <li>一致性：数据库总是从一个一致的状态转到另一个一致的状态</li>
 <li>隔离性：事务在最终提交之前对其他事务不可见</li>
 <li>持久性：一旦事务提交，就会永久保存到数据库中</li>
 </ul>
 </li>
-<li>隔离级别：<ul>
+<li><p>隔离级别：</p>
+<ul>
 <li>未提交读：事务可以读未提交的数据</li>
 <li>已提交读：满足隔离性，不能重复查询</li>
 <li>可重复读：没有解决幻读（where读取范围内记录，如果另一个事务向范围内加入了记录，则产生幻行）</li>
 <li>串行化：强制事务串行执行的</li>
 </ul>
 </li>
-<li>死锁：<ul>
+<li><p>死锁：</p>
+<ul>
 <li>死锁超时放弃</li>
 <li>InnoDB：将持有最少行级排他锁的事务回滚</li>
 </ul>
 </li>
-<li>显式锁：<ul>
+<li><p>显式锁：</p>
+<ul>
 <li>Lock in share mode</li>
 <li>lock for update</li>
 <li>ps：不满足SQL规范，应该少量使用</li>
 </ul>
 </li>
-<li>InnoDB的MVCC（多版本并发控制）：<ul>
+<li><p>InnoDB的MVCC（多版本并发控制）：</p>
+<ul>
 <li>在每行记录后面增加两列，一个保存行的创建时间，一个保存过期时间</li>
 <li>SELECT：版本小于当前事务版本+删除版本要么未定义，要么大于事务版本号</li>
 <li>UPDATE：插入记录保存当前版本号为创建时间+设置当前版本号为原有列的删除时间</li>
@@ -196,14 +208,16 @@
 <p>MyISAM存储引擎</p>
 </blockquote>
 <ul>
-<li>特性：<ul>
+<li><p>特性：</p>
+<ul>
 <li>表级锁</li>
 <li>支持repair操作</li>
 <li>支持全文索引</li>
 <li>延迟更新索引键（<code>DELAY_KEY_WRITE</code>）</li>
 </ul>
 </li>
-<li>使用场景：<ul>
+<li><p>使用场景：</p>
+<ul>
 <li>不在乎并发和数据丢失，不需要事务</li>
 <li>尤其在乎空间大小</li>
 <li>支持地理空间搜索</li>
@@ -218,12 +232,14 @@
 </ul>
 <h3 id="2-慢查询日志：开销最低，精度最高"><a href="#2-慢查询日志：开销最低，精度最高" class="headerlink" title="2. 慢查询日志：开销最低，精度最高"></a>2. 慢查询日志：开销最低，精度最高</h3><ul>
 <li>使用pt-query-digest工具输出报告，找到执行最慢的语句</li>
-<li>剖析单条查询：<ul>
+<li><p>剖析单条查询：</p>
+<ul>
 <li>show profile</li>
 <li>show status</li>
 </ul>
 </li>
-<li>分析是否是服务器的问题：<ul>
+<li><p>分析是否是服务器的问题：</p>
+<ul>
 <li>show global status</li>
 <li>show processlist</li>
 </ul>
@@ -320,7 +336,7 @@
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>17</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
 		  
 		
 		  
