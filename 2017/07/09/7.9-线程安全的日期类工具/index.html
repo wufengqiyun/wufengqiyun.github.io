@@ -4,62 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>6.7-Spring Cloud学习 | 舞风起云</title>
+    <title>线程安全的日期类工具 | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
     
 
     
-    <meta name="description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
-
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
-
-
-Eureka模块简介
-
-
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
+    <meta name="description" content="12345678910111213141516171819202122232425262728import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;public class DateUtil &amp;#123;    private static final String DATE_FORM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="6.7-Spring Cloud学习">
-<meta property="og:url" content="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/index.html">
+<meta property="og:title" content="线程安全的日期类工具">
+<meta property="og:url" content="http://yoursite.com/2017/07/09/7.9-线程安全的日期类工具/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
-
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
-
-
-Eureka模块简介
-
-
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
-<meta property="og:updated_time" content="2017-07-06T10:28:38.000Z">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;public class DateUtil &amp;#123;    private static final String DATE_FORM">
+<meta property="og:updated_time" content="2017-07-19T09:13:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="6.7-Spring Cloud学习">
-<meta name="twitter:description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
-
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
-
-
-Eureka模块简介
-
-
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
+<meta name="twitter:title" content="线程安全的日期类工具">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425262728import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;public class DateUtil &amp;#123;    private static final String DATE_FORM">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -114,14 +75,14 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/06/07/6.7-Spring Cloud学习/" title="6.7-Spring Cloud学习" itemprop="url">6.7-Spring Cloud学习</a>
+      <a href="/2017/07/09/7.9-线程安全的日期类工具/" title="线程安全的日期类工具" itemprop="url">线程安全的日期类工具</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
 		
   <p class="article-time">
-    <time datetime="2017-06-07T11:24:18.000Z" itemprop="datePublished"> 发表于 2017-06-07</time>
+    <time datetime="2017-07-09T12:32:43.000Z" itemprop="datePublished"> 发表于 2017-07-09</time>
     
   </p>
 </header>
@@ -130,68 +91,18 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、Eureka"><span class="toc-number">1.</span> <span class="toc-text">一、Eureka</span></a></li></ol>
+			
 		
 		</div>
 		
-		<h3 id="一、Eureka"><a href="#一、Eureka" class="headerlink" title="一、Eureka"></a>一、Eureka</h3><p>微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。</p>
-<blockquote>
-<p>服务注册与发现</p>
-</blockquote>
-<ul>
-<li>服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。</li>
-<li>服务间调用通过向服务中心发起请求进行（服务端负载均衡）。</li>
-</ul>
-<blockquote>
-<p>Eureka模块简介</p>
-</blockquote>
-<ul>
-<li>Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式</li>
-<li>高可用注册中心：将自己作为服务向其他中心注册自己（在registered-replicas项可以看到），形成互相注册的服务注册中心，实现服务清单的互相同步，以达到高可用的效果。客户端需要重新配置defaultZone加上两个注册中心。</li>
-<li>Eureka客户端（提供者）：向注册中心注册自身提供的服务，并且周期性发送心跳来更新租约，也能够从服务端查询当前注册的服务信息缓存到本地，并更新服务状态。</li>
-<li>服务消费者<ul>
-<li>Rest+Ribbon：使用RestTemplate远程调用</li>
-<li>Feign(自带断路器)</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>具体功能实现</p>
-</blockquote>
-<ul>
-<li>服务提供者<ul>
-<li>服务注册：Server接收到服务提供者的REST请求后，用一个双层结构Map存储。第一层Key是服务名，第二层Key是具体服务实例名</li>
-<li>服务同步：请求转发</li>
-<li>服务续约：服务提供者维护一个心跳，可通过参数定义调用间隔时间和服务失效时间</li>
-</ul>
-</li>
-<li>服务消费者<ul>
-<li>获取服务清单：发送REST请求，需要保证eureka.client.fetch-registry=true</li>
-<li>服务调用：Eureka中有Region和Zone的概念，一个Region包含多个Zone，每个客户端对应一个Region和一个Zone</li>
-<li>服务下线：发送REST请求告知服务注册中心</li>
-</ul>
-</li>
-<li>服务注册中心<ul>
-<li>失效剔除：Server启动时就会创建相应的定时任务</li>
-<li>自我保护：维护的实例不准确</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>与Zookeeper的区别</p>
-</blockquote>
-<ul>
-<li>Eureka强调了CAP原理中的AP，即可用性和可靠性</li>
-<li>Zookeeper更加强调CP，即一致性和可靠性</li>
-</ul>
-  
+		<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.text.DateFormat;</div><div class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DateUtil</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DATE_FORMAT = <span class="string">"yyyy-MM-dd HH:mm:ss"</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;DateFormat&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;DateFormat&gt;();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DateFormat <span class="title">getDateFormat</span><span class="params">()</span> </span>&#123;</div><div class="line">        DateFormat df = threadLocal.get();</div><div class="line">        <span class="keyword">if</span>(df==<span class="keyword">null</span>)&#123;</div><div class="line">            df = <span class="keyword">new</span> SimpleDateFormat(DATE_FORMAT);</div><div class="line">            threadLocal.set(df);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> df;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">formatDate</span><span class="params">(Date date)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getDateFormat().format(date);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCurrentTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        DateFormat df = getDateFormat();</div><div class="line">        <span class="keyword">return</span> df.format(System.currentTimeMillis());</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/实习/">实习</a>►<a class="article-category-link" href="/categories/实习/Spring/">Spring</a>
+  <a class="article-category-link" href="/categories/实习/">实习</a>
 </div>
 
 
@@ -201,7 +112,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/" data-title="6.7-Spring Cloud学习 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/07/09/7.9-线程安全的日期类工具/" data-title="线程安全的日期类工具 | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -215,18 +126,18 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2017/06/08/6.8-360mall商品页请求分析/" title="6.8-商品页请求分析">
+ <a href="/2017/07/10/7.10-消息队列设计 系统常见优化策略总结/" title="消息队列常见优化策略总结">
   <strong>上一篇：</strong><br/>
   <span>
-  6.8-商品页请求分析</span>
+  消息队列常见优化策略总结</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2017/06/06/6.6-代码浏览/"  title="6.6-代码浏览">
+<a href="/2017/07/07/7.8-项目相关理论问题整理/"  title="7.8-项目相关理论问题整理">
  <strong>下一篇：</strong><br/> 
- <span>6.6-代码浏览
+ <span>7.8-项目相关理论问题整理
 </span>
 </a>
 </div>
@@ -235,7 +146,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/06/07/6.7-Spring Cloud学习/" data-title="6.7-Spring Cloud学习" data-url="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/"></div>
+	<div class="ds-thread" data-thread-key="2017/07/09/7.9-线程安全的日期类工具/" data-title="线程安全的日期类工具" data-url="http://yoursite.com/2017/07/09/7.9-线程安全的日期类工具/"></div>
 </section>
 
 
@@ -245,7 +156,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、Eureka"><span class="toc-number">1.</span> <span class="toc-text">一、Eureka</span></a></li></ol>
+ 
  
   </div>
 

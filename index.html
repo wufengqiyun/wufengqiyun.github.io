@@ -73,6 +73,133 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2017/07/17/7.17-Http学习/" title="HTTP学习" itemprop="url">
+  
+    <h1 itemprop="name">HTTP学习</h1>
+    
+     
+           <p itemprop="description" >一、HTTPS特点
+在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS
+用数字证书对服务器进行认证：
+通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书
+通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）
+
+
+
+二、SSL连接过程
+建立到</p>
+        
+    
+    <time datetime="2017-07-17T10:45:20.000Z" itemprop="datePublished">2017-07-17</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/13/7.13-二分查找/" title="二分查找" itemprop="url">
+  
+    <h1 itemprop="name">二分查找</h1>
+    
+     
+           <p itemprop="description" >二分查找的几种写法一、最常见写法
+注意while条件
+注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    </p>
+        
+    
+    <time datetime="2017-07-13T10:09:22.000Z" itemprop="datePublished">2017-07-13</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/12/7.12-Java虚拟机一些问题整理/" title="Java虚拟机一些问题整理" itemprop="url">
+  
+    <h1 itemprop="name">Java虚拟机一些问题整理</h1>
+    
+     
+           <p itemprop="description" >一、制造各种溢出的场景
+Java堆溢出：
+操作：不停向List中add数据
+参数：-Xmx -Xms
+
+
+虚拟机和本地方法栈溢出：
+操作：无限递归
+参数：-Xss
+Tips：单线程情况下内存无法分配都提示StackOverflowError
+如果是建立多线程导致内存溢出，在线程数</p>
+        
+    
+    <time datetime="2017-07-12T13:08:50.000Z" itemprop="datePublished">2017-07-12</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/10/7.10-消息队列设计 系统常见优化策略总结/" title="消息队列常见优化策略总结" itemprop="url">
+  
+    <h1 itemprop="name">消息队列常见优化策略总结</h1>
+    
+     
+           <p itemprop="description" >《消息队列设计精要》原文链接：https://tech.meituan.com/mq-design.html
+一、消息队列的应用点
+业务解耦：对于非核心的事务，做到“通知”，而非全部处理“完成”。
+最终一致性：
+
+强一致性：分布式事务（落地难成本高）
+最终一致性：”记录“和”补偿</p>
+        
+    
+    <time datetime="2017-07-10T11:22:09.000Z" itemprop="datePublished">2017-07-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/09/7.9-线程安全的日期类工具/" title="线程安全的日期类工具" itemprop="url">
+  
+    <h1 itemprop="name">线程安全的日期类工具</h1>
+    
+     
+           <p itemprop="description" >12345678910111213141516171819202122232425262728import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;public cl</p>
+        
+    
+    <time datetime="2017-07-09T12:32:43.000Z" itemprop="datePublished">2017-07-09</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2017/07/07/7.8-项目相关理论问题整理/" title="7.8-项目相关理论问题整理" itemprop="url">
   
     <h1 itemprop="name">7.8-项目相关理论问题整理</h1>
@@ -201,148 +328,6 @@ Round-Robin：根据地址列表按顺序选择
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/30/6.30-大型网站技术架构学习/" title="6.30-大型网站技术架构学习" itemprop="url">
-  
-    <h1 itemprop="name">6.30-大型网站技术架构学习</h1>
-    
-     
-           <p itemprop="description" >一、书籍信息《大型网站技术架构核心原理与案例分析》
-二、大型网站软件系统特点：
-高并发，大流量
-高可用
-海量数据
-用户分布广泛，网络情况复杂
-安全环境恶劣
-需求快速变更，发布频繁
-
-三、网站架构渐进式发展
-网站架构演进：
-
-初始网站架构（应用程序、文件、数据库在同一服务器上，如租</p>
-        
-    
-    <time datetime="2017-06-30T10:26:51.000Z" itemprop="datePublished">2017-06-30</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/29/6.29-Java并发包/" title="6.29-Java并发包" itemprop="url">
-  
-    <h1 itemprop="name">6.29-Java并发包</h1>
-    
-     
-           <p itemprop="description" >本文为《分布式Java应用于实践》笔记。
-一、集合包1. ArrayList
-默认构造为实例化一个Object类型的数组
-add时数组已满：Arrays.copyOf
-add插入指定位置：index后对象逐个往后复制
-remove删除：对象非null则使用equals，删除使用f</p>
-        
-    
-    <time datetime="2017-06-29T12:01:23.000Z" itemprop="datePublished">2017-06-29</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/28/6.28-微服务与SOA/" title="6.28-微服务与SOA" itemprop="url">
-  
-    <h1 itemprop="name">6.28-微服务与SOA</h1>
-    
-     
-           <p itemprop="description" >一、微服务特点（整理自知乎）
-不同的子系统采用自己的架构，各个服务运行自己的Web容器中。当需要增加计算能力的时候，只需要增加这个子系统或服务的实例就好了，当升级的时候，可以不影响别的子系统。
-微服务与SOA相比，更强调分布式系统的特性，比如横向伸缩性，服务发现，负载均衡，故障转</p>
-        
-    
-    <time datetime="2017-06-28T07:15:20.000Z" itemprop="datePublished">2017-06-28</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/27/6.27-MySQL优化/" title="6.27-MySQL优化" itemprop="url">
-  
-    <h1 itemprop="name">6.27-MySQL优化</h1>
-    
-     
-           <p itemprop="description" >一、 库表优化1. 数据类型
-类型选择原则：
-
-更小的通常更好，但要确保没有低估
-尽可能使用简单数据类型（ip用整型）
-尽可能不使用null
-
-
-浮点类型：
-
-DECIMAL存储精确的小数
-FLOAT和DOUBLE使用更少空间
-对于需要高精度的财务类数据，可以乘以一定倍数后采用B</p>
-        
-    
-    <time datetime="2017-06-27T10:45:21.000Z" itemprop="datePublished">2017-06-27</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/26/6.26-MySQL基础/" title="6.26-MySQL基础" itemprop="url">
-  
-    <h1 itemprop="name">6.26-MySQL基础</h1>
-    
-     
-           <p itemprop="description" >一、MySQL架构1. 并发控制（服务器+存储引擎）
-共享锁和排他锁（读写锁）
-锁粒度：
-
-表锁：服务器会为ALTER TABLE这样的语句加表锁
-行级锁：只在存储引擎实现
-
-
-事务的ACID：
-
-原子性：一个事务必须被视为不可分割的最小单元
-一致性：数据库总是从一个一致的状态转</p>
-        
-    
-    <time datetime="2017-06-26T11:03:12.000Z" itemprop="datePublished">2017-06-26</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -373,7 +358,7 @@ FLOAT和DOUBLE使用更少空间
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
 		  
 		
 		  
@@ -423,16 +408,6 @@ FLOAT和DOUBLE使用更少空间
         
     </ul>
 </div>
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="wufengqiyun" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
 
 </aside>
 </div>

@@ -4,62 +4,59 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>6.7-Spring Cloud学习 | 舞风起云</title>
+    <title>HTTP学习 | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
     
 
     
-    <meta name="description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
-
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
+    <meta name="description" content="一、HTTPS特点
+在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS
+用数字证书对服务器进行认证：
+通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书
+通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）
 
 
-Eureka模块简介
 
-
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
+二、SSL连接过程
+建立到443端口的TCP连接
+SSL安全参数握手，交换密钥
+SSL上发送HTTP请求/TCP上发送已加密请求
+SSL上发送HT">
 <meta property="og:type" content="article">
-<meta property="og:title" content="6.7-Spring Cloud学习">
-<meta property="og:url" content="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/index.html">
+<meta property="og:title" content="HTTP学习">
+<meta property="og:url" content="http://yoursite.com/2017/07/17/7.17-Http学习/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
-
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
+<meta property="og:description" content="一、HTTPS特点
+在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS
+用数字证书对服务器进行认证：
+通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书
+通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）
 
 
-Eureka模块简介
 
-
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
-<meta property="og:updated_time" content="2017-07-06T10:28:38.000Z">
+二、SSL连接过程
+建立到443端口的TCP连接
+SSL安全参数握手，交换密钥
+SSL上发送HTTP请求/TCP上发送已加密请求
+SSL上发送HT">
+<meta property="og:updated_time" content="2017-07-19T09:15:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="6.7-Spring Cloud学习">
-<meta name="twitter:description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
-
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
+<meta name="twitter:title" content="HTTP学习">
+<meta name="twitter:description" content="一、HTTPS特点
+在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS
+用数字证书对服务器进行认证：
+通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书
+通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）
 
 
-Eureka模块简介
 
-
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
+二、SSL连接过程
+建立到443端口的TCP连接
+SSL安全参数握手，交换密钥
+SSL上发送HTTP请求/TCP上发送已加密请求
+SSL上发送HT">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -114,14 +111,14 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/06/07/6.7-Spring Cloud学习/" title="6.7-Spring Cloud学习" itemprop="url">6.7-Spring Cloud学习</a>
+      <a href="/2017/07/17/7.17-Http学习/" title="HTTP学习" itemprop="url">HTTP学习</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
 		
   <p class="article-time">
-    <time datetime="2017-06-07T11:24:18.000Z" itemprop="datePublished"> 发表于 2017-06-07</time>
+    <time datetime="2017-07-17T10:45:20.000Z" itemprop="datePublished"> 发表于 2017-07-17</time>
     
   </p>
 </header>
@@ -130,59 +127,81 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、Eureka"><span class="toc-number">1.</span> <span class="toc-text">一、Eureka</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、HTTPS特点"><span class="toc-number">1.</span> <span class="toc-text">一、HTTPS特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、SSL连接过程"><span class="toc-number">2.</span> <span class="toc-text">二、SSL连接过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、HTTP消息结构"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息结构</span></a></li></ol>
 		
 		</div>
 		
-		<h3 id="一、Eureka"><a href="#一、Eureka" class="headerlink" title="一、Eureka"></a>一、Eureka</h3><p>微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。</p>
-<blockquote>
-<p>服务注册与发现</p>
-</blockquote>
-<ul>
-<li>服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。</li>
-<li>服务间调用通过向服务中心发起请求进行（服务端负载均衡）。</li>
-</ul>
-<blockquote>
-<p>Eureka模块简介</p>
-</blockquote>
-<ul>
-<li>Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式</li>
-<li>高可用注册中心：将自己作为服务向其他中心注册自己（在registered-replicas项可以看到），形成互相注册的服务注册中心，实现服务清单的互相同步，以达到高可用的效果。客户端需要重新配置defaultZone加上两个注册中心。</li>
-<li>Eureka客户端（提供者）：向注册中心注册自身提供的服务，并且周期性发送心跳来更新租约，也能够从服务端查询当前注册的服务信息缓存到本地，并更新服务状态。</li>
-<li>服务消费者<ul>
-<li>Rest+Ribbon：使用RestTemplate远程调用</li>
-<li>Feign(自带断路器)</li>
+		<h3 id="一、HTTPS特点"><a href="#一、HTTPS特点" class="headerlink" title="一、HTTPS特点"></a>一、HTTPS特点</h3><ul>
+<li>在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS</li>
+<li>用数字证书对服务器进行认证：<ul>
+<li>通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书</li>
+<li>通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）</li>
 </ul>
 </li>
 </ul>
-<blockquote>
-<p>具体功能实现</p>
-</blockquote>
-<ul>
-<li>服务提供者<ul>
-<li>服务注册：Server接收到服务提供者的REST请求后，用一个双层结构Map存储。第一层Key是服务名，第二层Key是具体服务实例名</li>
-<li>服务同步：请求转发</li>
-<li>服务续约：服务提供者维护一个心跳，可通过参数定义调用间隔时间和服务失效时间</li>
+<h3 id="二、SSL连接过程"><a href="#二、SSL连接过程" class="headerlink" title="二、SSL连接过程"></a>二、SSL连接过程</h3><ul>
+<li>建立到443端口的TCP连接</li>
+<li>SSL安全参数握手，交换密钥</li>
+<li>SSL上发送HTTP请求/TCP上发送已加密请求</li>
+<li>SSL上发送HTTP响应/TCP上发送已加密响应</li>
+<li>SSL关闭</li>
+<li>TCP连接终止</li>
+</ul>
+<h3 id="三、HTTP消息结构"><a href="#三、HTTP消息结构" class="headerlink" title="三、HTTP消息结构"></a>三、HTTP消息结构</h3><ul>
+<li>request：<ul>
+<li>请求行：GET http：//…  HTTP/1.1</li>
+<li>请求头（Cache头域）：<ul>
+<li>If-Modified-Since：判断是否使用304</li>
+<li>If-None-Match：和Etag配合使用</li>
+<li>Pragma：只可以设定为no-cache</li>
+<li>Cache-Control：public/private/no-cache</li>
 </ul>
 </li>
-<li>服务消费者<ul>
-<li>获取服务清单：发送REST请求，需要保证eureka.client.fetch-registry=true</li>
-<li>服务调用：Eureka中有Region和Zone的概念，一个Region包含多个Zone，每个客户端对应一个Region和一个Zone</li>
-<li>服务下线：发送REST请求告知服务注册中心</li>
+<li>请求头（Client头域）：<ul>
+<li>Accept：浏览器可接受的媒体类型</li>
+<li>Accept-Language：可接受语言</li>
+<li>Accept-Encoding：可接受编码方法，如gzip</li>
+<li>Accept-Charset：可接受字符集</li>
+<li>User-Agent：客户端的操作系统等信息</li>
 </ul>
 </li>
-<li>服务注册中心<ul>
-<li>失效剔除：Server启动时就会创建相应的定时任务</li>
-<li>自我保护：维护的实例不准确</li>
+<li>请求头（其他）：<ul>
+<li>Cookie：缓存指</li>
+<li>Content-Length：发送给服务器的数据长度</li>
+<li>Content-Type：发送给服务器的数据类型</li>
+<li>Referer：指明链接来源</li>
+<li>Connection：是否keep-alive</li>
 </ul>
 </li>
 </ul>
-<blockquote>
-<p>与Zookeeper的区别</p>
-</blockquote>
-<ul>
-<li>Eureka强调了CAP原理中的AP，即可用性和可靠性</li>
-<li>Zookeeper更加强调CP，即一致性和可靠性</li>
+</li>
+<li>response:<ul>
+<li>响应行：HTTP/1.1 200 “success” </li>
+<li>响应头（Entity头域）：<ul>
+<li>Etag：和If-None-Match配合使用</li>
+<li>Content-Type：响应对象字符集</li>
+<li>Content-Length：响应对象长度</li>
+<li>Content-Encoding：表明压缩方法</li>
+<li>Content-Language：响应对象的语言</li>
+<li>Set-Cookie：把Cookie发送到客户端浏览器</li>
+</ul>
+</li>
+<li>响应头（其他）：<ul>
+<li>Connection：close/keep-alive</li>
+<li>Location：重定向一个新的位置</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>响应码：<ul>
+<li>200：成功</li>
+<li>302：Found重定向，新的URL会在response中的Location返回</li>
+<li>304：NotModified上次文档缓存，可以继续使用</li>
+<li>403：Forbidden拒绝提供服务</li>
+<li>404：NotFound请求资源不存在</li>
+<li>503：ServerUnavailable服务器当前不能处理客户端请求</li>
+</ul>
+</li>
 </ul>
   
 	</div>
@@ -191,7 +210,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/实习/">实习</a>►<a class="article-category-link" href="/categories/实习/Spring/">Spring</a>
+  <a class="article-category-link" href="/categories/实习/">实习</a>
 </div>
 
 
@@ -201,7 +220,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/" data-title="6.7-Spring Cloud学习 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/07/17/7.17-Http学习/" data-title="HTTP学习 | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -214,19 +233,11 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2017/06/08/6.8-360mall商品页请求分析/" title="6.8-商品页请求分析">
-  <strong>上一篇：</strong><br/>
-  <span>
-  6.8-商品页请求分析</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2017/06/06/6.6-代码浏览/"  title="6.6-代码浏览">
+<a href="/2017/07/13/7.13-二分查找/"  title="二分查找">
  <strong>下一篇：</strong><br/> 
- <span>6.6-代码浏览
+ <span>二分查找
 </span>
 </a>
 </div>
@@ -235,7 +246,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/06/07/6.7-Spring Cloud学习/" data-title="6.7-Spring Cloud学习" data-url="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/"></div>
+	<div class="ds-thread" data-thread-key="2017/07/17/7.17-Http学习/" data-title="HTTP学习" data-url="http://yoursite.com/2017/07/17/7.17-Http学习/"></div>
 </section>
 
 
@@ -245,7 +256,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、Eureka"><span class="toc-number">1.</span> <span class="toc-text">一、Eureka</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、HTTPS特点"><span class="toc-number">1.</span> <span class="toc-text">一、HTTPS特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、SSL连接过程"><span class="toc-number">2.</span> <span class="toc-text">二、SSL连接过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、HTTP消息结构"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息结构</span></a></li></ol>
  
   </div>
 

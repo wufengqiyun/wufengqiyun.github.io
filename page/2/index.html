@@ -73,6 +73,148 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2017/06/30/6.30-大型网站技术架构学习/" title="6.30-大型网站技术架构学习" itemprop="url">
+  
+    <h1 itemprop="name">6.30-大型网站技术架构学习</h1>
+    
+     
+           <p itemprop="description" >一、书籍信息《大型网站技术架构核心原理与案例分析》
+二、大型网站软件系统特点：
+高并发，大流量
+高可用
+海量数据
+用户分布广泛，网络情况复杂
+安全环境恶劣
+需求快速变更，发布频繁
+
+三、网站架构渐进式发展
+网站架构演进：
+
+初始网站架构（应用程序、文件、数据库在同一服务器上，如租</p>
+        
+    
+    <time datetime="2017-06-30T10:26:51.000Z" itemprop="datePublished">2017-06-30</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/29/6.29-Java并发包/" title="6.29-Java并发包" itemprop="url">
+  
+    <h1 itemprop="name">6.29-Java并发包</h1>
+    
+     
+           <p itemprop="description" >本文为《分布式Java应用于实践》笔记。
+一、集合包1. ArrayList
+默认构造为实例化一个Object类型的数组
+add时数组已满：Arrays.copyOf
+add插入指定位置：index后对象逐个往后复制
+remove删除：对象非null则使用equals，删除使用f</p>
+        
+    
+    <time datetime="2017-06-29T12:01:23.000Z" itemprop="datePublished">2017-06-29</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/28/6.28-微服务与SOA/" title="6.28-微服务与SOA" itemprop="url">
+  
+    <h1 itemprop="name">6.28-微服务与SOA</h1>
+    
+     
+           <p itemprop="description" >一、微服务特点（整理自知乎）
+不同的子系统采用自己的架构，各个服务运行自己的Web容器中。当需要增加计算能力的时候，只需要增加这个子系统或服务的实例就好了，当升级的时候，可以不影响别的子系统。
+微服务与SOA相比，更强调分布式系统的特性，比如横向伸缩性，服务发现，负载均衡，故障转</p>
+        
+    
+    <time datetime="2017-06-28T07:15:20.000Z" itemprop="datePublished">2017-06-28</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/27/6.27-MySQL优化/" title="6.27-MySQL优化" itemprop="url">
+  
+    <h1 itemprop="name">6.27-MySQL优化</h1>
+    
+     
+           <p itemprop="description" >一、 库表优化1. 数据类型
+类型选择原则：
+
+更小的通常更好，但要确保没有低估
+尽可能使用简单数据类型（ip用整型）
+尽可能不使用null
+
+
+浮点类型：
+
+DECIMAL存储精确的小数
+FLOAT和DOUBLE使用更少空间
+对于需要高精度的财务类数据，可以乘以一定倍数后采用B</p>
+        
+    
+    <time datetime="2017-06-27T10:45:21.000Z" itemprop="datePublished">2017-06-27</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/26/6.26-MySQL基础/" title="6.26-MySQL基础" itemprop="url">
+  
+    <h1 itemprop="name">6.26-MySQL基础</h1>
+    
+     
+           <p itemprop="description" >一、MySQL架构1. 并发控制（服务器+存储引擎）
+共享锁和排他锁（读写锁）
+锁粒度：
+
+表锁：服务器会为ALTER TABLE这样的语句加表锁
+行级锁：只在存储引擎实现
+
+
+事务的ACID：
+
+原子性：一个事务必须被视为不可分割的最小单元
+一致性：数据库总是从一个一致的状态转</p>
+        
+    
+    <time datetime="2017-06-26T11:03:12.000Z" itemprop="datePublished">2017-06-26</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2017/06/24/6.24-Maven父子模块/" title="6.24-Maven父子模块" itemprop="url">
   
     <h1 itemprop="name">6.24-Maven父子模块</h1>
@@ -177,128 +319,6 @@ mall-service模块中的html页面,id和class都是js可选择绑定实现操作
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/17/6.17-添加异步方法/" title="6.17-同步改异步" itemprop="url">
-  
-    <h1 itemprop="name">6.17-同步改异步</h1>
-    
-     
-           <p itemprop="description" >一、优惠券改为异步方法
-启动Application类中添加异步注解@EnableAsync
-Controller中改写相应方法，返回Future类型
-12345678 //可领取的券Future&amp;lt;BaseResponseVo&amp;lt;List&amp;lt;CouponBatchAc</p>
-        
-    
-    <time datetime="2017-06-17T09:04:09.000Z" itemprop="datePublished">2017-06-17</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/16/6.16-MyBatis复习/" title="6.16-MyBatis复习" itemprop="url">
-  
-    <h1 itemprop="name">6.16-MyBatis复习</h1>
-    
-     
-           <p itemprop="description" >一、备忘常识
-ResultMap和ResultType：ResultType直接表示返回类型，ResultMap则是外部引用。相比ResultType，ResultMap适用于配置较为复杂的查询。
-1234567891011&amp;lt;resultMap type=&quot;Comment&quot;</p>
-        
-    
-    <time datetime="2017-06-16T11:09:20.000Z" itemprop="datePublished">2017-06-16</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/15/6.15-消息队列/" title="6.15-消息队列" itemprop="url">
-  
-    <h1 itemprop="name">6.15-消息队列</h1>
-    
-     
-           <p itemprop="description" >一、主要应用方案
-异步处理
-
-场景：用户注册时，先将注册信息写入数据库，然后发送短信和邮件方案：使用消息队列，将发送短信和邮件任务写入队列中，直接返回
-
-应用解耦
-
-场景：用户下单后，订单系统需要通知库存系统减库存。也就意味着订单和库存系统耦合了。方案：用户下单后，订单系统完成持</p>
-        
-    
-    <time datetime="2017-06-15T09:56:21.000Z" itemprop="datePublished">2017-06-15</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/14/6.14-Redis分布式锁/" title="6.14-Redis分布式锁" itemprop="url">
-  
-    <h1 itemprop="name">6.14-Redis分布式锁</h1>
-    
-     
-           <p itemprop="description" >Redis实现分布式锁一、Redis特性
-Redis为单进程单线程模式，采用队列模式将并发访问变成串行访问。
-多客户端对redis的连接并不存在竞争关系。
-Redis命令操作具有原子性。
-
-二、分布式锁的要求
-安全性： 互斥，在任何时候，只有一个客户端能持有锁。
-活跃性A：没有死</p>
-        
-    
-    <time datetime="2017-06-14T12:01:11.000Z" itemprop="datePublished">2017-06-14</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/13/6.13-SQL优化/" title="6.13-SQL优化相关" itemprop="url">
-  
-    <h1 itemprop="name">6.13-SQL优化相关</h1>
-    
-     
-           <p itemprop="description" >SQL优化方法一、异步写数据库
-新开线程
-
-12345678910ThreadPoolExecutor executor = new ThreadPoolExecutor(1,    1, 0L, TimeUnit.MILLISECONDS, new LinkedBlocking</p>
-        
-    
-    <time datetime="2017-06-13T11:27:54.000Z" itemprop="datePublished">2017-06-13</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -329,7 +349,7 @@ Redis命令操作具有原子性。
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>25</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
 		  
 		
 		  
@@ -379,16 +399,6 @@ Redis命令操作具有原子性。
         
     </ul>
 </div>
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="wufengqiyun" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
 
 </aside>
 </div>

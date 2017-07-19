@@ -4,62 +4,53 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>6.7-Spring Cloud学习 | 舞风起云</title>
+    <title>消息队列常见优化策略总结 | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
     
 
     
-    <meta name="description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
+    <meta name="description" content="《消息队列设计精要》原文链接：https://tech.meituan.com/mq-design.html
+一、消息队列的应用点
+业务解耦：对于非核心的事务，做到“通知”，而非全部处理“完成”。
+最终一致性：
 
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
-
-
-Eureka模块简介
+强一致性：分布式事务（落地难成本高）
+最终一致性：”记录“和”补偿“。记录不确定事件，到达成功状态后再清理。可以依靠本地定时任务轮询不断重发。
+最终一致性不是消息队列必须的
 
 
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
+广播：只">
 <meta property="og:type" content="article">
-<meta property="og:title" content="6.7-Spring Cloud学习">
-<meta property="og:url" content="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/index.html">
+<meta property="og:title" content="消息队列常见优化策略总结">
+<meta property="og:url" content="http://yoursite.com/2017/07/10/7.10-消息队列设计 系统常见优化策略总结/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
+<meta property="og:description" content="《消息队列设计精要》原文链接：https://tech.meituan.com/mq-design.html
+一、消息队列的应用点
+业务解耦：对于非核心的事务，做到“通知”，而非全部处理“完成”。
+最终一致性：
 
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
-
-
-Eureka模块简介
+强一致性：分布式事务（落地难成本高）
+最终一致性：”记录“和”补偿“。记录不确定事件，到达成功状态后再清理。可以依靠本地定时任务轮询不断重发。
+最终一致性不是消息队列必须的
 
 
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
-<meta property="og:updated_time" content="2017-07-06T10:28:38.000Z">
+广播：只">
+<meta property="og:updated_time" content="2017-07-19T09:14:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="6.7-Spring Cloud学习">
-<meta name="twitter:description" content="一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
+<meta name="twitter:title" content="消息队列常见优化策略总结">
+<meta name="twitter:description" content="《消息队列设计精要》原文链接：https://tech.meituan.com/mq-design.html
+一、消息队列的应用点
+业务解耦：对于非核心的事务，做到“通知”，而非全部处理“完成”。
+最终一致性：
 
-服务注册与发现
-
-
-服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
-服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
-
-
-Eureka模块简介
+强一致性：分布式事务（落地难成本高）
+最终一致性：”记录“和”补偿“。记录不确定事件，到达成功状态后再清理。可以依靠本地定时任务轮询不断重发。
+最终一致性不是消息队列必须的
 
 
-Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式
-高可用注册">
+广播：只">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -114,14 +105,14 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/06/07/6.7-Spring Cloud学习/" title="6.7-Spring Cloud学习" itemprop="url">6.7-Spring Cloud学习</a>
+      <a href="/2017/07/10/7.10-消息队列设计 系统常见优化策略总结/" title="消息队列常见优化策略总结" itemprop="url">消息队列常见优化策略总结</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
 		
   <p class="article-time">
-    <time datetime="2017-06-07T11:24:18.000Z" itemprop="datePublished"> 发表于 2017-06-07</time>
+    <time datetime="2017-07-10T11:22:09.000Z" itemprop="datePublished"> 发表于 2017-07-10</time>
     
   </p>
 </header>
@@ -130,59 +121,91 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、Eureka"><span class="toc-number">1.</span> <span class="toc-text">一、Eureka</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、消息队列的应用点"><span class="toc-number">1.</span> <span class="toc-text">一、消息队列的应用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、消息队列的设计"><span class="toc-number">2.</span> <span class="toc-text">二、消息队列的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、Pull和Push"><span class="toc-number">3.</span> <span class="toc-text">三、Pull和Push</span></a></li></ol>
 		
 		</div>
 		
-		<h3 id="一、Eureka"><a href="#一、Eureka" class="headerlink" title="一、Eureka"></a>一、Eureka</h3><p>微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。</p>
-<blockquote>
-<p>服务注册与发现</p>
-</blockquote>
+		<p>《消息队列设计精要》<br>原文链接：<a href="https://tech.meituan.com/mq-design.html" target="_blank" rel="external">https://tech.meituan.com/mq-design.html</a></p>
+<h3 id="一、消息队列的应用点"><a href="#一、消息队列的应用点" class="headerlink" title="一、消息队列的应用点"></a>一、消息队列的应用点</h3><ul>
+<li>业务解耦：对于非核心的事务，做到“通知”，而非全部处理“完成”。</li>
+<li><p>最终一致性：</p>
 <ul>
-<li>服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。</li>
-<li>服务间调用通过向服务中心发起请求进行（服务端负载均衡）。</li>
+<li>强一致性：分布式事务（落地难成本高）</li>
+<li>最终一致性：”记录“和”补偿“。记录不确定事件，到达成功状态后再清理。可以依靠本地定时任务轮询不断重发。</li>
+<li>最终一致性不是消息队列必须的</li>
 </ul>
-<blockquote>
-<p>Eureka模块简介</p>
-</blockquote>
+</li>
+<li><p>广播：只需关心消息是否送达队列，其他事情交给下游的订阅者</p>
+</li>
+<li>错峰流量控制：平衡前后端处理能力的巨大差异</li>
+</ul>
+<h3 id="二、消息队列的设计"><a href="#二、消息队列的设计" class="headerlink" title="二、消息队列的设计"></a>二、消息队列的设计</h3><ul>
+<li><p>RPC通信协议：</p>
 <ul>
-<li>Eureka服务端：服务注册中心，如果以集群模式部署，那么分片故障时会转入自我保护模式</li>
-<li>高可用注册中心：将自己作为服务向其他中心注册自己（在registered-replicas项可以看到），形成互相注册的服务注册中心，实现服务清单的互相同步，以达到高可用的效果。客户端需要重新配置defaultZone加上两个注册中心。</li>
-<li>Eureka客户端（提供者）：向注册中心注册自身提供的服务，并且周期性发送心跳来更新租约，也能够从服务端查询当前注册的服务信息缓存到本地，并更新服务状态。</li>
-<li>服务消费者<ul>
-<li>Rest+Ribbon：使用RestTemplate远程调用</li>
-<li>Feign(自带断路器)</li>
+<li>本质：两次或者三次RPC加中间broker的转储</li>
+<li>尽量选择现有框架；尽量选择本机房投递</li>
+</ul>
+</li>
+<li><p>高可用：</p>
+<ul>
+<li>目标：保证broker接受和确认消息是幂等的</li>
+<li>方式：共享存储,多机器共享db</li>
+</ul>
+</li>
+<li><p>服务端承载消息堆积：</p>
+<ul>
+<li>持久化</li>
+<li><p>非持久化</p>
+</li>
+<li><p>存储方式：内存，分布式KV，数据库，磁盘</p>
+</li>
+<li></li>
+</ul>
+</li>
+<li>存储子系统选择：可靠性要求高则选择DB</li>
+<li>消费关系解析：点对点和广播</li>
+<li><p>可靠投递：</p>
+<ul>
+<li>最终一致性保证导致消息可能重复，异常情况下可能延迟。</li>
+<li><p>重复消息怎么解决：</p>
+<ul>
+<li>鉴别重复（版本号）</li>
+<li>幂等处理</li>
+<li>尽量减少重复消息投递</li>
+</ul>
+</li>
+<li><p>顺序消息怎么实现：</p>
+<ul>
+<li>版本号（保存各个消息到来的顺序，重组）</li>
+<li>状态机</li>
+</ul>
+</li>
+<li><p>总结： 保证不丢失消息的情况下尽量减少重复消息，消费顺序交给消费者保证</p>
+</li>
+</ul>
+</li>
+<li><p>异步和同步</p>
+<ul>
+<li>服务端异步：解放I/O</li>
+<li>返回future的方式不一定只有线程池：NIO、事件<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//客户端异步，服务端异步</span></div><div class="line">Future&lt;Result&gt; future = request(server);</div><div class="line"><span class="keyword">return</span> future;</div><div class="line"><span class="comment">//客户端异步，服务端同步(开线程池)</span></div><div class="line">Future&lt;Result&gt; future = executor.submit(<span class="keyword">new</span> Callable()&#123;<span class="keyword">public</span> <span class="keyword">void</span> call&lt;Result&gt;()&#123;</div><div class="line">    result = request(server);</div><div class="line">&#125;&#125;)</div><div class="line"><span class="keyword">return</span> future;</div><div class="line"><span class="comment">//客户端同步，服务端异步</span></div><div class="line">Future&lt;Result&gt; future = request(server);</div><div class="line"><span class="keyword">synchronized</span>(future)&#123;</div><div class="line"><span class="keyword">while</span>(!future.isDone())&#123;</div><div class="line">   future.wait();</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> future.get();</div><div class="line"><span class="comment">//客户端同步，服务端同步</span></div><div class="line">Result result = request(server);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>网络请求小包合并成大包会提高性能</p>
+<ul>
+<li>减少无谓的请求头</li>
+<li>减少回复的ACK数量</li>
 </ul>
 </li>
 </ul>
-<blockquote>
-<p>具体功能实现</p>
-</blockquote>
-<ul>
-<li>服务提供者<ul>
-<li>服务注册：Server接收到服务提供者的REST请求后，用一个双层结构Map存储。第一层Key是服务名，第二层Key是具体服务实例名</li>
-<li>服务同步：请求转发</li>
-<li>服务续约：服务提供者维护一个心跳，可通过参数定义调用间隔时间和服务失效时间</li>
+<h3 id="三、Pull和Push"><a href="#三、Pull和Push" class="headerlink" title="三、Pull和Push"></a>三、Pull和Push</h3><ul>
+<li>Push的缺点：慢消费</li>
+<li>Pull的缺点：消息延迟与忙碌等待</li>
+<li>Pull对于顺序消息的实现容易很多：<ul>
+<li>producer对应partition，单线程</li>
+<li>consumer对应partition，消费确认后继续</li>
 </ul>
 </li>
-<li>服务消费者<ul>
-<li>获取服务清单：发送REST请求，需要保证eureka.client.fetch-registry=true</li>
-<li>服务调用：Eureka中有Region和Zone的概念，一个Region包含多个Zone，每个客户端对应一个Region和一个Zone</li>
-<li>服务下线：发送REST请求告知服务注册中心</li>
-</ul>
-</li>
-<li>服务注册中心<ul>
-<li>失效剔除：Server启动时就会创建相应的定时任务</li>
-<li>自我保护：维护的实例不准确</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>与Zookeeper的区别</p>
-</blockquote>
-<ul>
-<li>Eureka强调了CAP原理中的AP，即可用性和可靠性</li>
-<li>Zookeeper更加强调CP，即一致性和可靠性</li>
 </ul>
   
 	</div>
@@ -191,7 +214,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/实习/">实习</a>►<a class="article-category-link" href="/categories/实习/Spring/">Spring</a>
+  <a class="article-category-link" href="/categories/实习/">实习</a>
 </div>
 
 
@@ -201,7 +224,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/" data-title="6.7-Spring Cloud学习 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/07/10/7.10-消息队列设计 系统常见优化策略总结/" data-title="消息队列常见优化策略总结 | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -215,18 +238,18 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2017/06/08/6.8-360mall商品页请求分析/" title="6.8-商品页请求分析">
+ <a href="/2017/07/12/7.12-Java虚拟机一些问题整理/" title="Java虚拟机一些问题整理">
   <strong>上一篇：</strong><br/>
   <span>
-  6.8-商品页请求分析</span>
+  Java虚拟机一些问题整理</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2017/06/06/6.6-代码浏览/"  title="6.6-代码浏览">
+<a href="/2017/07/09/7.9-线程安全的日期类工具/"  title="线程安全的日期类工具">
  <strong>下一篇：</strong><br/> 
- <span>6.6-代码浏览
+ <span>线程安全的日期类工具
 </span>
 </a>
 </div>
@@ -235,7 +258,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/06/07/6.7-Spring Cloud学习/" data-title="6.7-Spring Cloud学习" data-url="http://yoursite.com/2017/06/07/6.7-Spring Cloud学习/"></div>
+	<div class="ds-thread" data-thread-key="2017/07/10/7.10-消息队列设计 系统常见优化策略总结/" data-title="消息队列常见优化策略总结" data-url="http://yoursite.com/2017/07/10/7.10-消息队列设计 系统常见优化策略总结/"></div>
 </section>
 
 
@@ -245,7 +268,7 @@ Eureka服务端：服务注册中心，如果以集群模式部署，那么分�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、Eureka"><span class="toc-number">1.</span> <span class="toc-text">一、Eureka</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、消息队列的应用点"><span class="toc-number">1.</span> <span class="toc-text">一、消息队列的应用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、消息队列的设计"><span class="toc-number">2.</span> <span class="toc-text">二、消息队列的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、Pull和Push"><span class="toc-number">3.</span> <span class="toc-text">三、Pull和Push</span></a></li></ol>
  
   </div>
 
