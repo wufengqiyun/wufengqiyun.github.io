@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>6.14-Redis分布式锁 | 舞风起云</title>
+    <title>Redis实现布式锁 | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
@@ -21,7 +21,7 @@ Redis命令操作具有原子性。
 活跃性A：没有死锁，即使客户端在持有锁的时候崩溃，最后也会有其他客户端能获得锁，有超时机制。
 活跃性B：故障容忍，只有大多数Redis节">
 <meta property="og:type" content="article">
-<meta property="og:title" content="6.14-Redis分布式锁">
+<meta property="og:title" content="Redis实现布式锁">
 <meta property="og:url" content="http://yoursite.com/2017/06/14/6.14-Redis分布式锁/index.html">
 <meta property="og:site_name" content="舞风起云">
 <meta property="og:description" content="Redis实现分布式锁一、Redis特性
@@ -33,9 +33,9 @@ Redis命令操作具有原子性。
 安全性： 互斥，在任何时候，只有一个客户端能持有锁。
 活跃性A：没有死锁，即使客户端在持有锁的时候崩溃，最后也会有其他客户端能获得锁，有超时机制。
 活跃性B：故障容忍，只有大多数Redis节">
-<meta property="og:updated_time" content="2017-06-28T01:16:54.000Z">
+<meta property="og:updated_time" content="2017-07-19T09:23:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="6.14-Redis分布式锁">
+<meta name="twitter:title" content="Redis实现布式锁">
 <meta name="twitter:description" content="Redis实现分布式锁一、Redis特性
 Redis为单进程单线程模式，采用队列模式将并发访问变成串行访问。
 多客户端对redis的连接并不存在竞争关系。
@@ -99,7 +99,7 @@ Redis命令操作具有原子性。
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/06/14/6.14-Redis分布式锁/" title="6.14-Redis分布式锁" itemprop="url">6.14-Redis分布式锁</a>
+      <a href="/2017/06/14/6.14-Redis分布式锁/" title="Redis实现布式锁" itemprop="url">Redis实现布式锁</a>
   </h1>
   <p class="article-author">By
        
@@ -154,7 +154,7 @@ Redis命令操作具有原子性。
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/06/14/6.14-Redis分布式锁/" data-title="6.14-Redis分布式锁 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/06/14/6.14-Redis分布式锁/" data-title="Redis实现布式锁 | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -168,18 +168,18 @@ Redis命令操作具有原子性。
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2017/06/15/6.15-消息队列/" title="6.15-消息队列">
+ <a href="/2017/06/15/6.15-消息队列/" title="消息队列学习">
   <strong>上一篇：</strong><br/>
   <span>
-  6.15-消息队列</span>
+  消息队列学习</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2017/06/13/6.13-SQL优化/"  title="6.13-SQL优化相关">
+<a href="/2017/06/13/6.13-SQL优化/"  title="SQL优化相关">
  <strong>下一篇：</strong><br/> 
- <span>6.13-SQL优化相关
+ <span>SQL优化相关
 </span>
 </a>
 </div>
@@ -188,7 +188,7 @@ Redis命令操作具有原子性。
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/06/14/6.14-Redis分布式锁/" data-title="6.14-Redis分布式锁" data-url="http://yoursite.com/2017/06/14/6.14-Redis分布式锁/"></div>
+	<div class="ds-thread" data-thread-key="2017/06/14/6.14-Redis分布式锁/" data-title="Redis实现布式锁" data-url="http://yoursite.com/2017/06/14/6.14-Redis分布式锁/"></div>
 </section>
 
 
