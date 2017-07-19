@@ -41,7 +41,7 @@ SSL上发送HT">
 SSL安全参数握手，交换密钥
 SSL上发送HTTP请求/TCP上发送已加密请求
 SSL上发送HT">
-<meta property="og:updated_time" content="2017-07-19T09:20:07.000Z">
+<meta property="og:updated_time" content="2017-07-19T09:40:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP学习">
 <meta name="twitter:description" content="一、HTTPS特点
@@ -127,29 +127,30 @@ SSL上发送HT">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、HTTPS特点"><span class="toc-number">1.</span> <span class="toc-text">一、HTTPS特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、SSL连接过程"><span class="toc-number">2.</span> <span class="toc-text">二、SSL连接过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、HTTP消息结构"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息结构</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、HTTPS特点"><span class="toc-number">1.</span> <span class="toc-text">一、HTTPS特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、SSL连接过程"><span class="toc-number">2.</span> <span class="toc-text">二、SSL连接过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、HTTP消息结构"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息结构</span></a></li></ol>
 		
 		</div>
 		
-		<h3 id="一、HTTPS特点"><a href="#一、HTTPS特点" class="headerlink" title="一、HTTPS特点"></a>一、HTTPS特点</h3><ul>
+		<h2 id="一、HTTPS特点"><a href="#一、HTTPS特点" class="headerlink" title="一、HTTPS特点"></a>一、HTTPS特点</h2><ol>
 <li>在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS</li>
 <li>用数字证书对服务器进行认证：<ul>
 <li>通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书</li>
 <li>通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）</li>
 </ul>
 </li>
-</ul>
-<h3 id="二、SSL连接过程"><a href="#二、SSL连接过程" class="headerlink" title="二、SSL连接过程"></a>二、SSL连接过程</h3><ul>
+</ol>
+<h2 id="二、SSL连接过程"><a href="#二、SSL连接过程" class="headerlink" title="二、SSL连接过程"></a>二、SSL连接过程</h2><ol>
 <li>建立到443端口的TCP连接</li>
 <li>SSL安全参数握手，交换密钥</li>
 <li>SSL上发送HTTP请求/TCP上发送已加密请求</li>
 <li>SSL上发送HTTP响应/TCP上发送已加密响应</li>
 <li>SSL关闭</li>
 <li>TCP连接终止</li>
-</ul>
-<h3 id="三、HTTP消息结构"><a href="#三、HTTP消息结构" class="headerlink" title="三、HTTP消息结构"></a>三、HTTP消息结构</h3><ul>
-<li><p>request：</p>
-<ul>
+</ol>
+<h2 id="三、HTTP消息结构"><a href="#三、HTTP消息结构" class="headerlink" title="三、HTTP消息结构"></a>三、HTTP消息结构</h2><blockquote>
+<p>Request：</p>
+</blockquote>
+<ol>
 <li>请求行：GET http：//…  HTTP/1.1</li>
 <li><p>请求头（Cache头域）：</p>
 <ul>
@@ -177,10 +178,11 @@ SSL上发送HT">
 <li>Connection：是否keep-alive</li>
 </ul>
 </li>
-</ul>
-</li>
-<li><p>response:</p>
-<ul>
+</ol>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<ol>
 <li>响应行：HTTP/1.1 200 “success” </li>
 <li><p>响应头（Entity头域）：</p>
 <ul>
@@ -198,18 +200,18 @@ SSL上发送HT">
 <li>Location：重定向一个新的位置</li>
 </ul>
 </li>
-</ul>
-</li>
-<li>响应码：<ul>
+</ol>
+<blockquote>
+<p>响应码：</p>
+</blockquote>
+<ol>
 <li>200：成功</li>
 <li>302：Found重定向，新的URL会在response中的Location返回</li>
 <li>304：NotModified上次文档缓存，可以继续使用</li>
 <li>403：Forbidden拒绝提供服务</li>
 <li>404：NotFound请求资源不存在</li>
 <li>503：ServerUnavailable服务器当前不能处理客户端请求</li>
-</ul>
-</li>
-</ul>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -263,7 +265,7 @@ SSL上发送HT">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、HTTPS特点"><span class="toc-number">1.</span> <span class="toc-text">一、HTTPS特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、SSL连接过程"><span class="toc-number">2.</span> <span class="toc-text">二、SSL连接过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、HTTP消息结构"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息结构</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、HTTPS特点"><span class="toc-number">1.</span> <span class="toc-text">一、HTTPS特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、SSL连接过程"><span class="toc-number">2.</span> <span class="toc-text">二、SSL连接过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、HTTP消息结构"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息结构</span></a></li></ol>
  
   </div>
 
