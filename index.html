@@ -73,6 +73,127 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2017/07/28/7.21-京东主站领券请求分析/" title="" itemprop="url">
+  
+    <h1 itemprop="name"></h1>
+    
+     
+           <p itemprop="description" >title: 京东主站领券请求分析date: 2017-07-21 20:43:11categories: 实习
+—### 一、领券地址例：https://sale.jd.com/act/sHBb8jZtuy0VNS.html?utm_source=kong&amp;amp;utm_me</p>
+        
+    
+    <time datetime="2017-07-28T11:55:23.000Z" itemprop="datePublished">2017-07-28</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/28/7.28-注解+AOP改良项目中的监控/" title="注解+AOP改良项目中的监控" itemprop="url">
+  
+    <h1 itemprop="name">注解+AOP改良项目中的监控</h1>
+    
+     
+           <p itemprop="description" >一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写t</p>
+        
+    
+    <time datetime="2017-07-28T11:54:20.000Z" itemprop="datePublished">2017-07-28</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/27/7.27-缓存应用深入学习/" title="缓存应用学习" itemprop="url">
+  
+    <h1 itemprop="name">缓存应用学习</h1>
+    
+     
+           <p itemprop="description" >一、原文链接https://tech.meituan.com/cache_about.html
+二、缓存特征
+命中率
+最大缓存存放空间
+清空策略：
+FIFO先入先出
+LFU最少使用（保证高频数据有效）
+LRU最近最少使用（优先保证热点数据）
+
+
+
+三、本地缓存
+静态变量
+
+
+使用</p>
+        
+    
+    <time datetime="2017-07-27T12:11:09.000Z" itemprop="datePublished">2017-07-27</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/24/7.24-分布式系统中互斥性与幂等性问题/" title="分布式系统幂等性" itemprop="url">
+  
+    <h1 itemprop="name">分布式系统幂等性</h1>
+    
+     
+           <p itemprop="description" >一、原文链接https://tech.meituan.com/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html
+二、互斥性问题
+多线程中的解决方案
+
+
+ReetrantLock，利用CAS+C</p>
+        
+    
+    <time datetime="2017-07-24T12:06:17.000Z" itemprop="datePublished">2017-07-24</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/18/7.18-零散知识捡拾（二）/" title="零散知识捡拾（二）" itemprop="url">
+  
+    <h1 itemprop="name">零散知识捡拾（二）</h1>
+    
+     
+           <p itemprop="description" >一、Spring注解方式定时任务1234567891011121314@Scheduled(cron=&quot;0 0 1 * * ? &quot;)/*CRON表达式&quot;0 0 12 * * ?&quot;    每天中午十二点触发 &quot;0 15 10 ? * *&quot;    每天早上10：15触发 &quot;0 15 </p>
+        
+    
+    <time datetime="2017-07-18T13:22:40.000Z" itemprop="datePublished">2017-07-18</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2017/07/17/7.17-Http学习/" title="HTTP学习" itemprop="url">
   
     <h1 itemprop="name">HTTP学习</h1>
@@ -107,9 +228,9 @@
     <h1 itemprop="name">二分查找</h1>
     
      
-           <p itemprop="description" >二分查找的几种写法一、最常见写法
+           <p itemprop="description" >一、最常见写法
 注意while条件
-注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    </p>
+注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start</p>
         
     
     <time datetime="2017-07-13T10:09:22.000Z" itemprop="datePublished">2017-07-13</time>
@@ -199,140 +320,9 @@ Tips：单线程情况下内存无法分配都提示StackOverflowError
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/07/07/7.8-项目相关理论问题整理/" title="实习相关理论问题整理" itemprop="url">
-  
-    <h1 itemprop="name">实习相关理论问题整理</h1>
-    
-     
-           <p itemprop="description" >Redis
-线程模型：
-
-套接字：套接字操作抽象成文件事件
-I/O多路复用：监听多个套接字，把文件事件放入队列
-文件事件分派：接收并传给相应的事件处理器
-事件处理器：处理事件
-
-
-Redis为什么快:
-
-绝大部分请求是纯粹的内存操作（非常快速）
-采用单线程,避免了不必要的上下文切</p>
-        
-    
-    <time datetime="2017-07-07T11:25:01.000Z" itemprop="datePublished">2017-07-07</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/07/06/7.6-安全与拦截器/" title="Web安全与拦截器" itemprop="url">
-  
-    <h1 itemprop="name">Web安全与拦截器</h1>
-    
-     
-           <p itemprop="description" >一、处理信息安全问题：
-CSRF跨站请求伪造：伪装来自受信用户的请求来利用受信网站
-
-
-特性：利用网站对用户标识的信任,依靠用户标识危害网站
-做法：欺骗用户的浏览器发送HTTP请求给目标站点
-实现：可以通过IMG标签触发GET请求，利用它来实现CSRF攻击
-防范（可使用拦截器实现</p>
-        
-    
-    <time datetime="2017-07-06T10:33:22.000Z" itemprop="datePublished">2017-07-06</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/07/05/7.5-正则表达式/" title="正则表达式" itemprop="url">
-  
-    <h1 itemprop="name">正则表达式</h1>
-    
-     
-           <p itemprop="description" >一、相应需求：要求input中输入的必须是//开头的地址
-正则表达式：
-/^([hH][tT]{2}[pP]:\\/\\/|[hH][tT]{2}[pP][sS]:\\/\\/|\\/\\/)+/
-解析：
-/^：匹配字符串开始位置
-[hH][tT]{2}[pP]：大小写不敏感匹配</p>
-        
-    
-    <time datetime="2017-07-05T09:42:41.000Z" itemprop="datePublished">2017-07-05</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/07/04/7.4-高可用、可伸缩系统/" title="高可用、高伸缩系统架构知识" itemprop="url">
-  
-    <h1 itemprop="name">高可用、高伸缩系统架构知识</h1>
-    
-     
-           <p itemprop="description" >本文为《分布式Java应用与实践》笔记。
-一、负载均衡机器选择
-随机选择
-Hash选择：静态页面加载，常见用于静态图片加载
-Round-Robin：根据地址列表按顺序选择
-按权重选择：静态权重和动态权重
-按负载选择：需要搜集负载状况，实际较少使用
-按连接选择：按连接数多少分配，但</p>
-        
-    
-    <time datetime="2017-07-04T10:03:47.000Z" itemprop="datePublished">2017-07-04</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/" title="AsyncConfigurer与JDK包中线程池" itemprop="url">
-  
-    <h1 itemprop="name">AsyncConfigurer与JDK包中线程池</h1>
-    
-     
-           <p itemprop="description" >1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &amp;#123;    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</p>
-        
-    
-    <time datetime="2017-07-03T10:46:11.000Z" itemprop="datePublished">2017-07-03</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -360,7 +350,7 @@ Round-Robin：根据地址列表按顺序选择
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
 		  
 		
 		  

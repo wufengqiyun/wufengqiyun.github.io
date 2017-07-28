@@ -41,7 +41,7 @@ SSL上发送HT">
 SSL安全参数握手，交换密钥
 SSL上发送HTTP请求/TCP上发送已加密请求
 SSL上发送HT">
-<meta property="og:updated_time" content="2017-07-19T09:40:53.000Z">
+<meta property="og:updated_time" content="2017-07-19T09:47:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP学习">
 <meta name="twitter:description" content="一、HTTPS特点
@@ -131,26 +131,26 @@ SSL上发送HT">
 		
 		</div>
 		
-		<h2 id="一、HTTPS特点"><a href="#一、HTTPS特点" class="headerlink" title="一、HTTPS特点"></a>一、HTTPS特点</h2><ol>
+		<h2 id="一、HTTPS特点"><a href="#一、HTTPS特点" class="headerlink" title="一、HTTPS特点"></a>一、HTTPS特点</h2><ul>
 <li>在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS</li>
 <li>用数字证书对服务器进行认证：<ul>
 <li>通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书</li>
 <li>通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问）</li>
 </ul>
 </li>
-</ol>
-<h2 id="二、SSL连接过程"><a href="#二、SSL连接过程" class="headerlink" title="二、SSL连接过程"></a>二、SSL连接过程</h2><ol>
+</ul>
+<h2 id="二、SSL连接过程"><a href="#二、SSL连接过程" class="headerlink" title="二、SSL连接过程"></a>二、SSL连接过程</h2><ul>
 <li>建立到443端口的TCP连接</li>
 <li>SSL安全参数握手，交换密钥</li>
 <li>SSL上发送HTTP请求/TCP上发送已加密请求</li>
 <li>SSL上发送HTTP响应/TCP上发送已加密响应</li>
 <li>SSL关闭</li>
 <li>TCP连接终止</li>
-</ol>
+</ul>
 <h2 id="三、HTTP消息结构"><a href="#三、HTTP消息结构" class="headerlink" title="三、HTTP消息结构"></a>三、HTTP消息结构</h2><blockquote>
 <p>Request：</p>
 </blockquote>
-<ol>
+<ul>
 <li>请求行：GET http：//…  HTTP/1.1</li>
 <li><p>请求头（Cache头域）：</p>
 <ul>
@@ -178,11 +178,11 @@ SSL上发送HT">
 <li>Connection：是否keep-alive</li>
 </ul>
 </li>
-</ol>
+</ul>
 <blockquote>
 <p>Response:</p>
 </blockquote>
-<ol>
+<ul>
 <li>响应行：HTTP/1.1 200 “success” </li>
 <li><p>响应头（Entity头域）：</p>
 <ul>
@@ -200,18 +200,18 @@ SSL上发送HT">
 <li>Location：重定向一个新的位置</li>
 </ul>
 </li>
-</ol>
+</ul>
 <blockquote>
 <p>响应码：</p>
 </blockquote>
-<ol>
+<ul>
 <li>200：成功</li>
 <li>302：Found重定向，新的URL会在response中的Location返回</li>
 <li>304：NotModified上次文档缓存，可以继续使用</li>
 <li>403：Forbidden拒绝提供服务</li>
 <li>404：NotFound请求资源不存在</li>
 <li>503：ServerUnavailable服务器当前不能处理客户端请求</li>
-</ol>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -242,6 +242,14 @@ SSL上发送HT">
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2017/07/18/7.18-零散知识捡拾（二）/" title="零散知识捡拾（二）">
+  <strong>上一篇：</strong><br/>
+  <span>
+  零散知识捡拾（二）</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2017/07/13/7.13-二分查找/"  title="二分查找">
@@ -291,7 +299,7 @@ SSL上发送HT">
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
 		  
 		
 		  

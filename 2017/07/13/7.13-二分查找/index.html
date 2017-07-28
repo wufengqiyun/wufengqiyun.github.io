@@ -11,22 +11,22 @@
     
 
     
-    <meta name="description" content="二分查找的几种写法一、最常见写法
+    <meta name="description" content="一、最常见写法
 注意while条件
-注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start = 0;    int end = n - 1;    int middle;    while (">
+注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start = 0;    int end = n - 1;    int middle;    while (start &amp;lt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="二分查找">
 <meta property="og:url" content="http://yoursite.com/2017/07/13/7.13-二分查找/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="二分查找的几种写法一、最常见写法
+<meta property="og:description" content="一、最常见写法
 注意while条件
-注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start = 0;    int end = n - 1;    int middle;    while (">
-<meta property="og:updated_time" content="2017-07-19T09:15:19.000Z">
+注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start = 0;    int end = n - 1;    int middle;    while (start &amp;lt">
+<meta property="og:updated_time" content="2017-07-19T09:59:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二分查找">
-<meta name="twitter:description" content="二分查找的几种写法一、最常见写法
+<meta name="twitter:description" content="一、最常见写法
 注意while条件
-注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start = 0;    int end = n - 1;    int middle;    while (">
+注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &amp;#123;    int start = 0;    int end = n - 1;    int middle;    while (start &amp;lt">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -97,11 +97,11 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#二分查找的几种写法"><span class="toc-number">1.</span> <span class="toc-text">二分查找的几种写法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、最常见写法"><span class="toc-number">1.1.</span> <span class="toc-text">一、最常见写法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、相同值找坐标最小的"><span class="toc-number">1.2.</span> <span class="toc-text">二、相同值找坐标最小的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、相同值找坐标最大的"><span class="toc-number">1.3.</span> <span class="toc-text">三、相同值找坐标最大的</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、最常见写法"><span class="toc-number">1.</span> <span class="toc-text">一、最常见写法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、相同值找坐标最小的"><span class="toc-number">2.</span> <span class="toc-text">二、相同值找坐标最小的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、相同值找坐标最大的"><span class="toc-number">3.</span> <span class="toc-text">三、相同值找坐标最大的</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="二分查找的几种写法"><a href="#二分查找的几种写法" class="headerlink" title="二分查找的几种写法"></a>二分查找的几种写法</h2><h3 id="一、最常见写法"><a href="#一、最常见写法" class="headerlink" title="一、最常见写法"></a>一、最常见写法</h3><ul>
+		<h3 id="一、最常见写法"><a href="#一、最常见写法" class="headerlink" title="一、最常见写法"></a>一、最常见写法</h3><ul>
 <li>注意while条件</li>
 <li>注意if/else中条件判断后的操作<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> start = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> end = n - <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> middle;</div><div class="line">    <span class="keyword">while</span> (start &lt;= end) &#123;</div><div class="line">        middle = (start + end) / <span class="number">2</span>;</div><div class="line">        <span class="keyword">if</span> (array[middle] &gt; value) &#123;</div><div class="line">            end = middle - <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (array[middle] &lt; value) &#123;</div><div class="line">            start = middle + <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> middle;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
@@ -176,7 +176,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#二分查找的几种写法"><span class="toc-number">1.</span> <span class="toc-text">二分查找的几种写法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、最常见写法"><span class="toc-number">1.1.</span> <span class="toc-text">一、最常见写法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、相同值找坐标最小的"><span class="toc-number">1.2.</span> <span class="toc-text">二、相同值找坐标最小的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、相同值找坐标最大的"><span class="toc-number">1.3.</span> <span class="toc-text">三、相同值找坐标最大的</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、最常见写法"><span class="toc-number">1.</span> <span class="toc-text">一、最常见写法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、相同值找坐标最小的"><span class="toc-number">2.</span> <span class="toc-text">二、相同值找坐标最小的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、相同值找坐标最大的"><span class="toc-number">3.</span> <span class="toc-text">三、相同值找坐标最大的</span></a></li></ol>
  
   </div>
 
@@ -202,7 +202,7 @@
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
 		  
 		
 		  

@@ -73,6 +73,134 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2017/06/12/6.12-缓存/" title="360商城缓存使用初探" itemprop="url">
+  
+    <h1 itemprop="name">360商城缓存使用初探</h1>
+    
+     
+           <p itemprop="description" >添加/删除收藏流程优化（Guava+Redis）一、缓存的使用
+Google的Cache——Guava
+
+
+本地缓存开关
+
+
+创建缓存对象
+1private static Cache&amp;lt;String, String&amp;gt; CACHE_SWITCH = CacheBuilde</p>
+        
+    
+    <time datetime="2017-06-12T09:33:29.000Z" itemprop="datePublished">2017-06-12</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/09/6.9-Spring Cloud学习/" title="Spring Cloud学习（二）" itemprop="url">
+  
+    <h1 itemprop="name">Spring Cloud学习（二）</h1>
+    
+     
+           <p itemprop="description" >二、Ribbon基于HTTP和TCP的负载均衡工具，实现客户端负载均衡。与服务端负载均衡不同的是，客户端负载均衡中，所有客户端节点维护着自己要访问的服务端清单，服务端清单来自注册中心。
+
+基本使用 
+
+
+服务提供者启动多个服务实例，注册到一个或者多个关联的注册中心
+消费者调用被@</p>
+        
+    
+    <time datetime="2017-06-09T10:08:11.000Z" itemprop="datePublished">2017-06-09</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/08/6.8-360mall商品页请求分析/" title="360商城商详页请求" itemprop="url">
+  
+    <h1 itemprop="name">360商城商详页请求</h1>
+    
+     
+           <p itemprop="description" >一、商品详情页面controller集合
+getCartNum（购物车中物品数量）使用了Guava Cache
+hotword（热门搜索词）使用了b2c.mall.service中的ES搜索
+batchPrice（缓存的一批价格）
+existsSkuList（是否存在SkuLis</p>
+        
+    
+    <time datetime="2017-06-08T12:04:01.000Z" itemprop="datePublished">2017-06-08</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/07/6.7-Spring Cloud学习/" title="Spring Cloud学习（一）" itemprop="url">
+  
+    <h1 itemprop="name">Spring Cloud学习（一）</h1>
+    
+     
+           <p itemprop="description" >一、Eureka微服务之间的互相调用，通过手动配置会显得非常复杂，所以需要一个统一的注册中心。
+
+服务注册与发现
+
+
+服务单元向注册中心注册，注册中心维护一个服务清单，通过“心跳检测”来检查清单中的服务是否可用。
+服务间调用通过向服务中心发起请求进行（服务端负载均衡）。
+
+
+Eu</p>
+        
+    
+    <time datetime="2017-06-07T11:24:18.000Z" itemprop="datePublished">2017-06-07</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/06/06/6.6-代码浏览/" title="【实习】代码浏览" itemprop="url">
+  
+    <h1 itemprop="name">【实习】代码浏览</h1>
+    
+     
+           <p itemprop="description" >b2c-item-service代码学习
+1. 环境切换application-{profile}.properties中配置spring.profiles.activemvn clean package -P dev时，maven就知道profileActive=dev这个属性</p>
+        
+    
+    <time datetime="2017-06-06T11:14:11.000Z" itemprop="datePublished">2017-06-06</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2017/03/01/App后台开发笔记/" title="App后台开发笔记" itemprop="url">
   
     <h1 itemprop="name">App后台开发笔记</h1>
@@ -203,54 +331,9 @@ APP后台接收到用户名和密码，验证正确后生成一串token</p>
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/01/03/Servlet的请求转发和重定向/" title="Servlet的请求转发和重定向" itemprop="url">
-  
-    <h1 itemprop="name">Servlet的请求转发和重定向</h1>
-    
-     
-           <p itemprop="description" >1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOExcepti</p>
-        
-    
-    <time datetime="2017-01-03T14:28:30.000Z" itemprop="datePublished">2017-01-03</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/01/03/Servlet的实现方式/" title="从Servlet开始认识JavaWeb" itemprop="url">
-  
-    <h1 itemprop="name">从Servlet开始认识JavaWeb</h1>
-    
-     
-           <p itemprop="description" >1.Servlet需要容器——Tomcat等
-通信支持：轻松让servlet与Web服务器对话
-生命周期管理：控制servlet的实例化、初始化、生与死
-多线程支持：自动为每个servlet请求创建新的java线程
-声明方式实现安全：使用XML描述文件配置和修改安全性
-JSP支持</p>
-        
-    
-    <time datetime="2017-01-03T12:10:33.000Z" itemprop="datePublished">2017-01-03</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
-    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
 </div>
@@ -278,7 +361,7 @@ JSP支持</p>
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
 		  
 		
 		  

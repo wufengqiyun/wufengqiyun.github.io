@@ -23,7 +23,7 @@
 不同的子系统采用自己的架构，各个服务运行自己的Web容器中。当需要增加计算能力的时候，只需要增加这个子系统或服务的实例就好了，当升级的时候，可以不影响别的子系统。
 微服务与SOA相比，更强调分布式系统的特性，比如横向伸缩性，服务发现，负载均衡，故障转移，高可用。
 互联网开发对服务治理提出了更多的要求，比如多版本，比如灰度升级，比如服务降级，比如分布式跟踪，这些都是在S">
-<meta property="og:updated_time" content="2017-07-19T09:25:31.000Z">
+<meta property="og:updated_time" content="2017-07-19T10:01:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="了解微服务与SOA">
 <meta name="twitter:description" content="一、微服务特点（整理自知乎）
@@ -100,7 +100,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、微服务特点（整理自知乎）"><span class="toc-number">1.</span> <span class="toc-text">一、微服务特点（整理自知乎）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、分布式Java应用"><span class="toc-number">2.</span> <span class="toc-text">二、分布式Java应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-分布式带来的挑战："><span class="toc-number">3.</span> <span class="toc-text">1. 分布式带来的挑战：</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、微服务特点（整理自知乎）"><span class="toc-number">1.</span> <span class="toc-text">一、微服务特点（整理自知乎）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、分布式Java应用"><span class="toc-number">2.</span> <span class="toc-text">二、分布式Java应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-分布式带来的挑战："><span class="toc-number">2.1.</span> <span class="toc-text">1. 分布式带来的挑战：</span></a></li></ol></li></ol>
 		
 		</div>
 		
@@ -110,7 +110,7 @@
 <li>互联网开发对服务治理提出了更多的要求，比如多版本，比如灰度升级，比如服务降级，比如分布式跟踪，这些都是在SOA实践中重视不够的。</li>
 <li>Docker容器为微服务提供了更便利的条件，每个服务可以通过SpringBoot技术跑在自己的进程中。可能在几十台计算机中运行成千上万个Docker容器，每个容器都运行着服务的一个实例。</li>
 </ul>
-<h3 id="二、分布式Java应用"><a href="#二、分布式Java应用" class="headerlink" title="二、分布式Java应用"></a>二、分布式Java应用</h3><h3 id="1-分布式带来的挑战："><a href="#1-分布式带来的挑战：" class="headerlink" title="1. 分布式带来的挑战："></a>1. 分布式带来的挑战：</h3><ul>
+<h3 id="二、分布式Java应用"><a href="#二、分布式Java应用" class="headerlink" title="二、分布式Java应用"></a>二、分布式Java应用</h3><h4 id="1-分布式带来的挑战："><a href="#1-分布式带来的挑战：" class="headerlink" title="1. 分布式带来的挑战："></a>1. 分布式带来的挑战：</h4><ul>
 <li>服务多级调用的延迟</li>
 <li>调试、bug跟踪困难</li>
 <li>安全监测需要有统一平台</li>
@@ -178,7 +178,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、微服务特点（整理自知乎）"><span class="toc-number">1.</span> <span class="toc-text">一、微服务特点（整理自知乎）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、分布式Java应用"><span class="toc-number">2.</span> <span class="toc-text">二、分布式Java应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-分布式带来的挑战："><span class="toc-number">3.</span> <span class="toc-text">1. 分布式带来的挑战：</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、微服务特点（整理自知乎）"><span class="toc-number">1.</span> <span class="toc-text">一、微服务特点（整理自知乎）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、分布式Java应用"><span class="toc-number">2.</span> <span class="toc-text">二、分布式Java应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-分布式带来的挑战："><span class="toc-number">2.1.</span> <span class="toc-text">1. 分布式带来的挑战：</span></a></li></ol></li></ol>
  
   </div>
 
@@ -204,7 +204,7 @@
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
 		  
 		
 		  

@@ -73,6 +73,137 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2017/07/07/7.8-项目相关理论问题整理/" title="零散知识捡拾（一）" itemprop="url">
+  
+    <h1 itemprop="name">零散知识捡拾（一）</h1>
+    
+     
+           <p itemprop="description" >Redis
+线程模型：
+
+套接字：套接字操作抽象成文件事件
+I/O多路复用：监听多个套接字，把文件事件放入队列
+文件事件分派：接收并传给相应的事件处理器
+事件处理器：处理事件
+
+
+Redis为什么快:
+
+绝大部分请求是纯粹的内存操作（非常快速）
+采用单线程,避免了不必要的上下文切</p>
+        
+    
+    <time datetime="2017-07-07T11:25:01.000Z" itemprop="datePublished">2017-07-07</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/06/7.6-安全与拦截器/" title="Web安全与拦截器" itemprop="url">
+  
+    <h1 itemprop="name">Web安全与拦截器</h1>
+    
+     
+           <p itemprop="description" >一、处理信息安全问题：
+CSRF跨站请求伪造：伪装来自受信用户的请求来利用受信网站
+
+
+特性：利用网站对用户标识的信任,依靠用户标识危害网站
+做法：欺骗用户的浏览器发送HTTP请求给目标站点
+实现：可以通过IMG标签触发GET请求，利用它来实现CSRF攻击
+防范（可使用拦截器实现</p>
+        
+    
+    <time datetime="2017-07-06T10:33:22.000Z" itemprop="datePublished">2017-07-06</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/05/7.5-正则表达式/" title="正则表达式" itemprop="url">
+  
+    <h1 itemprop="name">正则表达式</h1>
+    
+     
+           <p itemprop="description" >一、相应需求：要求input中输入的必须是//开头的地址
+正则表达式：
+/^([hH][tT]{2}[pP]:\\/\\/|[hH][tT]{2}[pP][sS]:\\/\\/|\\/\\/)+/
+解析：
+/^：匹配字符串开始位置
+[hH][tT]{2}[pP]：大小写不敏感匹配</p>
+        
+    
+    <time datetime="2017-07-05T09:42:41.000Z" itemprop="datePublished">2017-07-05</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/04/7.4-高可用、可伸缩系统/" title="高可用、高伸缩系统架构知识" itemprop="url">
+  
+    <h1 itemprop="name">高可用、高伸缩系统架构知识</h1>
+    
+     
+           <p itemprop="description" >本文为《分布式Java应用与实践》笔记。
+一、负载均衡机器选择
+随机选择
+Hash选择：静态页面加载，常见用于静态图片加载
+Round-Robin：根据地址列表按顺序选择
+按权重选择：静态权重和动态权重
+按负载选择：需要搜集负载状况，实际较少使用
+按连接选择：按连接数多少分配，但</p>
+        
+    
+    <time datetime="2017-07-04T10:03:47.000Z" itemprop="datePublished">2017-07-04</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2017/07/03/7.3-AsyncConfigurer与JDK包中线程池/" title="AsyncConfigurer与JDK包中线程池" itemprop="url">
+  
+    <h1 itemprop="name">AsyncConfigurer与JDK包中线程池</h1>
+    
+     
+           <p itemprop="description" >1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &amp;#123;    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</p>
+        
+    
+    <time datetime="2017-07-03T10:46:11.000Z" itemprop="datePublished">2017-07-03</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2017/06/30/6.30-大型网站技术架构学习/" title="大型网站技术架构学习" itemprop="url">
   
     <h1 itemprop="name">大型网站技术架构学习</h1>
@@ -212,116 +343,9 @@ FLOAT和DOUBLE使用更少空间
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/24/6.24-Maven父子模块/" title="Maven父子模块" itemprop="url">
-  
-    <h1 itemprop="name">Maven父子模块</h1>
-    
-     
-           <p itemprop="description" >maven父子模块
-父模块配置
-123456&amp;lt;groupId&amp;gt;com.jcloud.b2c&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;jcloud-b2c-mall-web&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;1.</p>
-        
-    
-    <time datetime="2017-06-24T07:20:33.000Z" itemprop="datePublished">2017-06-24</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/23/6.23-前后端交互/" title="前后端交互逻辑分析" itemprop="url">
-  
-    <h1 itemprop="name">前后端交互逻辑分析</h1>
-    
-     
-           <p itemprop="description" >一、根据优惠券逻辑学习Ajax前后交互的流程
-mall-service模块中的html页面,id和class都是js可选择绑定实现操作的对象
-12345&amp;lt;div id=&quot;leftsub&quot;&amp;gt;  &amp;lt;ul&amp;gt;    &amp;lt;li class=&quot;coupontip </p>
-        
-    
-    <time datetime="2017-06-23T10:15:09.000Z" itemprop="datePublished">2017-06-23</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/22/6.22-Ajax/" title="Ajax基本概念学习" itemprop="url">
-  
-    <h1 itemprop="name">Ajax基本概念学习</h1>
-    
-     
-           <p itemprop="description" >一、ajax方法参数详解12345678910111213141516171819202122$.ajax(&amp;#123;    //url:发送请求的地址    url: &quot;/shop/isFavor&quot;,    //type:请求方式默认为get    type: &quot;post&quot;,</p>
-        
-    
-    <time datetime="2017-06-22T11:01:23.000Z" itemprop="datePublished">2017-06-22</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/19/6.19-并发编程复习/" title="并发编程复习" itemprop="url">
-  
-    <h1 itemprop="name">并发编程复习</h1>
-    
-     
-           <p itemprop="description" >一、进程和线程
-进程对应的是程序，每个进程对应一定的地址空间，暂停时保存当前的状态，为进程切换提供了可能
-单核CPU的话任一时间只有一个进程在占用CPU
-针对进程子任务只能串行的问题，出现了线程的概念。每个线程对应一个子任务。（为什么不多进程？分配进程成本高，进程切换消耗大，进程</p>
-        
-    
-    <time datetime="2017-06-19T08:31:59.000Z" itemprop="datePublished">2017-06-19</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2017/06/18/6.18-Spring Boot自定义starter/" title="Spring Boot自定义Starter" itemprop="url">
-  
-    <h1 itemprop="name">Spring Boot自定义Starter</h1>
-    
-     
-           <p itemprop="description" >一、maven依赖123456&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;        &amp;lt;artifact</p>
-        
-    
-    <time datetime="2017-06-18T06:20:35.000Z" itemprop="datePublished">2017-06-18</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -349,7 +373,7 @@ mall-service模块中的html页面,id和class都是js可选择绑定实现操作
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>30</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
 		  
 		
 		  
