@@ -5,7 +5,7 @@
     <url>%2F2017%2F07%2F28%2F7.28-%E6%B3%A8%E8%A7%A3%2BAOP%E6%94%B9%E8%89%AF%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E7%9B%91%E6%8E%A7%2F</url>
     <content type="text"><![CDATA[一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使用过自定义注解，在学习时也只是写过取注解中属性和反射相关的小demo，想要实现改良，需要将注解结合AOP动态代理使用。 二、实际操作 定义注解 定义一个名为@AddUMP的注解1234567@Target(ElementType.METHOD)@Retention(RetentionPolicy.RUNTIME)public @interface AddUMP &#123; String methodName(); boolean enableHeartBeat() default false; boolean enableTP() default true;&#125; 配置切点 切点限定（execution表达式） 在原有逻辑前后加上异常检测 ProceedingJoinPoint调用proceed方法执行 123456789101112131415161718192021222324252627282930313233@Component@Aspectpublic class UMPMonitor &#123; private static final Logger log = LoggerFactory.getLogger(UMPMonitor.class); //关键：切面设置为针对@addUMP注解 @Around(value = "@annotation(addUMP)") //返回值为Object类型，参数传入注解（不用再写反射） public Object aroundMethod(ProceedingJoinPoint pjd, AddUMP addUMP) &#123; //获取注解中的信息 String methodName = addUMP.methodName(); boolean enableHeartBeat = addUMP.enableHeartBeat(); boolean enableTP = addUMP.enableTP(); CallerInfo callerInfo = null; Object result; BaseResponseVo responseVo = new BaseResponseVo(); try &#123; callerInfo = Profiler.registerInfo(methodName, enableHeartBeat, enableTP); //执行原有逻辑 result = pjd.proceed(); &#125; catch (Throwable e) &#123; Profiler.functionError(callerInfo); log.error("UMP捕获到错误:" + e); responseVo.setErrorCode(""); responseVo.setErrStrSet(null); responseVo.setIsSuccess(false); responseVo.setMessage(e.getMessage()); result = responseVo; &#125;finally &#123; Profiler.registerInfoEnd(callerInfo); &#125; return result; &#125;&#125; 方法添加注解 在所需要添加切面的方法上标记@AddUMP即可]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -13,7 +13,7 @@
     <url>%2F2017%2F07%2F27%2F7.27-%E7%BC%93%E5%AD%98%E5%BA%94%E7%94%A8%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%2F</url>
     <content type="text"><![CDATA[一、原文链接https://tech.meituan.com/cache_about.html 二、缓存特征 命中率 最大缓存存放空间 清空策略： FIFO先入先出 LFU最少使用（保证高频数据有效） LRU最近最少使用（优先保证热点数据） 三、本地缓存 静态变量 使用Zookeeper自动更新（一致性） 缺点是受到heap区影响，缓存数据有限 Guava Cache 功能： 自动将Entry节点加载入缓存 缓存数据超过限制，采用LRU清理 根据Entry节点上次被访问时间或写入时间计算过期机制 Key封装在WeakReference引用中 Value封装在SoftReference引用中 实现机制： 模仿ConcurrentHashMap，ReferenceEntry封装键值对，ValueReference封装值。 每个Segment包含ReferenceEntry链，每个ReferenceEntry包含key、hash、valueReference和next ValueReference对应四种实现（Strong/Soft/Weak/Loading）,LoadingValueReference支持动态加载，加载完成后会替换 access链（实现LRU）：访问节点如果在链表中，移动到最后，否则直接加在最后，poll时直接删除头节点的下一个节点 write链（实现LRU）：类似access链 12345678910111213141516 /** * Callable */public void callablex() throws ExecutionException &#123; Cache&lt;String, String&gt; cache = CacheBuilder.newBuilder() .maximumSize(1000).build(); String result = cache.get("key", new Callable&lt;String&gt;() &#123; public String call() &#123; return "result"; &#125; &#125;); System.out.println(result);&#125; 四、分布式缓存 Redis 核心变量redisObject： 数据类型：string/hash/list/set/zset 编码方式：raw/zipmap/ziplist/intset/skiplist 单线程的I/O复用模型]]></content>
       <categories>
-        <category>实习</category>
+        <category>缓存</category>
       </categories>
   </entry>
   <entry>
@@ -21,7 +21,7 @@
     <url>%2F2017%2F07%2F24%2F7.24-%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%AD%E4%BA%92%E6%96%A5%E6%80%A7%E4%B8%8E%E5%B9%82%E7%AD%89%E6%80%A7%E9%97%AE%E9%A2%98%2F</url>
     <content type="text"><![CDATA[一、原文链接https://tech.meituan.com/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html 二、互斥性问题 多线程中的解决方案 ReetrantLock，利用CAS+CLH队列实现 synchronized关键字，JVM底层实现 多进程中的解决方案 信号量（P-wait/V-signal）操作 分布式中的解决方案 基本要求：有锁存储空间；唯一标识；两种状态 进阶要求： 可重入 惊群效应：占有锁的线程释放，避免唤醒所有等待的线程 公平锁和非公平锁（开销较好） 阻塞锁（临界区操作耗时长）和自旋锁（临界区操作耗时短） Redis实现（之前已经有介绍过） 三、幂等性问题 原理：将每一个不同的业务操作赋予其唯一性 通过对不同操作所对应的唯一的内容特性生成一个唯一的全局ID来实现：相同的操作生成相同的全局ID，不同的操作生成不同的全局ID。]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -37,7 +37,7 @@
     <url>%2F2017%2F07%2F18%2F7.18-%E9%9B%B6%E6%95%A3%E7%9F%A5%E8%AF%86%E6%8D%A1%E6%8B%BE%EF%BC%88%E4%BA%8C%EF%BC%89%2F</url>
     <content type="text"><![CDATA[一、Spring注解方式定时任务1234567891011121314@Scheduled(cron="0 0 1 * * ? ")/*CRON表达式"0 0 12 * * ?" 每天中午十二点触发 "0 15 10 ? * *" 每天早上10：15触发 "0 15 10 * * ?" 每天早上10：15触发 "0 15 10 * * ? *" 每天早上10：15触发 "0 15 10 * * ? 2005" 2005年的每天早上10：15触发 "0 * 14 * * ?" 每天从下午2点开始到2点59分每分钟一次触发 "0 0/5 14 * * ?" 每天从下午2点开始到2：55分结束每5分钟一次触发 "0 0/5 14,18 * * ?" 每天的下午2点至2：55和6点至6点55分两个时间段内每5分钟一次触发 "0 0-5 14 * * ?" 每天14:00至14:05每分钟一次触发 "0 10,44 14 ? 3 WED" 三月的每周三的14：10和14：44触发 "0 15 10 ? * MON-FRI" 每个周一、周二、周三、周四、周五的10：15触发 */ 二、@Async注解原理 其实就是Spring的动态代理的实现，通过代理类完成异步操作，因此异步方法和异步方法的调用不能在同一个类中。 注意配置连接池，默认连接池很小，很容易卡死。配置连接池的方式有两种： 应用级implements AsyncConfigurer 方法级（@Async后面指定名称） 12345678@Configuration@EnableAsyncpublic class SpringAsyncConfig &#123; @Bean(name = "threadPoolTaskExecutor") public Executor threadPoolTaskExecutor() &#123; return new ThreadPoolTaskExecutor(); &#125;&#125; 三、ActiveMQ发送消息步骤与JmsTemplate 发送消息： new ActiveMQConnectionFactory创建工厂cf 工厂cf创建连接conn 连接conn创建会话session 创建目的地（队列名）destination 会话session调用createProducer(destination)创建发送者producer 会话session调用createTextMessage()创建发送内容message 发送者producer调用send(message)发送消息 JmsTemplate简化操作，可以直接发送信息 execute：创建连接与会话 doSend：执行发送信息任务]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -45,7 +45,7 @@
     <url>%2F2017%2F07%2F17%2F7.17-Http%E5%AD%A6%E4%B9%A0%2F</url>
     <content type="text"><![CDATA[一、HTTPS特点 在应用层（HTTP）和传输层（TCP）之间，使用SSL/TLS 用数字证书对服务器进行认证： 通过HTTPS建立安全的Web事务之后，浏览器会获取服务器的数字证书 通过验证颁发机构的签名确认是否“信任”（如果不信任会发出询问） 二、SSL连接过程 建立到443端口的TCP连接 SSL安全参数握手，交换密钥 SSL上发送HTTP请求/TCP上发送已加密请求 SSL上发送HTTP响应/TCP上发送已加密响应 SSL关闭 TCP连接终止 三、HTTP消息结构 Request： 请求行：GET http：//… HTTP/1.1 请求头（Cache头域）： If-Modified-Since：判断是否使用304 If-None-Match：和Etag配合使用 Pragma：只可以设定为no-cache Cache-Control：public/private/no-cache 请求头（Client头域）： Accept：浏览器可接受的媒体类型 Accept-Language：可接受语言 Accept-Encoding：可接受编码方法，如gzip Accept-Charset：可接受字符集 User-Agent：客户端的操作系统等信息 请求头（其他）： Cookie：缓存指 Content-Length：发送给服务器的数据长度 Content-Type：发送给服务器的数据类型 Referer：指明链接来源 Connection：是否keep-alive Response: 响应行：HTTP/1.1 200 “success” 响应头（Entity头域）： Etag：和If-None-Match配合使用 Content-Type：响应对象字符集 Content-Length：响应对象长度 Content-Encoding：表明压缩方法 Content-Language：响应对象的语言 Set-Cookie：把Cookie发送到客户端浏览器 响应头（其他）： Connection：close/keep-alive Location：重定向一个新的位置 响应码： 200：成功 302：Found重定向，新的URL会在response中的Location返回 304：NotModified上次文档缓存，可以继续使用 403：Forbidden拒绝提供服务 404：NotFound请求资源不存在 503：ServerUnavailable服务器当前不能处理客户端请求]]></content>
       <categories>
-        <category>实习</category>
+        <category>HTTP</category>
       </categories>
   </entry>
   <entry>
@@ -53,7 +53,7 @@
     <url>%2F2017%2F07%2F13%2F7.13-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%2F</url>
     <content type="text"><![CDATA[一、最常见写法 注意while条件 注意if/else中条件判断后的操作12345678910111213141516public static int binarySearch(int[] array, int n, int value) &#123; int start = 0; int end = n - 1; int middle; while (start &lt;= end) &#123; middle = (start + end) / 2; if (array[middle] &gt; value) &#123; end = middle - 1; &#125; else if (array[middle] &lt; value) &#123; start = middle + 1; &#125; else &#123; return middle; &#125; &#125; return -1;&#125; 二、相同值找坐标最小的 start &lt; end start = middle12345678910111213141516public static int binarySearch_left(int[] array, int n, int value) &#123; int start = 0; int end = n - 1; int middle; while (start &lt; end) &#123; middle = (start + end) / 2; if (array[middle] &gt; value) &#123; end = middle - 1; &#125; else if (array[middle] &lt; value) &#123; start = middle; &#125; else &#123; return middle; &#125; &#125; return -1;&#125; 三、相同值找坐标最大的 start &lt; end end = middle12345678910111213141516public static int binarySearch_right(int[] array, int n, int value) &#123; int start = 0; int end = n - 1; int middle; while (start &lt; end) &#123; middle = (start + end) / 2; if (array[middle] &gt; value) &#123; end = middle; &#125; else if (array[middle] &lt; value) &#123; start = middle + 1; &#125; else &#123; return middle; &#125; &#125; return -1;&#125;]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -61,7 +61,7 @@
     <url>%2F2017%2F07%2F12%2F7.12-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86%2F</url>
     <content type="text"><![CDATA[一、制造各种溢出的场景 Java堆溢出： 操作：不停向List中add数据 参数：-Xmx -Xms 虚拟机和本地方法栈溢出： 操作：无限递归 参数：-Xss Tips：单线程情况下内存无法分配都提示StackOverflowError 如果是建立多线程导致内存溢出，在线程数量无法减少的情况下，可以减少最大堆容量和栈容量来优化 方法区和运行时常量池溢出： 操作：无限String.intern 参数：-XX:PermSize Tips：JDK1.7中，intern方法不会再复制实例，只在常量池中记录首次出现的实例。对于Str.intern()==Str的结果，可能为true（首次出现）或者false（非首次出现时） 本机直接内存溢出： 操作：递归调用unsafe.allocateMemory(x) 参数：-XX：MaxDirectMemorySize 二、回收方法 堆回收：可达性分析（从GC Roots到这个对象不可达） 哪些是GC roots： 虚拟机栈中局部变量表中的对象 方法区中类静态属性引用的对象 方法区中常量引用的对象 JNI引用的对象 引用类型的种类： 强引用：普遍存在，回收不了 软引用：快溢出异常时会回收一波 弱引用：一旦发生GC就干掉 虚引用：有虚引用的话回收有个通知，最弱 方法区回收： 废弃常量：当前没有对象引用的常量 无用的类： 该类的所有实例都已经被回收 加载该类的ClassLoader已经被回收 该类的java.lang.Class没有在任何地方被使用（反射） 特例：-127到127的int类型，缓存在其中 三、HotSpot实现 准确性GC：使用一组OopMap得知哪些地方存放对象引用，加快了GC Roots的枚举 SafePoint：程序只有在到达安全点时才能开始GC 抢先式中断：中断所有线程，如果有不在安全点的线程，恢复之让其到达安全点 主动式中断：设置中断标志，各个线程主动轮询 SafeRegion：安全区域，解决挂起线程的中断问题 Serial收集器：简单高效，适合Client ParNew收集器：多线程并发的收集器 CMS垃圾收集器： 初始标记：需要STW，速度快 并发标记：时间较久 重新标记：需要STW，修正并发标记期间的一些变化 并发清除：真正进行垃圾收集 缺点：CPU资源敏感；浮动垃圾无法处理；基于标记清除，会产生内存碎片 G1垃圾收集器 四、内存分配与回收策略 对象优先在Eden区分配 MinorGC：新生代的较为频繁的GC，时间短 MajorGC：老年代GC 大对象直接进入老年代 避免Eden和Survivor之间发生大量复制 代码编写时应避免短命的大对象 长期存活的对象进入老年代 新生代中熬过一次MinorGC增加年龄一次 动态年龄判断：相同年龄所有对象大小超过Survivor的一半 空间分配担保 处理MinorGC后剩余过多，其中一个Survivor放不下的问题 五、类加载机制 加载： 通过类的全限定名得到二进制流 将字节流代表的静态存储结构转为方法区的运行时数据结构 内存中生成一个java.lang.Class对象，作为方法区类的数据的访问入口 验证：确认字节流信息符合虚拟机要求 文件格式验证 元数据验证 字节码验证 符号引用验证 准备：为类变量分配内存，设定初始值 解析：符号引用 初始化： 静态语句块只能访问定义在块前的变量，定义在之后的变量，在静态语句块中只能定义不能访问 父类静态-子类静态-父类赋值-子类赋值 六、类加载器 类的唯一性：需要类和加载类的加载器一同确定 双亲委派模型：除了顶层类加载器，其他都需要有自己的父类加载器（非继承，而是组合） 启动类加载器：\lib目录下且虚拟机识别的类库 扩展类加载器：\lib\ext目录 应用程序类加载器 工作过程：尽可能委派给父类加载器完成，父加载器反馈无法完成时再自己动手 好处：给类赋予了层次关系，例如保证了Object类的稳定 破坏双亲委派模型 JNDI接口：线程上下文类加载器 OSGi环境：网状结构 七、虚拟机字节码执行引擎 栈帧： 局部变量表：基本单位为变量槽Slot 操作数栈：LIFO后入先出 动态连接 返回地址：保存PC计数器的值 方法重载（静态分派） 如果没有合适的方法，则向上转型 变长参数的优先级最低 方法重写（动态分派） （目前）静态多分派，动态单分派 八、Java语法糖 泛型：在Java中的实现实际上会出现类型擦除 泛型与重载： 返回值相同时无法重载（原因：类型擦除） 返回值不同时可勉强重载（描述符不是完全一致则可以共存），大部分编译器选择拒绝 自动装箱/拆箱 包装类重写了equals方法，需要类型和内容都一致 Integer使用一个内部静态类中的一个静态数组保存了-128-127范围内的数据，两个同值的Integer对象做==操作，可能为true或者false 条件编译：只能使用条件为常量的if语句 九、先行发生 时间先后与先行发生并没有关联 改写使线程安全： 添加volatile适用volatile变量规则 添加synchronized适用管程锁定规则 十、线程安全 定义：多线程访问一个对象，不需要进行额外的协调和同步，可以获得正确的结果。也就是说代码本身封装了保障的手段，调用方无须关心线程问题，也不用自己额外采取措施来进行保障 安全程度： 不可变：final修饰 绝对线程安全：需要完全满足定义，很困难 相对线程安全：线程安全类Vector在两个线程中分别get和delete时，仍然需要同步 线程兼容：常见的HashMap等集合 线程对立：无论是否采取同步措施都无法在多线程环境下并发使用 十一、线程安全实现 互斥同步：加锁、synchronized 非阻塞同步：CAS操作等 无同步：可重入代码（任何时候中断，转而执行其他代码，控制权返回后不会出错）一定是线程安全的，线程安全不一定可重入 线程本地存储：ThreadLocal类实现。每个线程的Thread对象中都有一个ThreadLocalMap对象，存储了一组以threadLocalHashCode为键，本地变量为值的K-V对 十二、锁优化 自旋锁：（挂起和恢复线程消耗大）等待锁的请求做一个忙循环，期待占有锁的线程很快释放。通过”自适应“变得更加智能。 锁消除：（堆上所有数据不会被其他线程访问到）根据逃逸分析判断，可以无视掉代码里要求的同步 锁粗化：（一串连续动作反复加锁解锁）锁粗化到操作序列的外部 轻量级锁：如果同步周期内存在锁竞争，反而消耗更大 偏向锁：偏向于第一个获得锁的线程。如果大多数锁被多个不同线程访问，则偏向锁反而不好。]]></content>
       <categories>
-        <category>实习</category>
+        <category>JVM</category>
       </categories>
   </entry>
   <entry>
@@ -69,7 +69,7 @@
     <url>%2F2017%2F07%2F10%2F7.10-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E8%AE%BE%E8%AE%A1%20%E7%B3%BB%E7%BB%9F%E5%B8%B8%E8%A7%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5%E6%80%BB%E7%BB%93%2F</url>
     <content type="text"><![CDATA[《消息队列设计精要》原文链接：https://tech.meituan.com/mq-design.html 一、消息队列的应用点 业务解耦：对于非核心的事务，做到“通知”，而非全部处理“完成”。 最终一致性： 强一致性：分布式事务（落地难成本高） 最终一致性：”记录“和”补偿“。记录不确定事件，到达成功状态后再清理。可以依靠本地定时任务轮询不断重发。 最终一致性不是消息队列必须的 广播：只需关心消息是否送达队列，其他事情交给下游的订阅者 错峰流量控制：平衡前后端处理能力的巨大差异 二、消息队列的设计 RPC通信协议： 本质：两次或者三次RPC加中间broker的转储 尽量选择现有框架；尽量选择本机房投递 高可用： 目标：保证broker接受和确认消息是幂等的 方式：共享存储,多机器共享db 服务端承载消息堆积： 持久化 非持久化 存储方式：内存，分布式KV，数据库，磁盘 存储子系统选择：可靠性要求高则选择DB 消费关系解析：点对点和广播 可靠投递： 最终一致性保证导致消息可能重复，异常情况下可能延迟。 重复消息怎么解决： 鉴别重复（版本号） 幂等处理 尽量减少重复消息投递 顺序消息怎么实现： 版本号（保存各个消息到来的顺序，重组） 状态机 总结： 保证不丢失消息的情况下尽量减少重复消息，消费顺序交给消费者保证 异步和同步 服务端异步：解放I/O 返回future的方式不一定只有线程池：NIO、事件123456789101112131415161718//客户端异步，服务端异步Future&lt;Result&gt; future = request(server);return future;//客户端异步，服务端同步(开线程池)Future&lt;Result&gt; future = executor.submit(new Callable()&#123;public void call&lt;Result&gt;()&#123; result = request(server);&#125;&#125;)return future;//客户端同步，服务端异步Future&lt;Result&gt; future = request(server);synchronized(future)&#123;while(!future.isDone())&#123; future.wait();&#125;&#125;return future.get();//客户端同步，服务端同步Result result = request(server); 网络请求小包合并成大包会提高性能 减少无谓的请求头 减少回复的ACK数量 三、Pull和Push Push的缺点：慢消费 Pull的缺点：消息延迟与忙碌等待 Pull对于顺序消息的实现容易很多： producer对应partition，单线程 consumer对应partition，消费确认后继续]]></content>
       <categories>
-        <category>实习</category>
+        <category>MQ</category>
       </categories>
   </entry>
   <entry>
@@ -77,7 +77,7 @@
     <url>%2F2017%2F07%2F09%2F7.9-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%97%A5%E6%9C%9F%E7%B1%BB%E5%B7%A5%E5%85%B7%2F</url>
     <content type="text"><![CDATA[12345678910111213141516171819202122232425262728import java.text.DateFormat;import java.text.SimpleDateFormat;import java.util.Date;public class DateUtil &#123; private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; private static ThreadLocal&lt;DateFormat&gt; threadLocal = new ThreadLocal&lt;DateFormat&gt;(); public static DateFormat getDateFormat() &#123; DateFormat df = threadLocal.get(); if(df==null)&#123; df = new SimpleDateFormat(DATE_FORMAT); threadLocal.set(df); &#125; return df; &#125; public static String formatDate(Date date) &#123; return getDateFormat().format(date); &#125; public static String getCurrentTime() &#123; DateFormat df = getDateFormat(); return df.format(System.currentTimeMillis()); &#125;]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -85,7 +85,7 @@
     <url>%2F2017%2F07%2F07%2F7.8-%E9%A1%B9%E7%9B%AE%E7%9B%B8%E5%85%B3%E7%90%86%E8%AE%BA%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86%2F</url>
     <content type="text"><![CDATA[Redis 线程模型： 套接字：套接字操作抽象成文件事件 I/O多路复用：监听多个套接字，把文件事件放入队列 文件事件分派：接收并传给相应的事件处理器 事件处理器：处理事件 Redis为什么快: 绝大部分请求是纯粹的内存操作（非常快速） 采用单线程,避免了不必要的上下文切换和竞争条件 非阻塞IO 并发问题：思路可参考《6.14-Redis分布式锁》 序列化用哪种方式： Json：适用于只有存取操作 Map：对象被缓存期间有对属性的操作 缓存穿透： 缓存一个存活时期很短的空结果 与MySQL的数据一致性 并发不高读：读Redis，若没有，读DB，写Redis，若有，直接取得 并发不高写：写DB成功，写Redis 并发高读：读Redis，若没有，读DB，写Redis，若有，直接取得（可以降级成只读Redis） 并发高写：异步写，写入Redis缓存，定时同步到MySQL MQ 原理:先进先出的队列，实现消费者和生产者解耦 如何保证消息可靠传输： 使用failover，配置备用机 如何处理消息丢失: 确认才消费：使用listener回调函数，在有消息到达时，会调用listener接口的onMessage方法。在这种情况下，在onMessage方法执行完毕后，消息才会被确认，此时只要在方法中抛出异常，该消息就不会被确认 过期的、多次处理失败的消息将会被ActiveMQ置入“ActiveMQ.DLQ”这个队列中 配置： randomize=false不使用负载均衡 jms.prefetchPolicy.all=1消费者每次最多取一条信息 initialReconnectDelay=500重连等待 maxReconnectAttempts=60最大重连尝试数 priorityBackup=true主机恢复后使用主机 并发 AQS实现原理 segement锁如何实现： Segment类继承于ReentrantLock类 每个Segment对象包含一个volatile的计数器 Segment中volatile的HashEntry数组table负责整个ConcurrentHashMap包含桶总数的一部分（默认为1/16） MySQL 主从同步延迟： 原理：主库对所有DDL和 DML产生顺序的binlog，从库用Slave_IO_Running到从库取日志，用单线程Slave_SQL_Running执行 原因：主库TPS并发较高，DDL数量超过从库一个线程所能承受的范围；产生锁等待 解决方案：从库硬件升级；降低从库安全设置，关闭binlog等 MyBatis 原理： XML文件加载到内存中会生成一个对应的MappedStatement对象，以Key-Value形式存储在Configuration的Map中 创建SqlSession开启数据库访问 传递SQL语句的StatementId和参数 根据StatementId找到MappedStatement（包含SQLSource和ResultMap） Exector执行，完成SQL语句动态解析，生成BoundSQL，提供给StatementHandler 创建JDBC的Statement，传递给StatementHandler StatementHandler填充参数，执行并返回List 与数据库交互方式： Mybatis提供的API：创建一个和数据库打交道的SqlSession对象，根据StatementId和参数来操作数据库 Mapper接口：通过SqlSession.getMapper(XXXMapper.class)方法，MyBatis 会根据相应的接口声明的方法信息，通过动态代理实现生成Mapper实例，底层仍然通过API调用]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -93,7 +93,7 @@
     <url>%2F2017%2F07%2F06%2F7.6-%E5%AE%89%E5%85%A8%E4%B8%8E%E6%8B%A6%E6%88%AA%E5%99%A8%2F</url>
     <content type="text"><![CDATA[一、处理信息安全问题： CSRF跨站请求伪造：伪装来自受信用户的请求来利用受信网站 特性：利用网站对用户标识的信任,依靠用户标识危害网站 做法：欺骗用户的浏览器发送HTTP请求给目标站点 实现：可以通过IMG标签触发GET请求，利用它来实现CSRF攻击 防范（可使用拦截器实现）： 增加隐藏token，提交请求时验证token（Cookie中不存在） 项目中使用的：验证HTTP请求的Referer字段是否为正常的字段 CSS跨站脚本：利用站点内的可信用户 做法：输入js脚本，点击页面时会执行 防范： form表单添加&lt;spring:htmlEscape defaultHtmlEscape=&quot;true&quot; /&gt; 手动escape 后台加过滤器 二、上下文信息获取 对所有URL添加统一拦截器，获取ControllerContext ControllerContext上下文中包含一系列信息，包括从登陆Ticket获取的信息]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -101,7 +101,7 @@
     <url>%2F2017%2F07%2F05%2F7.5-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%2F</url>
     <content type="text"><![CDATA[一、相应需求：要求input中输入的必须是//开头的地址 正则表达式： /^([hH][tT]{2}[pP]:\\/\\/|[hH][tT]{2}[pP][sS]:\\/\\/|\\/\\/)+/ 解析： /^：匹配字符串开始位置 [hH][tT]{2}[pP]：大小写不敏感匹配http [hH][tT]{2}[pP][sS]：大小写不敏感匹配https \\/\\/：匹配/ 二、 正则表达式学习 限定符： *：前面的子表达式0到多次 {0,} +：前面的子表达式1到多次 {1,} ?：前面的子表达式0到1次 {0,1} ——非贪婪或最小匹配 {n}：前面的子表达式n次 一些元字符： \b：匹配单词边界（结尾部分） \B：匹配非单词边界（结尾部分） \d：匹配一个数字字符 \D：匹配一个非数字字符 \n：匹配换行符 \r：匹配回车符 \w：匹配包括下划线的任意字符]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -109,7 +109,7 @@
     <url>%2F2017%2F07%2F04%2F7.4-%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E5%8F%AF%E4%BC%B8%E7%BC%A9%E7%B3%BB%E7%BB%9F%2F</url>
     <content type="text"><![CDATA[本文为《分布式Java应用与实践》笔记。 一、负载均衡机器选择 随机选择 Hash选择：静态页面加载，常见用于静态图片加载 Round-Robin：根据地址列表按顺序选择 按权重选择：静态权重和动态权重 按负载选择：需要搜集负载状况，实际较少使用 按连接选择：按连接数多少分配，但新开机器问题大 unicorn策略：所有顾客到一个收银台排队，收银员处理完毕后亮灯通知 二、 2PC保证一致性 基本流程： 开启事务 通知master执行（写入undo和redo） 如有一个master反馈不能执行，则回滚（rollback） 通知所有master完成操作（commit） 缺点： 同步阻塞问题 协调者单点故障 数据不一致（commit请求发送，有些没收到） 协调者和唯一参与者全部宕机，事务永远不确定状态 三、 3PC保证一致性 在2PC基础上增加了preCommit阶段，canCommit，doCommit master收到preCommit之后继续等doCommit或者等一段时间后提交 优缺点： 超时执行减少了对资源的阻塞 同时产生一定的数据一致性问题，例如abort没有及时到达 四、 尽可能避免错误 设计可容错的系统：一是Fail Fast原则，有错误的时候立刻中断流程，避免无谓操作，二是保证接口和对象设计的严谨性 设计具有自我保护能力的系统：警惕所有第三方调用，设计缓存等 限制使用资源： 避免过大的HashMap等集合 注意释放不再引用的对象（ThreadLocal的set(null)方法） 限制日志文件的使用 限制网络资源：使用连接池；保留操作系统资源 限制线程的使用：选择合适的线程池 五、 垂直伸缩 增加CPU后得不到改善的情况： 单线程任务：考虑并行分解任务，SUN的Fork/Join 锁竞争激烈：尽可能降低锁竞争的部分 支撑并发请求的线程数固定：根据CPU数量计算合理的线程数 增加内存后得不到改善的情况： cache集合大小固定：根据可用内存大小计算 JVM堆内存固定：需要进行相应调整 支撑大数据量： 分库：访问分散，数据库关联查询增加 分表：单张表数据减少，但开发复杂（DAL），分页较为麻烦]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -117,7 +117,7 @@
     <url>%2F2017%2F07%2F03%2F7.3-AsyncConfigurer%E4%B8%8EJDK%E5%8C%85%E4%B8%AD%E7%BA%BF%E7%A8%8B%E6%B1%A0%2F</url>
     <content type="text"><![CDATA[1. Async异步方法线程池配置123456789101112public Executor getAsyncExecutor() &#123; ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor(); //参数配置 executor.setCorePoolSize(10); executor.setMaxPoolSize(300); executor.setQueueCapacity(500); executor.setThreadPriority(Thread.NORM_PRIORITY); executor.setThreadNamePrefix("customerAsyncExecutor-"); executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy()); executor.initialize(); return executor;&#125; 2. ThreadPoolTaskExecutor类 参数： poolSizeMonitor：用于加锁 corePoolSize maxPoolSize keepAliveSeconds queueCapacity allowCoreThreadTimeOut threadPoolExecutor：真正的线程池 参数的get/set方法都加了synchronized关键字，锁住了poolSizeMonitor对象 队列：传入参数大于0，则为LinkedBlockingQueue，否则使用SynchronousQueue，都强制类型转换成BlockingQueue 继承了ExecutorConfigurationSupport类 3. java.util包中的threadPoolExecutor类 线程Size： 线程数小于corePoolSize，直接新建线程 大于corePoolSize，小于maximumPoolSize，队列满时才新建线程 prestartCoreThread方法：预先创建线程 ThreadPoolFactory创建线程：可修改线程组名称，优先级等 Keep-alive：线程数大于corePoolSize，等候超过一定时间后中断线程 队列Queue： SynchronousQueue：无缓冲队列，生产者直到消费者就位才执行，可以避免任务线程互相等待的情况。一般要求maximumPoolSize设置越大越好 LinkedBlockingQueue：无界队列，不会有超过corePoolSize数量的线程。适用于线程完全独立的情况，处理瞬态突发请求，Web服务器中常用 ArrayBlockingQueue：有界队列，可以控制系统资源消耗，但是需要在队列长度和线程数之间做平衡 拒绝策略Policy： AbortPolicy：抛RejectedExecutionException异常 CallerRunsPolicy：提供简单的反馈控制机制，能够减缓新任务的提交速度 DiscardPolicy：直接drop任务 DiscardOldestPolicy：删除队列头部的任务，重试 Hook方法： beforeExecute：初始化ThreadLocal，添加Log信息等 afterExecute：统计数据，收尾处理等 ctl：为了包装workerCount和runState为一个int，限制任务线程数量为(2^29)-1，大约500百万个线程。后两位保存线程状态 线程池状态： RUNNING:接受新的任务，处理队列任务； SHUTDOWN：不在接受新的任务，处理队列任务； STOP：不在接受新任务，不处理队列任务，中断正在执行的任务线程； TIDYING：所有的任务已经结束，任务线程为0，线程转换到TIDYING； TERMINATED：线程池已将结束，即terminated()方法执行完。 参数：所有用于控制参数被修饰为volatile，以便正在进行的操作都是基于最新值。]]></content>
       <categories>
-        <category>实习</category>
+        <category>并发</category>
       </categories>
   </entry>
   <entry>
@@ -125,7 +125,7 @@
     <url>%2F2017%2F06%2F30%2F6.30-%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%AD%A6%E4%B9%A0%2F</url>
     <content type="text"><![CDATA[一、书籍信息《大型网站技术架构核心原理与案例分析》 二、大型网站软件系统特点： 高并发，大流量 高可用 海量数据 用户分布广泛，网络情况复杂 安全环境恶劣 需求快速变更，发布频繁 三、网站架构渐进式发展 网站架构演进： 初始网站架构（应用程序、文件、数据库在同一服务器上，如租用的阿里云服务器） 应用服务器（CPU）、数据库服务器（内存）、文件服务器分离（硬盘） 使用缓存减少数据库访问压力 使用负载均衡调度和集群减少应用服务器压力 数据库读写分离 CDN和反向代理 分布式文件系统和分布式数据库 noSQL和搜索引擎 业务拆分 网站架构模式： 分层：应用层、服务层、数据层 分割：高内聚低耦合 分布式：必须调用网络、宕机概率大、数据一致性保持 集群：多台服务器部署相同应用 缓存：CDN/反向代理/本地缓存/分布式缓存（数据访问热点不均衡、数据不会很快过期） 异步：消息队列（可以缓解高峰） 冗余：数据备份 安全：密码、验证码、访问控制等 大型网站核心架构要素： 性能：响应时间、TPS等要素 可用性：99.99% 伸缩性：体现在集群中服务器的添加 扩展性：事件驱动架构（消息队列）和分布式服务 安全性 Web前端性能优化： 浏览器访问优化： 减少HTTP请求（将js、css等文件合并） 使用浏览器缓存 启用压缩（如Gzip） CSS放在页面最上面、JS放在最下面（下载完全部CSS再进行渲染） 减少Cookie传输 CDN加速：本质仍然是缓存，缓存静态资源 反向代理：位于机房、代理Web服务器接收HTTP请求，可以实现负载均衡和缓存功能 应用服务器性能优化： 分布式缓存 考虑数据是否频繁修改、是否非热点、是否容忍数据不一致和脏读、缓存可用性如何 缓存预热：加载一些重要的元信息 缓存穿透：将不存在的数据缓存起来 分布式缓存架构（需要更新同步的JBoss和不互相通信的Memcached）Memcached优点很多 代码优化： 多线程 资源复用：单例模式和对象池（数据库连接池、线程池） 数据结构 垃圾回收 存储性能优化： 使用SSD B+树还是LSM树 RAID和HDFS（默认同一个数据有三个副本）]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -133,7 +133,7 @@
     <url>%2F2017%2F06%2F29%2F6.29-Java%E5%B9%B6%E5%8F%91%E5%8C%85%2F</url>
     <content type="text"><![CDATA[本文为《分布式Java应用于实践》笔记。 一、集合包1. ArrayList 默认构造为实例化一个Object类型的数组 add时数组已满：Arrays.copyOf add插入指定位置：index后对象逐个往后复制 remove删除：对象非null则使用equals，删除使用fastRemove方法，将index后对象逐个往前复制 iterator遍历：先比较创建时的modCount与现有modCount，如不同抛出异常，相同则用get获取 contains：通过遍历实现 2. LinkedArrayList 基于双向链表实现：先生成Entry赋值给header，然后header的pre与next指向自身，形成闭环 add：创建Entry对象，next指向header，pre指向header的pre get：选择从头开始遍历还是从未到头遍历 iterator遍历：可以调用hasPrevious contains：通过遍历实现 3. Vector 容量策略更可控：基于capacityIncrement 线程安全：add，remove，get等加上了synchronized关键字 4. Stack 基于Vector实现 peek方法：先获取数组大小，再获取最后一个元素 5. HashSet 基于HashMap实现 不支持get方法获取指定位置元素 6. TreeSet 支持排序，传入Comparator 7. HashMap put：如果key为null，基于Entry的next方法遍历查找；如果不为null，先取得key的HashCode，然后做Hash操作，再与Entry数组-1的值按位与得到位置 哈希冲突：不同的key找到相同的存储位置——链地址法。 get：寻找hash值相等，且key满足equals的Entry 8. TreeMap put：基于红黑树实现，必须要有key比较的方法 先判断root是否为null，如是则创建一个Entry赋值给root，然后根据Comparator基于红黑树遍历 二、并发包1. ConcurrentHashMap put：根据Hash值计算并获取Segment对象，先进行lock操作，判断是否扩容，然后进行与HashMap基本相同的操作，完成之后释放锁 默认分为16段，各自都持有锁 get：读数据时，仅在value为null时才加锁 实现读取不加锁：HashEntry对象数组对应的变量是volatile的，hash、key以及next属性都是final的 size：不加锁情况下遍历所有段，读取volatile的count和modCount，统计完毕后再遍历，比较modCount是否有改变。如果执行三次还有问题，那么分段加锁计算 2. CopyOnWriteArrayList add：使用ReetrantLock保证线程安全，每次都创建一个新的Object数组，将新增加的对象放入数组末尾后，引用切换 remove：创建一个比当前数组小1的数组，没有使用Arrays.copyOf get：没有加锁保护，可能读脏数据 iterator：仅对快照数组进行遍历 小结：增删性能较差 3. ArrayBlockingQueue 构造器：传入参数即为初始化数组的大小，同时初始化锁和两个Condition，notEmpty和notFull offer：插入时加锁，如数组已满，进入等待。如等待超时，返回false，未超时则调用notFull条件的await进行等待，唤醒后继续判断数组是否已满。 poll：调用notEMpty条件的await进行等待 iterator：调用next方法时先进行加锁 4. LinkedBlockingQueue put/offer一把锁，take/poll一把锁，避免读写时相互竞争锁 5. Atomic原子类 incrementAndGet：关键方法为compareAndSet，调用unsafe的compareAndSwapInt方法（native方法），基于CPU的CAS元语实现 6. ThreadPoolExecutor execute：如当前线程数小于corePoolSize，调用addIfUnderCorePoolSize方法： 先对mainLock加锁 然后addThread增加线程 addThread方法创建Worker对象，调用threadFactory创建线程，放入Workers中 增加线程数，释放mainLock，完成方法执行 启动新线程执行Runnable任务，Worker的Run方法先执行Runnable任务，执行完毕后Task后，通过WorkQueue的poll或者take方法获取新的Task 线程池配置： 高性能：SynchronousQueue作为任务缓冲队列，不在队列缓冲，直接开线程执行 缓冲执行：使用LinkedBlockingQueue，可以使Runnable任务尽量被corePoolSize范围的线程执行掉 7. Executors newFixedThreadPool(int):固定大小线程池 newSingleThreadExecutor：单线程执行线程池 newCachedThreadPool：缓存队列使用SynchronousQueue，直到启动线程数量达到整形最大值，报异常 newScheduledThreadPool 8. FutureTask run：调用Sync的innerRun方法实现，基于CAS将state从0设置为RUNNING。获取当前线程，如果是RUNNING，调用innerSet，首先获取STATE，如果是RAN（已经执行）则返回，CANCELLED则调用releaseShared，最后将runner属性设置为null get：若STATE为RAN或者CANCELLED且runner为null，则进入后续步骤，否则等待。后续无异常，则返回result cancel：调用Sync的innerCancel，基于CAS将state设置为CANCELLED 9. 其他并发工具 Semaphore信号量：通过CAS操作减，返回剩余个数大于0则完成tryAcquire CountDownLatch：减计数到0后才执行 CyclicBarrier：与CountDownLatch相反，增加到一定计数后执行 ReetrantLock：CAS操作，可重入。如果未获得锁，则用unsafe.park()方法挂起 ReetrantReadWriteLock：升级降级机制： 持有读锁后，不能直接加写锁的lock，“读锁不可升级” 持有写锁，可调用读锁的lock，写锁unlock后，当前锁降级为读锁]]></content>
       <categories>
-        <category>实习</category>
+        <category>并发</category>
       </categories>
   </entry>
   <entry>
@@ -141,7 +141,7 @@
     <url>%2F2017%2F06%2F28%2F6.28-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESOA%2F</url>
     <content type="text"><![CDATA[一、微服务特点（整理自知乎） 不同的子系统采用自己的架构，各个服务运行自己的Web容器中。当需要增加计算能力的时候，只需要增加这个子系统或服务的实例就好了，当升级的时候，可以不影响别的子系统。 微服务与SOA相比，更强调分布式系统的特性，比如横向伸缩性，服务发现，负载均衡，故障转移，高可用。 互联网开发对服务治理提出了更多的要求，比如多版本，比如灰度升级，比如服务降级，比如分布式跟踪，这些都是在SOA实践中重视不够的。 Docker容器为微服务提供了更便利的条件，每个服务可以通过SpringBoot技术跑在自己的进程中。可能在几十台计算机中运行成千上万个Docker容器，每个容器都运行着服务的一个实例。 二、分布式Java应用1. 分布式带来的挑战： 服务多级调用的延迟 调试、bug跟踪困难 安全监测需要有统一平台 高可用和可伸缩 多版本和依赖管理]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -149,7 +149,7 @@
     <url>%2F2017%2F06%2F27%2F6.27-MySQL%E4%BC%98%E5%8C%96%2F</url>
     <content type="text"><![CDATA[一、 库表优化1. 数据类型 类型选择原则： 更小的通常更好，但要确保没有低估 尽可能使用简单数据类型（ip用整型） 尽可能不使用null 浮点类型： DECIMAL存储精确的小数 FLOAT和DOUBLE使用更少空间 对于需要高精度的财务类数据，可以乘以一定倍数后采用BIGINT计算，避免浮点数计算不精确和DECIMAL计算代价过高的问题 字符串类型： VARCHAR：可变长字符串，使用额外字节记录长度，适用于UTF-8数据集 CHAR：定长，存储密码的md5值 BLOB/TEXT：BLOB存储二进制大数据，TEXT类型有排序规则 ENUM：枚举类型，两个ENUM列关联速度很快 时间类型： DATETIME：使用8字节存储空间，将日期和时间装到格式为YYYYMMDDHHMMSS的整数中 TIMESTAMP：使用4字节存储空间，显示的值依赖于时区 2. 范式 优点和缺点： 范式化的表一般比较小，更新操作快 重复数据少，更少需要DISTINCT和GROUP BY语句 缺点是通常需要关联 混用反范式化和范式化： 新增一列作为缓存并建立索引，加快排序 缓存衍生，如论坛中记录发帖数 缓存表和汇总表： 缓存表：可以较简单从其他表获得的数据 汇总表：保存GROUP BY语句聚合数据的表 二、索引优化（存储引擎层）1. 索引类型 B-Tree： MyISAM通过数据的物理位置引用被索引的行 InnoDB根据主键引用被索引的行 存储引擎不再需要进行全表扫描，取而代之是从索引的根节点开始进行搜索 B-Tree索引查询类型： 全值匹配：和索引中所有列进行匹配 匹配最左前缀：索引从左开始的x列匹配 匹配列前缀：只匹配某一列值的开头部分 匹配范围值 精确匹配某一列，范围匹配另一列 只访问索引的查询 B-Tree索引查询限制： 最左开始，无法跳过中间的列(最左前缀) 如果查询中对某列进行了范围查询，则其右边的所有列都无法使用索引优化查找 哈希索引： 只包含行指针+哈希值，不包含数据 不按照索引值顺序存储，无法用于排序 不支持部分索引列匹配查找，必须使用全部 不支持范围查询 InnoDB的自适应哈希索引（一种优化） 2. 索引策略 索引的优点： 索引可以大大减少数据库表的扫描量 索引可以帮助服务器避免排序和临时表 索引可以将随机I/O变成顺序I/O 索引失效： 索引不能是表达式的一部分 索引不能是函数的参数 索引选择： 前缀索引：使得索引更小，更快，但是无法做GROUP BY和ORDER BY操作，也无法覆盖扫描 索引列顺序：经验法则是将选择性最高的放在最前面 聚簇索引：实际上是一种数据的存储方式 数据航存放在索引的叶子结点，且数据行和相邻的键值紧凑地存放在一起 优点： 可以将相关数据保存在一起，减少磁盘I/O 索引和数据保存在一个B-Tree，数据访问更快 使用覆盖索引的扫描时可以直接使用主键 缺点： 插入速度依赖于插入顺序，最好是按照主键顺序插入 更新列代价很高 插入行可能导致页分裂 InnoDB和MyISAM的索引： MyISAM索引中的叶子结点包含了行号 InnoDB的聚簇索引，叶子结点包含主键，事务ID，回滚指针和所有剩余列 InnoDB的二级索引存储的是主键值，不是行指针 三、 查询优化1. 优化数据访问 避免查询不需要的记录：添加limit 避免多表查询查询所有列：不使用select * 重复查询相同数据：采用缓存即可 2. 从好到坏的where条件应用 最佳：存储引擎层在索引中使用where过滤不匹配的记录 次佳：使用索引覆盖扫描，直接从索引中过滤不需要的记录并返回，在服务器层完成 最次：先从数据表中返回数据，然后过滤，需要回表查询 3. 重构查询 一个复杂查询改为多个简单查询 对大查询分而治之，减少锁持有的时间：例如删除过期记录，每次LIMIT 10000 分解关联查询：常见使用IN方式替代 让缓存效率更高 减少锁的竞争 应用层关联便于表的拆分 减少冗余记录查询 4. 特定类型优化 COUNT()查询： COUNT(*)统计结果集 COUNT(列名)统计列的非空值的数量12select count(color='blue' OR NULL) as blue,count(color='red' OR NULL) as red from items; 优化关联查询： 确保ON或者USING的列上有索引，其中两表关联，只需要在第二个表的相应列创建索引 确保GROUP BY或者ORDER BY只涉及一个表中的列 优化LIMIT分页：使用索引覆盖扫描，然后再进行关联]]></content>
       <categories>
-        <category>实习</category>
+        <category>数据库</category>
       </categories>
   </entry>
   <entry>
@@ -157,7 +157,7 @@
     <url>%2F2017%2F06%2F26%2F6.26-MySQL%E5%9F%BA%E7%A1%80%2F</url>
     <content type="text"><![CDATA[一、MySQL架构1. 并发控制（服务器+存储引擎） 共享锁和排他锁（读写锁） 锁粒度： 表锁：服务器会为ALTER TABLE这样的语句加表锁 行级锁：只在存储引擎实现 事务的ACID： 原子性：一个事务必须被视为不可分割的最小单元 一致性：数据库总是从一个一致的状态转到另一个一致的状态 隔离性：事务在最终提交之前对其他事务不可见 持久性：一旦事务提交，就会永久保存到数据库中 隔离级别： 未提交读：事务可以读未提交的数据 已提交读：满足隔离性，不能重复查询 可重复读：没有解决幻读（where读取范围内记录，如果另一个事务向范围内加入了记录，则产生幻行） 串行化：强制事务串行执行的 死锁： 死锁超时放弃 InnoDB：将持有最少行级排他锁的事务回滚 显式锁： Lock in share mode lock for update ps：不满足SQL规范，应该少量使用 InnoDB的MVCC（多版本并发控制）： 在每行记录后面增加两列，一个保存行的创建时间，一个保存过期时间 SELECT：版本小于当前事务版本+删除版本要么未定义，要么大于事务版本号 UPDATE：插入记录保存当前版本号为创建时间+设置当前版本号为原有列的删除时间 2. 存储引擎 InnoDB存储引擎 概览： 数据存储在表空间 采用MVCC支持高并发 间隙锁（锁定查询涉及的行和索引中的间隙），防止幻读 采用聚簇索引 自适应哈希索引加速读操作 插入缓冲区加速写 支持热备份 MyISAM存储引擎 特性： 表级锁 支持repair操作 支持全文索引 延迟更新索引键（DELAY_KEY_WRITE） 使用场景： 不在乎并发和数据丢失，不需要事务 尤其在乎空间大小 支持地理空间搜索 二、MySQL性能测试1. 常见指标 吞吐量：单位时间内事务处理数量（常见指标TPS） 响应时间或延迟 并发性：同时工作中的线程数和连接数 可扩展性 2. 慢查询日志：开销最低，精度最高 使用pt-query-digest工具输出报告，找到执行最慢的语句 剖析单条查询： show profile show status 分析是否是服务器的问题： show global status show processlist 三、 MySQL高级特性1. 视图 视图是虚拟表 不能对视图创建触发器，也不能DROP TABLE]]></content>
       <categories>
-        <category>实习</category>
+        <category>数据库</category>
       </categories>
   </entry>
   <entry>
@@ -165,7 +165,7 @@
     <url>%2F2017%2F06%2F24%2F6.24-Maven%E7%88%B6%E5%AD%90%E6%A8%A1%E5%9D%97%2F</url>
     <content type="text"><![CDATA[maven父子模块 父模块配置 123456&lt;groupId&gt;com.jcloud.b2c&lt;/groupId&gt;&lt;artifactId&gt;jcloud-b2c-mall-web&lt;/artifactId&gt;&lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;&lt;packaging&gt;pom&lt;/packaging&gt;&lt;name&gt;b2c-mall-web&lt;/name&gt;&lt;description&gt;mall-web&lt;/description&gt; 父模块中注明子模块 1234&lt;!-- 管理子模块 --&gt;&lt;modules&gt; &lt;module&gt;ssmm&lt;/module&gt;&lt;/modules&gt; 子模块中注明父模块 12345&lt;parent&gt; &lt;groupId&gt;com.jcloud.b2c&lt;/groupId&gt; &lt;artifactId&gt;jcloud-b2c-mall-web&lt;/artifactId&gt; &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;&lt;/parent&gt; 子模块配置 12345&lt;!-- 父模块artifactId-子模块的名称，且与name相同 --&gt;&lt;artifactId&gt;b2c-mall-web-web&lt;/artifactId&gt;&lt;name&gt;b2c-mall-web-web&lt;/name&gt;&lt;!-- 需部署的子项目为war，其他为jar --&gt;&lt;packaging&gt;war&lt;/packaging&gt;]]></content>
       <categories>
-        <category>实习</category>
+        <category>Maven</category>
       </categories>
   </entry>
   <entry>
@@ -173,7 +173,7 @@
     <url>%2F2017%2F06%2F23%2F6.23-%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92%2F</url>
     <content type="text"><![CDATA[一、根据优惠券逻辑学习Ajax前后交互的流程 mall-service模块中的html页面,id和class都是js可选择绑定实现操作的对象 12345&lt;div id="leftsub"&gt; &lt;ul&gt; &lt;li class="coupontip couponbuttion" style="display: none;"&gt; &lt;img src="$&#123;staticWebDomain&#125;/mall/images/lscoupon.png"&gt; &lt;/li&gt; html本页面上js语句控制点按事件 初始时，leftsub停靠在页面左侧（宽度3px），不高亮（class不带active） 点按后，leftsub扩展（宽度30px），高亮（class带active） 满足左边栏扩展情况下，点击优惠券图标，调用itemPromotion &amp;&amp; itemPromotion.showCoupon(ev); mall-web模块中的html页面，包含控件以及参数 12345678910&lt;div class="txt" id="coupons" style="display: none;"data-itemid="$!&#123;itemDetail.skuId&#125;"data-venderid="$!&#123;itemExtendsInfoVo.venderId&#125;"data-jcat="$!&#123;itemExtendsInfoVo.jdCategroy&#125;"&gt; &lt;div class="cate"&gt; &lt;span class="cate-label"&gt;领券&lt;/span&gt; &lt;ul class="cate-list couponlist"&gt; &lt;/ul&gt; &lt;/div&gt;&lt;/div&gt; promotion.js中，itemPromotion初始化会调用showCoupon函数，通过$(&#39;#coupons&#39;)绑定控件，再获取couponTrip.data(&#39;itemid&#39;);等参数用于发送请求 123var showCoupon = function(ev)&#123; var couponTrip = $('#coupons') var itemid = couponTrip.data('itemid'); static模块中promotion.js发送Ajax请求绘制优惠券页 12345678if(dt.data.currentSkuConponList &amp;&amp; _.size(dt.data.currentSkuConponList)&gt;0)&#123; html.push('&lt;h5&gt;&lt;span&gt;本品可用优惠券&lt;/span&gt;&lt;/h5&gt;'); html.push('&lt;ul&gt;'); $.each(dt.data.currentSkuConponList, function(index,con)&#123; html.push(genUseConElement(con.batchId,con.parValue,con.quota,con.name,con.beginTime,con.endTime)); &#125;); html.push('&lt;/ul&gt;');&#125; 子函数genUseConElement负责绘制 123456789var genUseConElement = function(batchId,discount,quota,name,beginTime,endTime)&#123; var html = []; html.push('&lt;li id="'+batchId+'" class="havecoupon"&gt;&lt;div class="couponleft"&gt;'); html.push('&lt;div class="value"&gt;&lt;p&gt;&lt;span&gt;￥&lt;/span&gt;'+parsePrice(discount)+'&lt;/p&gt;&lt;/div&gt;'); html.push('&lt;div class="condition"&gt;&lt;/div&gt;&lt;h6&gt;'+getQuotaHtml(quota)+'&lt;/h6&gt;&lt;p&gt;'+name+'&lt;/p&gt;'); html.push('&lt;p&gt;'+(new Date(parseInt(beginTime))).Format('yyyy-MM-dd hh:mm')+'至'+(new Date(parseInt(endTime))).Format('yyyy-MM-dd hh:mm')+'&lt;/p&gt;'); html.push('&lt;/div&gt;&lt;/li&gt;'); return html.join('');&#125;; 二、根据/item映射学习velocity模板使用 velocity模板写法，以foreach为例 取参数：${item.xxx}，用！判断是否存在 流程控制：如#if，#end等，#end标记不可少 插件使用：同java用法，如imageUtils.getImageUrl4Jfs（xxx）12345#foreach($skuPic in $itemDetail.images) &lt;a href="javascript:;" class="tinypic#if($&#123;loopCounter&#125; == 0) cur#end"&gt; &lt;img src="$!imageUtils.getImageUrl4Jfs($!&#123;skuPic&#125;, 450, 450)"&gt; &lt;/a&gt;#end 2.Controller写法，使用ModelAndView 传参：request，response和其他参数 新建ModelAndView，传入跳转页参数 调用service查到相应内容Vo实体 实体和message等封装进ModelAndView 返回12345678910111213141516171819202122232425@RequestMapping(value = "/item")public ModelAndView item(HttpServletReques request, HttpServletResponse response, @RequestParam(value = "itemId", required = true) Long itemId)&#123; ModelAndView modelAndView = new ModelAndView("vm/shop/item"); CallerInfo callerInfo = null; try &#123; callerInfo = Profiler.registerInfo("com.jcloud.b2c.mall.web.controller.ItemController.item", false, true); ItemBasicInfoVo itemBasicInfo = itemClient.getItemBasicInfo( ControllerContext.getTenantId(), ControllerContext.getShopId(), itemId).getData(); if(itemBasicInfo==null) &#123; //不存在返回404页面 logger.warn("无此商品,userId:&#123;&#125;,skuId:&#123;&#125;", ControllerContext.getUserIdFormRequest(),itemId); String referer = request.getHeader("referer"); if(referer!=null &amp;&amp; referer.length()&gt;0)&#123; modelAndView.addObject("referer", referer); &#125; modelAndView.setViewName("vm/shop/emptyItem"); return modelAndView; &#125; //省略了存在的部分 return modelAndView; &#125; 三、Controller参数解析 SpringMVC处理请求流程： 首先被DispatcherServlet截获 DispatcherServlet通过handlerMapping获得HandlerExecutionChain 然后获得HandlerAdapter HandlerAdapter在内部对于每个请求，都会实例化一个ServletInvocableHandlerMethod进行处理 ServletInvocableHandlerMethod对请求跟响应进行处理。请求方法参数的处理、响应返回值的处理，分别是HandlerMethodArgumentResolver和HandlerMethodReturnValueHandler]]></content>
       <categories>
-        <category>实习</category>
+        <category>前后交互</category>
       </categories>
   </entry>
   <entry>
@@ -181,7 +181,7 @@
     <url>%2F2017%2F06%2F22%2F6.22-Ajax%2F</url>
     <content type="text"><![CDATA[一、ajax方法参数详解12345678910111213141516171819202122$.ajax(&#123; //url:发送请求的地址 url: "/shop/isFavor", //type:请求方式默认为get type: "post", //async：确认请求为异步请求 async:true, //附加在URL后面的参数 data:&#123;itemId:itemid&#125;, //预期服务器返回的数据类型 dataType: "json", //成功的回调函数 success: function(data)&#123; if(data &amp;&amp; data.errorCode==0 &amp;&amp; data.data)&#123; $('.favoritebtn').addClass('active'); &#125; &#125;, //失败的回调函数 error : function() &#123; //alert('fail'); &#125;&#125;); 二、Jquery 定位元素：$(this)定位当前$(&quot;#abc&quot;）通过id定位$(&quot;.abc&quot;) 通过class定位$(&quot;div&quot;) 通过标签定位 常见方法 动画类：.show()：显示HTML元素.hide()：隐藏HTML元素.toggle()：在显示和隐藏之间切换.fadeIn()：淡入淡出（Out/Toggle）.slideTown()：向下滑动 HTML类：.text()：设置或返回所选元素的文本内容.val()：设置或返回表单字段值.html()：设置或返回带HTML标记的所选元素内容.attr()：获取属性值.append()：在所选元素结尾插入内容.prepend()：在所选元素开头插入内容.remove()：删除元素.empty()：删除子元素.removeClass()：删除CSS类.addClass()：添加CSS类.css()：返回指定的CSS属性值 遍历：.children()：返回被选元素的下一个后代.find()：返回被选元素的后代，直到最后一层.each()：迭代JQuery对象，进行操作 基础语法：$(selector).action()]]></content>
       <categories>
-        <category>实习</category>
+        <category>前后交互</category>
       </categories>
   </entry>
   <entry>
@@ -189,7 +189,7 @@
     <url>%2F2017%2F06%2F19%2F6.19-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%A4%8D%E4%B9%A0%2F</url>
     <content type="text"><![CDATA[一、进程和线程 进程对应的是程序，每个进程对应一定的地址空间，暂停时保存当前的状态，为进程切换提供了可能 单核CPU的话任一时间只有一个进程在占用CPU 针对进程子任务只能串行的问题，出现了线程的概念。每个线程对应一个子任务。（为什么不多进程？分配进程成本高，进程切换消耗大，进程间资源不共享） 进程让操作系统的并发性成为可能，而线程让进程的内部并发成为可能。进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。线程共享进程的资源 二、Java内存模型 线程间共享变量存储在主内存中 每个线程都有私有的本地工作内存，本地内存中存储了共享变量的副本，线程对变量的读写操作都在本地进行。 三、并发编程需要考虑的问题 共享性 每个线程操作的始终是本地内存中的变量 Servlet以单实例多线程的方式工作。只要Servlet中的代码只使用局部变量，Servlet就不会导致同步问题。 Spring MVC的控制器也是这么做的，从请求中获得的对象都是以方法的参数传入而不是作为类的成员。 Struts2的做法正好相反，因此Struts2中作为控制器的Action类都是每个请求对应一个实例 互斥性 加锁（共享锁、排他锁） 不变模式，用final修饰。Java中的Spring就是具有不变形的代表，所以是线程安全的 原子性 volatile无法保证原子性 可见性 volatile修饰的变量，更改后会立刻刷新到主内存中，其他线程也会进行同步 有序性 编译级别的重排序，比如编译器的优化 指令级重排序，比如CPU指令执行的重排序 内存系统的重排序，比如缓存和读写缓冲区导致的重排序 四、volatile和synchronized 实现原理： volatile：lock前缀指令实现内存屏障，防止指令重排，并且把指令直接更新到主存中 synchronized：在JVM层次实现，使用monitor（每个对象都有一个监视器锁）来实现同步，其中同步代码块采用monitorenter、monitorexit指令显式实现，而同步方法则使用ACC_SYNCHRONIZED标记符隐式实现 修饰对象： volatile：修饰变量 synchronized：修饰成员方法（锁该对象），修饰静态方法（锁该类的.Class对象），修饰代码块（可以指定需要哪个对象的锁）。 五、线程状态改变 Object的方法：wait/notify/notifyAll Thread的方法：sleep/join/yield wait：释放锁，进入等待池 join：使主线程等待子线程执行完成后再执行，换句话说就是将线程的并行执行变为串行执行 yield：线程让出CPU，回到就绪状态]]></content>
       <categories>
-        <category>实习</category>
+        <category>并发</category>
       </categories>
   </entry>
   <entry>
@@ -197,7 +197,7 @@
     <url>%2F2017%2F06%2F18%2F6.18-Spring%20Boot%E8%87%AA%E5%AE%9A%E4%B9%89starter%2F</url>
     <content type="text"><![CDATA[一、maven依赖123456&lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-autoconfigure&lt;/artifactId&gt; &lt;/dependency&gt;&lt;/dependencies&gt; 二、设置配置文件相应类目的前缀12345@ConfigurationProperties("example.service")public class ExampleServiceProperties &#123; private String prefix; private String suffix; //省略 getter setter 三、编写AutoConfigure类12345678910111213141516171819@Configuration//当classpath下发现该类的情况下进行自动配置@ConditionalOnClass(ExampleService.class)@EnableConfigurationProperties(ExampleServiceProperties.class)public class ExampleAutoConfigure &#123; @Autowired private ExampleServiceProperties properties; @Bean //当Spring Context中不存在该Bean时 @ConditionalOnMissingBean //当配置文件中example.service.enabled=true时 @ConditionalOnProperty(prefix = "example.service",value = "enabled",havingValue = "true") ExampleService exampleService ()&#123; return new ExampleService(properties.getPrefix(),properties.getSuffix()); &#125;&#125; 四、在resources/META-INF/下创建spring.factories文件1org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.example.autocinfigure.ExampleAutoConfigure 五、原理 Spring Boot在启动时扫描项目所依赖的JAR包，寻找包含spring.factories文件的JAR包 根据spring.factories配置加载AutoConfigure类 根据 @Conditional注解的条件，进行自动配置并将Bean注入Spring Context 六、鸣谢http://www.jianshu.com/p/45538b44e04e]]></content>
       <categories>
-        <category>实习</category>
+        <category>Spring</category>
       </categories>
   </entry>
   <entry>
@@ -205,7 +205,7 @@
     <url>%2F2017%2F06%2F17%2F6.17-%E6%B7%BB%E5%8A%A0%E5%BC%82%E6%AD%A5%E6%96%B9%E6%B3%95%2F</url>
     <content type="text"><![CDATA[一、优惠券改为异步方法 启动Application类中添加异步注解@EnableAsync Controller中改写相应方法，返回Future类型 12345678 //可领取的券Future&lt;BaseResponseVo&lt;List&lt;CouponBatchActiveVo&gt;&gt;&gt; skuCouponResultFuture = promotionAsyncService.findJoinActives(jdUserId,Integer.valueOf(cid),itemId,Integer.valueOf(venderId),tenantId);//本品可用的券Future&lt;BaseResponseVo&lt;List&lt;ItemCouponVO&gt;&gt;&gt; currentSkuCouponResultFuture = promotionAsyncService.findCanUseCoupons(jdUserId,Integer.valueOf(cid), itemId,Integer.valueOf(venderId),tenantId);//已领取的券Future&lt;BaseResponseVo&lt;List&lt;CouponBatchActiveExtVo&gt;&gt;&gt; userConponResultFuture = promotionAsyncService.queryUsableCouponPage(jdUserId, "1",tenantId, itemId); 添加相应的AsyncService接口 12//可领取的券-接口Future&lt;BaseResponseVo&lt;List&lt;CouponBatchActiveVo&gt;&gt;&gt; findJoinActives(String jdUserId, int cId, Long skuId, int venderId, Long tenantId); 添加相应的AsyncServiceImpl，添加@Async注解，调用非Async的Service方法获取结果，包装成AsyncResult类型返回 123456@Asyncpublic Future&lt;BaseResponseVo&lt;List&lt;CouponBatchActiveVo&gt;&gt;&gt; findJoinActives(String jdUserId, int cId, Long skuId, int venderId, Long tenantId) &#123; LOGGER.info("--------PromotionAsyncServiceImpl.findJoinActives------start"); BaseResponseVo&lt;List&lt;CouponBatchActiveVo&gt;&gt; responseVo = promotionService.findJoinActives(jdUserId,cId,skuId,venderId,tenantId); return new AsyncResult&lt;BaseResponseVo&lt;List&lt;CouponBatchActiveVo&gt;&gt;&gt;(responseV);&#125; Future结果获取,使用get()方法 12345678910111213Long startTime = System.currentTimeMillis();while(true)&#123; if(skuCouponResultFuture.isDone() &amp;&amp; currentSkuCouponResultFuture.isDone() &amp;&amp; userConponResultFuture.isDone())&#123; break; &#125; if ((System.currentTimeMillis() - startTime) &gt; 2000) &#123; break; &#125;&#125;BaseResponseVo&lt;List&lt;CouponBatchActiveVo&gt;&gt; skuCouponResult = skuCouponResultFuture.get();BaseResponseVo&lt;List&lt;ItemCouponVO&gt;&gt; currentSkuCouponResult = currentSkuCouponResultFuture.get();BaseResponseVo&lt;List&lt;CouponBatchActiveExtVo&gt;&gt; userConponResult = userConponResultFuture.get(); 二、通过Feign调用的Controller修改成异步直接新建一个Service和对应的ServiceImpl，新建@Async方法，把通过client调用的方法包含在方法体内，实现异步。]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -213,7 +213,7 @@
     <url>%2F2017%2F06%2F16%2F6.16-MyBatis%E5%A4%8D%E4%B9%A0%2F</url>
     <content type="text"><![CDATA[一、备忘常识 ResultMap和ResultType：ResultType直接表示返回类型，ResultMap则是外部引用。相比ResultType，ResultMap适用于配置较为复杂的查询。 1234567891011&lt;resultMap type="Comment" id="CommentResult"&gt;&lt;association property="blog" select="selectBlog" column="blog" javaType="Blog"/&gt;&lt;/resultMap&gt;&lt;select id="selectComment" parameterType="int" resultMap="CommentResult"&gt;select * from t_Comment where id = #&#123;id&#125;&lt;/select&gt;&lt;select id="selectBlog" parameterType="int" resultType="Blog"&gt;select * from t_Blog where id = #&#123;id&#125;&lt;/select&gt; MyBatis的@Param和Spring的@Param：两个注解功能几乎相同，但是在编写相应XML文件时存在差别，spring中的@param在XML中按照变量顺序引用。 12345678&lt;select id="selectRoleCount" resultType="java.lang.Integer" &gt;select count(tbm.id) from t_business_member_relation tbm where tbm.business_id = #&#123;0,jdbcType=INTEGER&#125; and tbm.member_id = #&#123;1,jdbcType=INTEGER&#125; and tbm.role_business_id is not null&lt;/select&gt; SpringMVC的传参方式 @PathVariable：对应@RequestMapping(value=”/owners/{ownerId}”,method,RequestMethod.GET) @RequestParam:包含3个配置 @RequestParam(required = ,value=””, defaultValue = “”) @CookieValue:获取cookie信息 @RequestHeader:获取请求的头部信息 @RequestBody:接收Json对象的字符串，而不是Json对象 二、Mybatis表达式注意点 if标签使用的是OGNL表达式 OGNL对于Boolean的定义和JavaScript有点像，即&#39;&#39; == 0 == false，只有String类型才需要判断是否！=&#39;&#39;,其余判断是否！=null即可。 单引号内为单个字符时，OGNL会识别为Char类型，所以判断String是否为非空且等于单字符长度的字符串时，需要使用双引号而非单引号。]]></content>
       <categories>
-        <category>实习</category>
+        <category>MyBatis</category>
       </categories>
   </entry>
   <entry>
@@ -221,7 +221,7 @@
     <url>%2F2017%2F06%2F15%2F6.15-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%2F</url>
     <content type="text"><![CDATA[一、主要应用方案 异步处理 场景：用户注册时，先将注册信息写入数据库，然后发送短信和邮件方案：使用消息队列，将发送短信和邮件任务写入队列中，直接返回 应用解耦 场景：用户下单后，订单系统需要通知库存系统减库存。也就意味着订单和库存系统耦合了。方案：用户下单后，订单系统完成持久化处理，将消息写入队列。库存系统从订阅的消息队列中获取信息进行更新 秒杀 场景：秒杀活动一般会因为流量过大导致流量暴增。方案：服务器接收秒杀请求，写入消息队列。假如消息队列长度超过最大数量，则直接抛弃用户请求或跳转到秒杀失败页面。 日志 方案：日志采集客户端将日志放入Kafka队列中 二、JMS消息服务 P2P模式：P2P模式包含三个角色：消息队列（Queue），发送者(Sender)，接收者(Receiver)。每个消息都被发送到一个特定的队列，接收者从队列中获取消息。队列保留着消息，直到他们被消费或超时。 每个消息只有一个消费者（Consumer）(即一旦被消费，消息就不再在消息队列中) 发送者和接收者之间在时间上没有依赖性，也就是说当发送者发送了消息之后，不管接收者有没有正在运行，它不会影响到消息被发送到队列 接收者在成功接收消息之后需向队列应答成功 Pub/sub模式：多个发布者（Publisher）将消息发送到Topic,系统将这些消息传递给多个订阅者（Subscriber）。 每个消息可以有多个消费者 发布者和订阅者之间有时间上的依赖性。针对某个主题（Topic）的订阅者，它必须创建一个订阅者之后，才能消费发布者的消息。 为了消费消息，订阅者必须保持运行的状态。 三、代码实现（广告词为空时异步添加到MQ，执行添加缓存操作） 编写message实体类AdWordsSubmitMessage 添加配置文件 1234### MQ #####spring.activemq.broker-url=failover://(tcp://192.168.170.93:61616)?randomize=false&amp;priorityBackup=truespring.activemq.in-memory=truespring.activemq.pool.enabled=false 调用MQ接口发送数据 12345678910111213141516@Componentpublic class MqManager &#123; @Autowired private JmsTemplate jmsTemplate; //调用MQ接口发送数据 @Async public void sendDataToMQ(final String queueName, final String dataMessage) &#123; jmsTemplate.send(queueName,new MessageCreator() &#123; public Message createMessage(Session session) throws JMSException &#123; TextMessage mm = session.createTextMessage(); mm.setText(dataMessage); return mm; &#125; &#125;); &#125;&#125; ServiceImpl中注入MQmanager，添加调用 123456//异步发送MQ，广告词存缓存AdWordsSubmitMessage adm = new AdWordsSubmitMessage();adm.setTenantId(tenantId);adm.setShopId(shopId);adm.setJdSkuId(jdSkuId);mqManager.sendDataToMQ(AdWordsMqDict.AD_WORDS_SUBMIT, JSON.toJSONString(adm)); 消息队列监听 123456789101112131415161718@Componentpublic class OrderMessageListener &#123; //注入接收到消息后进行的订单操作 @Autowired private AdWordsMessageProcessor adWordsMessageProcessor; //监听指定消息队列 @JmsListener(destination = AdWordsMqDict.AD_WORDS_SUBMIT, concurrency = "50") public void onMessage(String message) &#123; try &#123; logger.info("接收到消息message=&#123;&#125;", message); adWordsMessageProcessor.processorMessage(message); &#125; catch (Exception e) &#123; logger.error("AdWordsMessageListener.message=&#123;&#125; error:", message,e); throw e; &#125; &#125;&#125; 监听到后操作Processor 12345678910111213141516171819202122232425262728293031@Componentpublic class AdWordsMessageProcessor &#123; @Autowired private ItemAdWordsService itemAdWordsService; @Resource private CacheClient cacheFeignClient; public void processorMessage(String message)&#123; try &#123; AdWordsSubmitMessage orderSubmitMessage = JSON.parseObject(message, AdWordsSubmitMessage.class); AdWords[] queryAdWords = itemAdWordsService.queryAdWords(orderSubmitMessage.getTenantId(), orderSubmitMessage.getShopId(), orderSubmitMessage.getJdSkuId()); if (queryAdWords != null &amp;&amp; queryAdWords.length &gt; 0) &#123; String queryAdWordsStr = JSON.toJSONString(queryAdWords); try &#123; //写缓存 cacheFeignClient.saveBytes2Cache(orderSubmitMessage.getTenantId(), getRedisKey(orderSubmitMessage.getTenantId(), orderSubmitMessage.getShopId(), orderSubmitMessage.getJdSkuId()), queryAdWordsStr.getBytes("UTF-8"), 0); &#125; catch (Exception e) &#123; log.error("广告词存缓存失败 jdskuid:", orderSubmitMessage.getJdSkuId()); &#125; &#125; &#125; catch (Exception e) &#123; log.error("处理广告词存缓存消息异常，message=&#123;&#125;", message, e); throw e; &#125; &#125; &#125;&#125;]]></content>
       <categories>
-        <category>实习</category>
+        <category>MQ</category>
       </categories>
   </entry>
   <entry>
@@ -229,7 +229,7 @@
     <url>%2F2017%2F06%2F14%2F6.14-Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%2F</url>
     <content type="text"><![CDATA[Redis实现分布式锁一、Redis特性 Redis为单进程单线程模式，采用队列模式将并发访问变成串行访问。 多客户端对redis的连接并不存在竞争关系。 Redis命令操作具有原子性。 二、分布式锁的要求 安全性： 互斥，在任何时候，只有一个客户端能持有锁。 活跃性A：没有死锁，即使客户端在持有锁的时候崩溃，最后也会有其他客户端能获得锁，有超时机制。 活跃性B：故障容忍，只有大多数Redis节点时存活的，客户端仍可以获得锁和释放锁。 三、实现锁的重要命令 SETNX key value 当且仅当key不存在时，将key的值设为value，返回1若给定的key已经存在，则SETNX不做任何动作，返回0 GETSET key value 将给定key的值设为value，返回key对应的旧的value当key存在但不是字符串类型时，返回一个错误当key不存在时，返回nil123456789101112131415161718192021222324252627282930313233//上锁 private boolean acquireLock(Long tenantId, String lockKey, long expired) &#123; boolean success = false; long value = System.currentTimeMillis() + expired; //通过SETNX试图获取一个lock boolean flag = cacheClient.setnx(tenantId, lockKey, String.valueOf(value)); //SETNX成功，则成功获取一个锁 if (flag) &#123; success = true; &#125; else &#123; //SETNX失败，说明锁仍然被其他对象保持，检查其是否已经超时（GET方法获取oldValue） long oldValue = Long.valueOf(cacheClient.get(tenantId, lockKey)); //如果超时，使用GETSET if (oldValue &lt; System.currentTimeMillis()) &#123; String getValue = cacheClient.getSet(tenantId, lockKey, String.valueOf(value)); // 如果oldValue与getSet获得的相同，则该线程获取锁成功 if (Long.valueOf(getValue) == oldValue) &#123; success = true; &#125; else &#123;//否则，已被其他进程捷足先登 success = false; &#125; &#125; else &#123;//未超时，则直接返回失败 success = false; &#125; &#125; return success;&#125;//解锁private void unLock(Long tenantId, String lockKey) &#123; //如果在获取锁的情况下，操作超时，那么锁有可能会被其他线程夺走 //所以在调用前判断下自身是否已经超时 cacheClient.del(tenantId,lockKey);&#125;]]></content>
       <categories>
-        <category>实习</category>
+        <category>并发</category>
       </categories>
   </entry>
   <entry>
@@ -237,7 +237,7 @@
     <url>%2F2017%2F06%2F13%2F6.13-SQL%E4%BC%98%E5%8C%96%2F</url>
     <content type="text"><![CDATA[SQL优化方法一、异步写数据库 新开线程 12345678910ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue&lt;Runnable&gt;());executor.execute(new Runnable() &#123; @Override public void run() &#123; int res = 0; res = favoriteItemMapper.insertFavoriteItem(favoriteItem); log.info("添加喜欢商品结束：受影响行数：&#123;&#125;",res); &#125;&#125;); 主要问题： 每次操作都新开线程池，资源消耗很大 线程池设置的存活时间极短，没有体现池的优势 消息队列ActiveMQ 二、SQL语句优化 避免select * 的存在 动态SQL 例如一个插入语句，可以根据参数包含属性的不同，有选择的进行属性插入：12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849&lt;insert id="insertFavoriteItem" parameterType="com.jcloud.b2c.favoriteItem.domain.FavoriteItem" &gt; insert into user_favorite_item &lt;trim prefix="(" suffix=")" suffixOverrides="," &gt; &lt;if test="tenantId != null" &gt; tenant_id, &lt;/if&gt; &lt;if test="shopId != null" &gt; shop_id, &lt;/if&gt; &lt;if test="skuId != null" &gt; sku_id, &lt;/if&gt; &lt;if test="userId != null" &gt; user_id, &lt;/if&gt; &lt;if test="addTime != null" &gt; add_time, &lt;/if&gt; &lt;if test="skuName != null" &gt; sku_name, &lt;/if&gt; &lt;if test="skuPictureUrl != null" &gt; sku_picture_url, &lt;/if&gt; &lt;/trim&gt; &lt;trim prefix="values (" suffix=")" suffixOverrides="," &gt; &lt;if test="tenantId != null" &gt; #&#123;tenantId,jdbcType=BIGINT&#125;, &lt;/if&gt; &lt;if test="shopId != null" &gt; #&#123;shopId,jdbcType=BIGINT&#125;, &lt;/if&gt; &lt;if test="skuId != null" &gt; #&#123;skuId,jdbcType=BIGINT&#125;, &lt;/if&gt; &lt;if test="userId != null" &gt; #&#123;userId,jdbcType=BIGINT&#125;, &lt;/if&gt; &lt;if test="addTime != null" &gt; #&#123;addTime,jdbcType=TIMESTAMP&#125;, &lt;/if&gt; &lt;if test="skuName != null" &gt; #&#123;skuName,jdbcType=VARCHAR&#125;, &lt;/if&gt; &lt;if test="skuPictureUrl != null" &gt; #&#123;skuPictureUrl,jdbcType=VARCHAR&#125;, &lt;/if&gt; &lt;/trim&gt; &lt;/insert&gt; 三、二级缓存,减少SQL访问次数例如BatchPrices批价格的获取，设置一个30s的缓存，可以提高刷新操作的效率。12345678910111213141516171819202122232425262728try &#123; Long tenantId = ControllerContext.getTenantId(); //静态方法拼装Redis的Key String key = CacheKeyUtils.getProductpPriceKey(B2C_BATCH_PRICE_KEY + tenantId + itemIds + priceArea); //Guava一级缓存（get方法） result = CACHE_PRICE.get(key, new Callable&lt;BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt;&gt;() &#123; public BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt; call() &#123; //从Redis中获取值，拼装成返回值BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt; String json = cacheFeignClient.get(tenantId, key); BaseResponseVo&lt;List&lt;ItemPriceVo&gt;&gt; priceRes = new BaseResponseVo(); priceRes.setData(Collections.EMPTY_LIST); if (StringUtils.isEmpty(json)) &#123; //Redis未命中，访问数据库 riceRes = itemClient.findItemsPrice(ControllerContext.getTenantId(),ControllerContext.getShopId(), itemIds, priceArea); try &#123; //写入缓存，存活时间30s cacheFeignClient.saveBytes2Cache(tenantId, key, JSON.toJSONString(priceRes).getBytes("UTF-8"), 30); &#125; catch (UnsupportedEncodingException e) &#123; e.printStackTrace(); &#125; &#125; else &#123; //Redis命中，从缓存中取数据 priceRes = JSON.parseObject(json, new TypeReference&lt;List&lt;ItemPriceVo&gt;&gt;() &#123;&#125;.getType()); &#125; return priceRes; &#125; &#125;);&#125;]]></content>
       <categories>
-        <category>实习</category>
+        <category>数据库</category>
       </categories>
   </entry>
   <entry>
@@ -245,7 +245,7 @@
     <url>%2F2017%2F06%2F12%2F6.12-%E7%BC%93%E5%AD%98%2F</url>
     <content type="text"><![CDATA[添加/删除收藏流程优化（Guava+Redis）一、缓存的使用 Google的Cache——Guava 本地缓存开关 创建缓存对象 1private static Cache&lt;String, String&gt; CACHE_SWITCH = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(2, TimeUnit.MINUTES).build(); 调用缓存中的get方法，当缓存命中时直接返回结果，当不命中时，通过给定的Callable类call（）方法返回结果，再缓存。 12345678910111213String flagKey = B2C_ITEM_FAVORITE_SWITCH + tenantId; try &#123; String key = CACHE_SWITCH.get(flagKey, new Callable&lt;String&gt;() &#123; @Override public String call() throws Exception &#123; String flag = cacheClient.get(tenantId, flagKey); return "true".equals(flag) ? "true" : ""; &#125; &#125;); return key; &#125; catch (Exception e) &#123; return ""; &#125; Redis缓存 生成Redis的key 1String redisKey = this.getSkuItemFavorsKey(favoriteItemVo.getTenantId(), favoriteItemVo.getUserId(), favoriteItemVo.getSkuId()); 调用cacheClient 1String favor = cacheClient.get(favoriteItemVo.getTenantId(), redisKey); 保存到Redis 12//favorFlag为value，0为expireSecondcacheClient.save2Cache(favoriteItemVo.getTenantId(), redisKey, favorFlag, 0); 二、缓存逻辑 本地缓存作为开关，如果有收藏功能，流程才继续 查Redis看是否命中缓存，如果命中，收藏结束 （Redis未命中）查询商品是否已经收藏 如果已经收藏，补充Redis缓存内容 （商品未收藏）启动DAO操作，向数据库中添加信息 三、二级缓存的好处到底是什么？在缓存到远程Redis的同时，缓存一份到本地进程Cache。使用了这样的二级缓存之后，取缓存的时候会先取本地，本地没有再向redis请求。这样会减少应用服务器&lt;–&gt;缓存服务器redis之间的网络开销。]]></content>
       <categories>
-        <category>实习</category>
+        <category>缓存</category>
       </categories>
   </entry>
   <entry>
@@ -254,6 +254,7 @@
     <content type="text"><![CDATA[二、Ribbon基于HTTP和TCP的负载均衡工具，实现客户端负载均衡。与服务端负载均衡不同的是，客户端负载均衡中，所有客户端节点维护着自己要访问的服务端清单，服务端清单来自注册中心。 基本使用 服务提供者启动多个服务实例，注册到一个或者多个关联的注册中心 消费者调用被@LoadBalanced注解过的RestTemplate 源码分析 LoadBalancerClient（客户端负载均衡器）中应该包含的能力： choose：挑选对应服务的实例 execute：执行请求 reconstructURI：拼接URI LoadBalancerAutoConfiguration自动化配置类： 创建LoadBalancerInterceptor的Bean，用于拦截请求 创建RestTemplateCustomizer的Bean，用于给RestTemplate增加拦截器 维护一个被@LoadBalanced注解修饰的RestTemplate对象列表 负载均衡规则实现： RandomRule：随机选取 RoundRobinRule: 使用了一个AtomicInteger实现线性轮询 RetryRule： 具备重试机制 ZoneAvoidanceRule：默认的负载均衡策略，两次过滤（先过滤清单，再轮询选择），先选取Zone，再使用Zone中指定的过滤器 三、Hystrix当某个服务单元发生故障时，通过断路器故障监控，向调用方返回错误响应。 四、Feign整合了Ribbon与Hystrix，并且提供了声明式的Web服务客户端定义方式。]]></content>
       <categories>
         <category>实习</category>
+        <category>Spring</category>
       </categories>
   </entry>
   <entry>
@@ -261,7 +262,7 @@
     <url>%2F2017%2F06%2F08%2F6.8-360mall%E5%95%86%E5%93%81%E9%A1%B5%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90%2F</url>
     <content type="text"><![CDATA[一、商品详情页面controller集合 getCartNum（购物车中物品数量）使用了Guava Cache hotword（热门搜索词）使用了b2c.mall.service中的ES搜索 batchPrice（缓存的一批价格） existsSkuList（是否存在SkuList） promotion（赠品）调用了开普勒接口 isFavor（是否是收藏） itemDescribe（获取规格参数） getByLocationId ==location的接口位置没找到== getProductType（商品类型） price（商品价格） stock（商品可售状态） add（点按收藏）与del（取消收藏） coupons（优惠券） 二、常用类简介 ControllerContext类（包含多个ThreadLocal） httpServletRequest httpServletResponse currentDomain userId userName jdUserId avatar 头像 tenantId 租户id cookieEncryptKy shopId bridgetoken fingerprint 指纹 staticDomain BaseResponseVo类(返回实体) isSuccess message clientMessage errorCode data (泛型T) errStrSet (Set类型) pageInfo (PageInfo类型，用于分页：currentPage,pageSize,totalRecord,totalPage) token 三、点按收藏的流程实例 Controller-Service-Client-Controller-Service-DAO-Cache mall-web-Controller调用mall-web-Service中的方法 mall-web-Service调用item-service-Client中的方法 组装item-service中的FavoriteItemParam实体 通过favorClient调用addFavoriteItem，传入FavoriteItemParam 由Feign的Client进入item-service-Controller，调用item-service-Sercive中的addFavoriteItem方法 通过item-service-Service中注入的favoriteItemMapper进行DAO操作 cacheClient处理缓存,删除RedisKey]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -278,7 +279,7 @@
     <url>%2F2017%2F06%2F06%2F6.6-%E4%BB%A3%E7%A0%81%E6%B5%8F%E8%A7%88%2F</url>
     <content type="text"><![CDATA[b2c-item-service代码学习 1. 环境切换application-{profile}.properties中配置spring.profiles.activemvn clean package -P dev时，maven就知道profileActive=dev这个属性生效。 2. Controller写法 参数中的@RequestBody，表示Json格式字符串的参数 返回值为BaseResponseVo使用了泛型 Domain全都以Vo结尾 CallerInfo的使用，Profiler.registerInfo(类名作为key，两个boolean，enableHeartbeat和enableTP) BeanUtils.copyProperties进行JavaBean的Set和Get 3. Service写法 远程RPC调用开普勒接口 4. Criterion实现条件查询]]></content>
       <categories>
-        <category>实习</category>
+        <category>实习相关</category>
       </categories>
   </entry>
   <entry>
@@ -332,7 +333,7 @@
     <url>%2F2017%2F01%2F03%2FServlet%E7%9A%84%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91%E5%92%8C%E9%87%8D%E5%AE%9A%E5%90%91%2F</url>
     <content type="text"><![CDATA[1.上一篇blog中的代码12345678910111213public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &#123; int id=Integer.parseInt(request.getParameter("id")); if (new problemservice().delProblemById(id)) &#123; response.sendRedirect("../success.jsp?state=delete"); &#125; else &#123; response.sendRedirect("../modifyinfo.jsp"); &#125; request.setAttribute("name", bieming); RequestDispatcher view = request.getRequestDispatcher("result.jsp"); view.forward(request, response); &#125; 2.RequestDispatcher：请求转发和请求包含getRequestDispatcher( )属于request的一个方法，上述代码中使用forward进行了请求转发，若是想要请求包含，则改为调用include即可。请求转发和请求包含的区别为： 请求转发:由当前Servlet设置响应头(该Servlet的相应体并不会显示)，下一个Servlet既可设置响应头也可设置响应体。 请求包含:当前Servlet和下一个Servlet共同完成相应头和响应体。 3.与sendRedirect( )重定向的区别 请求转发是一次请求一次响应，因为只发出一个请求所以效率高些，而重定向是两次请求两次响应。 请求转发地址栏不变化，而重定向会显示后一个请求的地址。 请求转发只能转发到本项目其他Servlet，而重定向不只能重定向到本项目的其它Servlet，还能定向到其它项目。 请求转发是服务器端行为，只需各处转发的Servlet路径，而重定向需要给出requestURI。 如果需要在下一个Servlet中获取request域中的数据，那么就必须使用请求转发]]></content>
       <categories>
-        <category>JSP+Servlet</category>
+        <category>Servlet</category>
       </categories>
       <tags>
         <tag>JavaWeb</tag>
@@ -343,7 +344,7 @@
     <url>%2F2017%2F01%2F03%2FServlet%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%2F</url>
     <content type="text"><![CDATA[1.Servlet需要容器——Tomcat等 通信支持：轻松让servlet与Web服务器对话 生命周期管理：控制servlet的实例化、初始化、生与死 多线程支持：自动为每个servlet请求创建新的java线程 声明方式实现安全：使用XML描述文件配置和修改安全性 JSP支持：将JSP翻译成JAVA 2.Servlet的作用 接受请求 处理请求 完成响应 3.实现Servlet的方式 实现javax.servlet.Servlet接口; 继承javax.servlet.GenericServlet类; 继承javax.servlet.http.HttpServlet类; 一般以继承HttpServlet类为主。以下是Servlet接口源代码： 123456789101112131415161718import javax.servlet.ServletConfig;import javax.servlet.ServletRequest;import javax.servlet.ServletResponse;import java.io.IOException;public abstract interface Servlet&#123; public abstract void init(ServletConfig paramServletConfig) throws javax.servlet.ServletException; public abstract ServletConfig getServletConfig(); public abstract void service(ServletRequest paramServletRequest, ServletResponse paramServletResponse) throws javax.servlet.ServletException, IOException; public abstract String getServletInfo(); public abstract void destroy();&#125; 4.生命周期中的函数含义 Init( )：一生调用一次，可能有初始化代码（获得数据库连接等），此时覆写 service( )：在service( )中处理用户请求，覆盖其中的doPost( )或者doGet( )，每次有客户请求容器就开启一个线程，生成请求和响应 destory( ) ServletConfig:每个servlet拥有一个；用于向servlet传递部署信息；用于访问ServletContext；参数在部署描述文件中配置 ServletContext:每个web应用拥有一个；用于访问web应用参数；相当于公告栏；得到服务器信息 5.Servlet中的三个域（在Jsp中多出一个pageContext域）request在Servlet中直接用，因为实现的doPost()方法中有request这个参数。 session通过HttpSession session=request.getSession();得到。 application通过ServletContext application=this.getServletContext();得到。 6.HTTPServlet中doPost( )方法的例子1234567891011121314public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException &#123; int id=Integer.parseInt(request.getParameter("id")); if (new problemservice().delProblemById(id)) &#123; response.sendRedirect("../success.jsp?state=delete"); &#125; else &#123; response.sendRedirect("../modifyinfo.jsp"); &#125; request.setAttribute("name", bieming); RequestDispatcher view = request.getRequestDispatcher("result.jsp"); view.forward(request, response); &#125;//其中用到了sendRedirect和RequestDispatcher]]></content>
       <categories>
-        <category>JSP+Servlet</category>
+        <category>Servlet</category>
       </categories>
       <tags>
         <tag>JavaWeb</tag>
