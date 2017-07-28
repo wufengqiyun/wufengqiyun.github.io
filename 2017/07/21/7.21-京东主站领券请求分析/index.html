@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>注解+AOP改良项目中的监控 | 舞风起云</title>
+    <title>京东主站领券请求分析 | 舞风起云</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="wufengqiyun">
     
 
     
-    <meta name="description" content="一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使">
+    <meta name="description" content="一、领券地址例：https://sale.jd.com/act/sHBb8jZtuy0VNS.html?utm_source=kong&amp;amp;utm_medium=zssc&amp;amp;utm_campaign=t_1000027280_939&amp;amp;utm_term=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407-p_1999-pr_224-at_939&amp;amp;jd_">
 <meta property="og:type" content="article">
-<meta property="og:title" content="注解+AOP改良项目中的监控">
-<meta property="og:url" content="http://yoursite.com/2017/07/28/7.28-注解+AOP改良项目中的监控/index.html">
+<meta property="og:title" content="京东主站领券请求分析">
+<meta property="og:url" content="http://yoursite.com/2017/07/21/7.21-京东主站领券请求分析/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使">
-<meta property="og:updated_time" content="2017-07-28T12:07:35.000Z">
+<meta property="og:description" content="一、领券地址例：https://sale.jd.com/act/sHBb8jZtuy0VNS.html?utm_source=kong&amp;amp;utm_medium=zssc&amp;amp;utm_campaign=t_1000027280_939&amp;amp;utm_term=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407-p_1999-pr_224-at_939&amp;amp;jd_">
+<meta property="og:updated_time" content="2017-07-28T12:10:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="注解+AOP改良项目中的监控">
-<meta name="twitter:description" content="一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使">
+<meta name="twitter:title" content="京东主站领券请求分析">
+<meta name="twitter:description" content="一、领券地址例：https://sale.jd.com/act/sHBb8jZtuy0VNS.html?utm_source=kong&amp;amp;utm_medium=zssc&amp;amp;utm_campaign=t_1000027280_939&amp;amp;utm_term=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407-p_1999-pr_224-at_939&amp;amp;jd_">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -75,14 +75,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/07/28/7.28-注解+AOP改良项目中的监控/" title="注解+AOP改良项目中的监控" itemprop="url">注解+AOP改良项目中的监控</a>
+      <a href="/2017/07/21/7.21-京东主站领券请求分析/" title="京东主站领券请求分析" itemprop="url">京东主站领券请求分析</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="wufengqiyun" target="_blank" itemprop="author">wufengqiyun</a>
 		
   <p class="article-time">
-    <time datetime="2017-07-28T11:54:20.000Z" itemprop="datePublished"> 发表于 2017-07-28</time>
+    <time datetime="2017-07-21T12:43:11.000Z" itemprop="datePublished"> 发表于 2017-07-21</time>
     
   </p>
 </header>
@@ -91,29 +91,113 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、需求与思考"><span class="toc-number">1.</span> <span class="toc-text">一、需求与思考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、实际操作"><span class="toc-number">2.</span> <span class="toc-text">二、实际操作</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、领券地址"><span class="toc-number">1.</span> <span class="toc-text">一、领券地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、领券请求"><span class="toc-number">2.</span> <span class="toc-text">二、领券请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-验证是否登录"><span class="toc-number">2.1.</span> <span class="toc-text">1.验证是否登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-优惠券状态获取"><span class="toc-number">2.2.</span> <span class="toc-text">2.优惠券状态获取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-优惠券详情获取"><span class="toc-number">2.3.</span> <span class="toc-text">3.优惠券详情获取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-领券（跳转到结果页面）"><span class="toc-number">2.4.</span> <span class="toc-text">3.领券（跳转到结果页面）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-优惠券状态刷新（返回原页面后刷新）"><span class="toc-number">2.5.</span> <span class="toc-text">4.优惠券状态刷新（返回原页面后刷新）</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h3 id="一、需求与思考"><a href="#一、需求与思考" class="headerlink" title="一、需求与思考"></a>一、需求与思考</h3><p>前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。<br>重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。<br>首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使用过自定义注解，在学习时也只是写过取注解中属性和反射相关的小demo，想要实现改良，需要将注解结合AOP动态代理使用。</p>
-<h3 id="二、实际操作"><a href="#二、实际操作" class="headerlink" title="二、实际操作"></a>二、实际操作</h3><blockquote>
-<p>定义注解</p>
-</blockquote>
-<p>定义一个名为@AddUMP的注解<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.METHOD)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AddUMP &#123;</div><div class="line">    <span class="function">String <span class="title">methodName</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enableHeartBeat</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enableTP</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>配置切点</p>
-</blockquote>
-<ul>
-<li>切点限定（execution表达式）</li>
-<li>在原有逻辑前后加上异常检测</li>
-<li>ProceedingJoinPoint调用proceed方法执行</li>
+		<h3 id="一、领券地址"><a href="#一、领券地址" class="headerlink" title="一、领券地址"></a>一、领券地址</h3><p>例：<a href="https://sale.jd.com/act/sHBb8jZtuy0VNS.html?utm_source=kong&amp;utm_medium=zssc&amp;utm_campaign=t_1000027280_939&amp;utm_term=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407-p_1999-pr_224-at_939&amp;jd_pop=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407&amp;abt=0" target="_blank" rel="external">https://sale.jd.com/act/sHBb8jZtuy0VNS.html?utm_source=kong&amp;utm_medium=zssc&amp;utm_campaign=t_1000027280_939&amp;utm_term=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407-p_1999-pr_224-at_939&amp;jd_pop=6cc65d58-d1cf-4f2b-b4e2-e98b1acc3407&amp;abt=0</a></p>
+<h3 id="二、领券请求"><a href="#二、领券请求" class="headerlink" title="二、领券请求"></a>二、领券请求</h3><h4 id="1-验证是否登录"><a href="#1-验证是否登录" class="headerlink" title="1.验证是否登录"></a>1.验证是否登录</h4><ul>
+<li>方式一：跳转结果页面显示未登录</li>
+<li>方式二：点击优惠券直接弹出未登录提示</li>
+<li>方式三：点击优惠券直接跳转登录二维码浮动页/主页面（京东采用）</li>
+<li>未登录返回状态码-1</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UMPMonitor</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger log = LoggerFactory.getLogger(UMPMonitor.class);</div><div class="line">    <span class="comment">//关键：切面设置为针对@addUMP注解</span></div><div class="line">    <span class="meta">@Around</span>(value = <span class="string">"@annotation(addUMP)"</span>)</div><div class="line">    <span class="comment">//返回值为Object类型，参数传入注解（不用再写反射）</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">aroundMethod</span><span class="params">(ProceedingJoinPoint pjd, AddUMP addUMP)</span> </span>&#123;</div><div class="line">        <span class="comment">//获取注解中的信息</span></div><div class="line">        String methodName = addUMP.methodName();</div><div class="line">        <span class="keyword">boolean</span> enableHeartBeat = addUMP.enableHeartBeat();</div><div class="line">        <span class="keyword">boolean</span> enableTP = addUMP.enableTP();</div><div class="line">        CallerInfo callerInfo = <span class="keyword">null</span>;</div><div class="line">        Object result;</div><div class="line">        BaseResponseVo responseVo = <span class="keyword">new</span> BaseResponseVo();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            callerInfo = Profiler.registerInfo(methodName, enableHeartBeat, enableTP);</div><div class="line">            <span class="comment">//执行原有逻辑</span></div><div class="line">            result = pjd.proceed();</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">            Profiler.functionError(callerInfo);</div><div class="line">            log.error(<span class="string">"UMP捕获到错误:"</span> + e);</div><div class="line">            responseVo.setErrorCode(<span class="string">""</span>);</div><div class="line">            responseVo.setErrStrSet(<span class="keyword">null</span>);</div><div class="line">            responseVo.setIsSuccess(<span class="keyword">false</span>);</div><div class="line">            responseVo.setMessage(e.getMessage());</div><div class="line">            result = responseVo;</div><div class="line">        &#125;<span class="keyword">finally</span> &#123;</div><div class="line">            Profiler.registerInfoEnd(callerInfo);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>方法添加注解</p>
-</blockquote>
-<p>在所需要添加切面的方法上标记@AddUMP即可</p>
-  
+<h4 id="2-优惠券状态获取"><a href="#2-优惠券状态获取" class="headerlink" title="2.优惠券状态获取"></a>2.优惠券状态获取</h4><ul>
+<li><p>request：</p>
+<ul>
+<li>名称：<a href="https://act-jshop.jd.com/couponBatchState.html" target="_blank" rel="external">https://act-jshop.jd.com/couponBatchState.html</a></li>
+<li>参数：<ul>
+<li>id</li>
+<li>加密密钥</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>response：</p>
+<ul>
+<li><p>state：</p>
+<ul>
+<li>16：今日已领完 </li>
+<li>17：已领完</li>
+<li>15：今日已领取</li>
+<li>999：可以正常领取</li>
+<li>14：已领取</li>
+<li>6：活动结束或者无法领取</li>
+</ul>
+</li>
+<li><p>ruleId：对应请求中的id</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-优惠券详情获取"><a href="#3-优惠券详情获取" class="headerlink" title="3.优惠券详情获取"></a>3.优惠券详情获取</h4><ul>
+<li><p>request：</p>
+<ul>
+<li>名称：<a href="https://act-jshop.jd.com/couponActive.html" target="_blank" rel="external">https://act-jshop.jd.com/couponActive.html</a></li>
+<li>参数：<ul>
+<li>id</li>
+<li>加密密钥</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>response：</p>
+<ul>
+<li>apiCode：0</li>
+<li>code：1</li>
+<li>success：true</li>
+<li><p>data列表：</p>
+<ul>
+<li>couponBatchList列表</li>
+<li>key：密钥，例如”ad3a679b5f12432bbe1dcbe1bf7023b7”</li>
+<li>ruleId：对应请求中的id</li>
+<li>success：true</li>
+</ul>
+</li>
+<li><p>couponBatchList中实体详细参数：</p>
+<ul>
+<li>endTime: 1501516799000</li>
+<li>discount: 300.0 优惠券优惠数额</li>
+<li>quota: 5000.0 优惠券启用价格</li>
+<li>beginTime: 1499011200000</li>
+<li>couponType: 1</li>
+<li>batchId: 45090839</li>
+<li>shopId: 0</li>
+<li>couponStyle: 0</li>
+<li>addDays: 0</li>
+<li>batchCount: 1450000</li>
+<li>nowCount: 0</li>
+<li>yn: 1</li>
+<li>limitStr: “仅可购买自营惠普笔记本指定商品”</li>
+<li>activityType: 0</li>
+<li>createTime: 1498637368282</li>
+<li>creator: “bjnxy”</li>
+<li>department: 0</li>
+<li>couponAreaType: 1</li>
+<li>bizType: 9</li>
+<li>limitType: 5 <code>限定时为1</code></li>
+<li>allowShare: 2</li>
+<li>allowSale: 2</li>
+<li>couponSort: 1</li>
+<li>popId: “0”</li>
+<li>notes: “ 惠普7月笔记本5000-300东券 “</li>
+<li>deductProportion: 0</li>
+<li>topSector: 0</li>
+<li>couponPlatfrom: 0</li>
+<li>applyOrgId: 0</li>
+<li>numPerSending: 1</li>
+<li>constraintBeginTime: 1499011200000</li>
+<li>constraintEndTime: 1501516799000</li>
+<li>allowOverlap: 0</li>
+<li>costType: 0</li>
+<li>sourceType: 0</li>
+<li>hourCoupon: 1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-领券（跳转到结果页面）"><a href="#3-领券（跳转到结果页面）" class="headerlink" title="3.领券（跳转到结果页面）"></a>3.领券（跳转到结果页面）</h4><h4 id="4-优惠券状态刷新（返回原页面后刷新）"><a href="#4-优惠券状态刷新（返回原页面后刷新）" class="headerlink" title="4.优惠券状态刷新（返回原页面后刷新）"></a>4.优惠券状态刷新（返回原页面后刷新）</h4>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -130,7 +214,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2017/07/28/7.28-注解+AOP改良项目中的监控/" data-title="注解+AOP改良项目中的监控 | 舞风起云" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2017/07/21/7.21-京东主站领券请求分析/" data-title="京东主站领券请求分析 | 舞风起云" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -143,11 +227,19 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2017/07/24/7.24-分布式系统中互斥性与幂等性问题/" title="分布式系统幂等性">
+  <strong>上一篇：</strong><br/>
+  <span>
+  分布式系统幂等性</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/2017/07/27/7.27-缓存应用深入学习/"  title="缓存应用学习">
+<a href="/2017/07/18/7.18-零散知识捡拾（二）/"  title="零散知识捡拾（二）">
  <strong>下一篇：</strong><br/> 
- <span>缓存应用学习
+ <span>零散知识捡拾（二）
 </span>
 </a>
 </div>
@@ -156,7 +248,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2017/07/28/7.28-注解+AOP改良项目中的监控/" data-title="注解+AOP改良项目中的监控" data-url="http://yoursite.com/2017/07/28/7.28-注解+AOP改良项目中的监控/"></div>
+	<div class="ds-thread" data-thread-key="2017/07/21/7.21-京东主站领券请求分析/" data-title="京东主站领券请求分析" data-url="http://yoursite.com/2017/07/21/7.21-京东主站领券请求分析/"></div>
 </section>
 
 
@@ -166,7 +258,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、需求与思考"><span class="toc-number">1.</span> <span class="toc-text">一、需求与思考</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、实际操作"><span class="toc-number">2.</span> <span class="toc-text">二、实际操作</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、领券地址"><span class="toc-number">1.</span> <span class="toc-text">一、领券地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、领券请求"><span class="toc-number">2.</span> <span class="toc-text">二、领券请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-验证是否登录"><span class="toc-number">2.1.</span> <span class="toc-text">1.验证是否登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-优惠券状态获取"><span class="toc-number">2.2.</span> <span class="toc-text">2.优惠券状态获取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-优惠券详情获取"><span class="toc-number">2.3.</span> <span class="toc-text">3.优惠券详情获取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-领券（跳转到结果页面）"><span class="toc-number">2.4.</span> <span class="toc-text">3.领券（跳转到结果页面）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-优惠券状态刷新（返回原页面后刷新）"><span class="toc-number">2.5.</span> <span class="toc-text">4.优惠券状态刷新（返回原页面后刷新）</span></a></li></ol></li></ol>
  
   </div>
 

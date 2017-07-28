@@ -41,7 +41,7 @@ synchronized关键字，JVM底层实现
 
 
 信号量（P-wait/V-si">
-<meta property="og:updated_time" content="2017-07-28T12:06:25.000Z">
+<meta property="og:updated_time" content="2017-07-28T12:11:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式系统幂等性">
 <meta name="twitter:description" content="一、原文链接https://tech.meituan.com/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html
@@ -150,14 +150,16 @@ synchronized关键字，JVM底层实现
 </blockquote>
 <ol>
 <li>基本要求：有锁存储空间；唯一标识；两种状态</li>
-<li>进阶要求：<ul>
+<li><p>进阶要求：</p>
+<ul>
 <li>可重入</li>
 <li>惊群效应：占有锁的线程释放，避免唤醒所有等待的线程</li>
 <li>公平锁和非公平锁（开销较好）</li>
 <li>阻塞锁（临界区操作耗时长）和自旋锁（临界区操作耗时短）</li>
 </ul>
 </li>
-<li>Redis实现（之前已经有介绍过）</li>
+<li><p>Redis实现（之前已经有介绍过）</p>
+</li>
 </ol>
 <h3 id="三、幂等性问题"><a href="#三、幂等性问题" class="headerlink" title="三、幂等性问题"></a>三、幂等性问题</h3><ul>
 <li>原理：将每一个不同的业务操作赋予其唯一性</li>
@@ -203,9 +205,9 @@ synchronized关键字，JVM底层实现
 
 
 <div class="next">
-<a href="/2017/07/18/7.18-零散知识捡拾（二）/"  title="零散知识捡拾（二）">
+<a href="/2017/07/21/7.21-京东主站领券请求分析/"  title="京东主站领券请求分析">
  <strong>下一篇：</strong><br/> 
- <span>零散知识捡拾（二）
+ <span>京东主站领券请求分析
 </span>
 </a>
 </div>
@@ -250,7 +252,7 @@ synchronized关键字，JVM底层实现
 		  
 		
 		  
-			<li><a href="/categories/实习/" title="实习">实习<sup>34</sup></a></li>
+			<li><a href="/categories/实习/" title="实习">实习<sup>35</sup></a></li>
 		  
 		
 		  
