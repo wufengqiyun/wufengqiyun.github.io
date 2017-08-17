@@ -11,82 +11,91 @@
     
 
     
-    <meta name="description" content="一、原文链接https://tech.meituan.com/cache_about.html
-二、缓存特征
+    <meta name="description" content="一、缓存特征
 命中率
 最大缓存存放空间
 清空策略：
+
 FIFO先入先出
-LFU最少使用（保证高频数据有效）
-LRU最近最少使用（优先保证热点数据）
+LFU，最少使用（可以保证高频数据有效）
+LRU，最近最少使用（优先保证热点数据）
 
 
 
-三、本地缓存
+二、本地缓存
 静态变量
 
 
-使用Zookeeper自动更新（一致性）
-缺点是受到heap区影响，缓存数据有限
+使用Zookeeper自动更新（保证一致性）
+缺点：受到heap区影响，缓存数据有限
 
 
 Guava Cache
 
 
-功能：">
+功能与特点：
+
+可以自动将Entry节点加载入缓存
+缓存数据如果超过限制，采用LRU清理策略">
 <meta property="og:type" content="article">
 <meta property="og:title" content="缓存应用学习">
 <meta property="og:url" content="http://yoursite.com/2017/07/27/7.27-缓存应用深入学习/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="一、原文链接https://tech.meituan.com/cache_about.html
-二、缓存特征
+<meta property="og:description" content="一、缓存特征
 命中率
 最大缓存存放空间
 清空策略：
+
 FIFO先入先出
-LFU最少使用（保证高频数据有效）
-LRU最近最少使用（优先保证热点数据）
+LFU，最少使用（可以保证高频数据有效）
+LRU，最近最少使用（优先保证热点数据）
 
 
 
-三、本地缓存
+二、本地缓存
 静态变量
 
 
-使用Zookeeper自动更新（一致性）
-缺点是受到heap区影响，缓存数据有限
+使用Zookeeper自动更新（保证一致性）
+缺点：受到heap区影响，缓存数据有限
 
 
 Guava Cache
 
 
-功能：">
-<meta property="og:updated_time" content="2017-07-28T12:23:17.000Z">
+功能与特点：
+
+可以自动将Entry节点加载入缓存
+缓存数据如果超过限制，采用LRU清理策略">
+<meta property="og:updated_time" content="2017-08-17T09:53:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="缓存应用学习">
-<meta name="twitter:description" content="一、原文链接https://tech.meituan.com/cache_about.html
-二、缓存特征
+<meta name="twitter:description" content="一、缓存特征
 命中率
 最大缓存存放空间
 清空策略：
+
 FIFO先入先出
-LFU最少使用（保证高频数据有效）
-LRU最近最少使用（优先保证热点数据）
+LFU，最少使用（可以保证高频数据有效）
+LRU，最近最少使用（优先保证热点数据）
 
 
 
-三、本地缓存
+二、本地缓存
 静态变量
 
 
-使用Zookeeper自动更新（一致性）
-缺点是受到heap区影响，缓存数据有限
+使用Zookeeper自动更新（保证一致性）
+缺点：受到heap区影响，缓存数据有限
 
 
 Guava Cache
 
 
-功能：">
+功能与特点：
+
+可以自动将Entry节点加载入缓存
+缓存数据如果超过限制，采用LRU清理策略">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -157,36 +166,36 @@ Guava Cache
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、原文链接"><span class="toc-number">1.</span> <span class="toc-text">一、原文链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、缓存特征"><span class="toc-number">2.</span> <span class="toc-text">二、缓存特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、本地缓存"><span class="toc-number">3.</span> <span class="toc-text">三、本地缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、分布式缓存"><span class="toc-number">4.</span> <span class="toc-text">四、分布式缓存</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、缓存特征"><span class="toc-number">1.</span> <span class="toc-text">一、缓存特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、本地缓存"><span class="toc-number">2.</span> <span class="toc-text">二、本地缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、分布式缓存"><span class="toc-number">3.</span> <span class="toc-text">三、分布式缓存</span></a></li></ol>
 		
 		</div>
 		
-		<h3 id="一、原文链接"><a href="#一、原文链接" class="headerlink" title="一、原文链接"></a>一、原文链接</h3><p><a href="https://tech.meituan.com/cache_about.html" target="_blank" rel="external">https://tech.meituan.com/cache_about.html</a></p>
-<h3 id="二、缓存特征"><a href="#二、缓存特征" class="headerlink" title="二、缓存特征"></a>二、缓存特征</h3><ul>
+		<h3 id="一、缓存特征"><a href="#一、缓存特征" class="headerlink" title="一、缓存特征"></a>一、缓存特征</h3><ul>
 <li>命中率</li>
 <li>最大缓存存放空间</li>
-<li>清空策略：<ul>
+<li><p>清空策略：</p>
+<ul>
 <li>FIFO先入先出</li>
-<li>LFU最少使用（保证高频数据有效）</li>
-<li>LRU最近最少使用（优先保证热点数据）</li>
+<li>LFU，最少使用（可以保证高频数据有效）</li>
+<li>LRU，最近最少使用（优先保证热点数据）</li>
 </ul>
 </li>
 </ul>
-<h3 id="三、本地缓存"><a href="#三、本地缓存" class="headerlink" title="三、本地缓存"></a>三、本地缓存</h3><blockquote>
+<h3 id="二、本地缓存"><a href="#二、本地缓存" class="headerlink" title="二、本地缓存"></a>二、本地缓存</h3><blockquote>
 <p>静态变量</p>
 </blockquote>
 <ul>
-<li>使用Zookeeper自动更新（一致性）</li>
-<li>缺点是受到heap区影响，缓存数据有限</li>
+<li>使用Zookeeper自动更新（保证一致性）</li>
+<li>缺点：受到heap区影响，缓存数据有限</li>
 </ul>
 <blockquote>
 <p>Guava Cache</p>
 </blockquote>
 <ul>
-<li><p>功能：</p>
+<li><p>功能与特点：</p>
 <ul>
-<li>自动将Entry节点加载入缓存</li>
-<li>缓存数据超过限制，采用LRU清理</li>
+<li>可以自动将Entry节点加载入缓存</li>
+<li>缓存数据如果超过限制，采用LRU清理策略清理</li>
 <li>根据Entry节点上次被访问时间或写入时间计算过期机制</li>
 <li>Key封装在WeakReference引用中</li>
 <li>Value封装在SoftReference引用中</li>
@@ -194,16 +203,18 @@ Guava Cache
 </li>
 <li><p>实现机制：</p>
 <ul>
-<li>模仿ConcurrentHashMap，ReferenceEntry封装键值对，ValueReference封装值。</li>
+<li>模仿ConcurrentHashMap，ReferenceEntry封装键值对，ValueReference封装值</li>
 <li>每个Segment包含ReferenceEntry链，每个ReferenceEntry包含key、hash、valueReference和next</li>
-<li>ValueReference对应四种实现（Strong/Soft/Weak/Loading）,LoadingValueReference支持动态加载，加载完成后会替换</li>
+<li>ValueReference对应四种实现（Strong/Soft/Weak/Loading）,LoadingValueReference支持动态加载（加载完成后替换成其他类型）</li>
 <li>access链（实现LRU）：访问节点如果在链表中，移动到最后，否则直接加在最后，poll时直接删除头节点的下一个节点</li>
 <li>write链（实现LRU）：类似access链</li>
 </ul>
 </li>
+<li><p>使用方法：</p>
+</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">/**</span></div><div class="line">  * Callable</div><div class="line">  */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">callablex</span><span class="params">()</span> <span class="keyword">throws</span> ExecutionException</span></div><div class="line">    &#123;</div><div class="line">  Cache&lt;String, String&gt; cache = CacheBuilder.newBuilder()</div><div class="line">    .maximumSize(<span class="number">1000</span>).build();</div><div class="line">  String result = cache.get(<span class="string">"key"</span>, <span class="keyword">new</span> Callable&lt;String&gt;()</div><div class="line">    &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span></span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"result"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    System.out.println(result);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="四、分布式缓存"><a href="#四、分布式缓存" class="headerlink" title="四、分布式缓存"></a>四、分布式缓存</h3><blockquote>
+<h3 id="三、分布式缓存"><a href="#三、分布式缓存" class="headerlink" title="三、分布式缓存"></a>三、分布式缓存</h3><blockquote>
 <p>Redis</p>
 </blockquote>
 <ul>
@@ -213,7 +224,20 @@ Guava Cache
 <li>编码方式：raw/zipmap/ziplist/intset/skiplist</li>
 </ul>
 </li>
-<li><p>单线程的I/O复用模型 </p>
+<li><p>线程模型：</p>
+<ul>
+<li>套接字：套接字操作抽象成文件事件</li>
+<li>I/O多路复用：监听多个套接字，把文件事件放入队列</li>
+<li>文件事件分派：接收并传给相应的事件处理器</li>
+<li>事件处理器：处理事件</li>
+</ul>
+</li>
+<li><p>Redis为什么快:</p>
+<ul>
+<li>绝大部分请求是纯粹的内存操作（非常快速）</li>
+<li>采用单线程,避免了不必要的上下文切换和竞争条件</li>
+<li>非阻塞IO</li>
+</ul>
 </li>
 </ul>
   
@@ -277,7 +301,7 @@ Guava Cache
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、原文链接"><span class="toc-number">1.</span> <span class="toc-text">一、原文链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、缓存特征"><span class="toc-number">2.</span> <span class="toc-text">二、缓存特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、本地缓存"><span class="toc-number">3.</span> <span class="toc-text">三、本地缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、分布式缓存"><span class="toc-number">4.</span> <span class="toc-text">四、分布式缓存</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、缓存特征"><span class="toc-number">1.</span> <span class="toc-text">一、缓存特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、本地缓存"><span class="toc-number">2.</span> <span class="toc-text">二、本地缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、分布式缓存"><span class="toc-number">3.</span> <span class="toc-text">三、分布式缓存</span></a></li></ol>
  
   </div>
 
@@ -289,6 +313,10 @@ Guava Cache
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
+		
+		  
+			<li><a href="/categories/AOP/" title="AOP">AOP<sup>1</sup></a></li>
+		  
 		
 		  
 			<li><a href="/categories/APP后台/" title="APP后台">APP后台<sup>1</sup></a></li>
@@ -319,11 +347,15 @@ Guava Cache
 		  
 		
 		  
+			<li><a href="/categories/实习/Spring/" title="Spring">Spring<sup>2</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/实习/Spring/" title="Spring">Spring<sup>2</sup></a></li>
+			<li><a href="/categories/实习/分布式/" title="分布式">分布式<sup>1</sup></a></li>
 		  
 		
 		  
@@ -335,7 +367,11 @@ Guava Cache
 		  
 		
 		  
-			<li><a href="/categories/实习相关/" title="实习相关">实习相关<sup>14</sup></a></li>
+			<li><a href="/categories/AOP/实习相关/" title="实习相关">实习相关<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习相关/" title="实习相关">实习相关<sup>11</sup></a></li>
 		  
 		
 		  

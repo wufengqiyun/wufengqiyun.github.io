@@ -41,7 +41,7 @@ synchronized关键字，JVM底层实现
 
 
 信号量（P-wait/V-si">
-<meta property="og:updated_time" content="2017-07-28T12:23:11.000Z">
+<meta property="og:updated_time" content="2017-08-17T09:56:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式系统幂等性">
 <meta name="twitter:description" content="一、原文链接https://tech.meituan.com/distributed-system-mutually-exclusive-idempotence-cerberus-gtis.html
@@ -135,20 +135,20 @@ synchronized关键字，JVM底层实现
 <h3 id="二、互斥性问题"><a href="#二、互斥性问题" class="headerlink" title="二、互斥性问题"></a>二、互斥性问题</h3><blockquote>
 <p>多线程中的解决方案</p>
 </blockquote>
-<ol>
+<ul>
 <li>ReetrantLock，利用CAS+CLH队列实现</li>
 <li>synchronized关键字，JVM底层实现</li>
-</ol>
+</ul>
 <blockquote>
 <p>多进程中的解决方案</p>
 </blockquote>
-<ol>
+<ul>
 <li>信号量（P-wait/V-signal）操作 </li>
-</ol>
+</ul>
 <blockquote>
 <p>分布式中的解决方案</p>
 </blockquote>
-<ol>
+<ul>
 <li>基本要求：有锁存储空间；唯一标识；两种状态</li>
 <li><p>进阶要求：</p>
 <ul>
@@ -158,8 +158,9 @@ synchronized关键字，JVM底层实现
 <li>阻塞锁（临界区操作耗时长）和自旋锁（临界区操作耗时短）</li>
 </ul>
 </li>
-<li><p>Redis实现（之前已经有介绍过）</p>
-</li>
+</ul>
+<ol>
+<li>Redis实现（之前已经有介绍过）</li>
 </ol>
 <h3 id="三、幂等性问题"><a href="#三、幂等性问题" class="headerlink" title="三、幂等性问题"></a>三、幂等性问题</h3><ul>
 <li>原理：将每一个不同的业务操作赋予其唯一性</li>
@@ -172,7 +173,7 @@ synchronized关键字，JVM底层实现
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/实习相关/">实习相关</a>
+  <a class="article-category-link" href="/categories/实习/">实习</a>►<a class="article-category-link" href="/categories/实习/分布式/">分布式</a>
 </div>
 
 
@@ -205,9 +206,9 @@ synchronized关键字，JVM底层实现
 
 
 <div class="next">
-<a href="/2017/07/21/7.21-京东主站领券请求分析/"  title="京东主站领券请求分析">
+<a href="/2017/07/17/7.17-Http学习/"  title="HTTP学习">
  <strong>下一篇：</strong><br/> 
- <span>京东主站领券请求分析
+ <span>HTTP学习
 </span>
 </a>
 </div>
@@ -240,6 +241,10 @@ synchronized关键字，JVM底层实现
 		<ul>
 		
 		  
+			<li><a href="/categories/AOP/" title="AOP">AOP<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/APP后台/" title="APP后台">APP后台<sup>1</sup></a></li>
 		  
 		
@@ -268,11 +273,15 @@ synchronized关键字，JVM底层实现
 		  
 		
 		  
+			<li><a href="/categories/实习/Spring/" title="Spring">Spring<sup>2</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/实习/Spring/" title="Spring">Spring<sup>2</sup></a></li>
+			<li><a href="/categories/实习/分布式/" title="分布式">分布式<sup>1</sup></a></li>
 		  
 		
 		  
@@ -284,7 +293,11 @@ synchronized关键字，JVM底层实现
 		  
 		
 		  
-			<li><a href="/categories/实习相关/" title="实习相关">实习相关<sup>14</sup></a></li>
+			<li><a href="/categories/AOP/实习相关/" title="实习相关">实习相关<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习相关/" title="实习相关">实习相关<sup>11</sup></a></li>
 		  
 		
 		  

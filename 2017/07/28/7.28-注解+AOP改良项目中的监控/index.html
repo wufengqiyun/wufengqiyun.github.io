@@ -11,16 +11,16 @@
     
 
     
-    <meta name="description" content="一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使">
+    <meta name="description" content="一、需求与思考背景：前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。思考：重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。方法：想到使用注解。注解的增删极其简单方便，然而之前">
 <meta property="og:type" content="article">
 <meta property="og:title" content="注解+AOP改良项目中的监控">
 <meta property="og:url" content="http://yoursite.com/2017/07/28/7.28-注解+AOP改良项目中的监控/index.html">
 <meta property="og:site_name" content="舞风起云">
-<meta property="og:description" content="一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使">
-<meta property="og:updated_time" content="2017-07-28T12:23:22.000Z">
+<meta property="og:description" content="一、需求与思考背景：前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。思考：重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。方法：想到使用注解。注解的增删极其简单方便，然而之前">
+<meta property="og:updated_time" content="2017-08-17T09:44:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="注解+AOP改良项目中的监控">
-<meta name="twitter:description" content="一、需求与思考前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使">
+<meta name="twitter:description" content="一、需求与思考背景：前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。思考：重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。方法：想到使用注解。注解的增删极其简单方便，然而之前">
 
     
     <link rel="alternative" href="/atom.xml" title="舞风起云" type="application/atom+xml">
@@ -95,24 +95,29 @@
 		
 		</div>
 		
-		<h3 id="一、需求与思考"><a href="#一、需求与思考" class="headerlink" title="一、需求与思考"></a>一、需求与思考</h3><p>前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。<br>重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。<br>首先想到的就是注解。注解的增删极其简单方便，然而之前并没有真正使用过自定义注解，在学习时也只是写过取注解中属性和反射相关的小demo，想要实现改良，需要将注解结合AOP动态代理使用。</p>
+		<h3 id="一、需求与思考"><a href="#一、需求与思考" class="headerlink" title="一、需求与思考"></a>一、需求与思考</h3><p>背景：前一阵因为需求变更，在一些方法上添加了统一监控的代码，基本上是采用try/catch/finally在不影响原有代码逻辑的情况下添加，其结果就是项目中出现了大量的重复代码。<br>思考：重复代码向来是优化工作中需要尽可能干掉的部分，此外想到今后还有可能对其他方法加/去监控，再写try/catch显得很不灵活，所以得想办法改善这一情况。<br>方法：想到使用注解。注解的增删极其简单方便，然而之前并没有真正使用过自定义注解，在学习时也只是写过取注解中属性和反射相关的小demo，想要实现改良，需要将注解结合AOP动态代理使用。</p>
 <h3 id="二、实际操作"><a href="#二、实际操作" class="headerlink" title="二、实际操作"></a>二、实际操作</h3><blockquote>
 <p>定义注解</p>
+<ul>
+<li>定义一个名为@AddUMP的注解</li>
+</ul>
 </blockquote>
-<p>定义一个名为@AddUMP的注解<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.METHOD)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AddUMP &#123;</div><div class="line">    <span class="function">String <span class="title">methodName</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enableHeartBeat</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enableTP</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.METHOD)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AddUMP &#123;</div><div class="line">    <span class="function">String <span class="title">methodName</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enableHeartBeat</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enableTP</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
 <p>配置切点</p>
-</blockquote>
 <ul>
 <li>切点限定（execution表达式）</li>
 <li>在原有逻辑前后加上异常检测</li>
 <li>ProceedingJoinPoint调用proceed方法执行</li>
 </ul>
+</blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UMPMonitor</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger log = LoggerFactory.getLogger(UMPMonitor.class);</div><div class="line">    <span class="comment">//关键：切面设置为针对@addUMP注解</span></div><div class="line">    <span class="meta">@Around</span>(value = <span class="string">"@annotation(addUMP)"</span>)</div><div class="line">    <span class="comment">//返回值为Object类型，参数传入注解（不用再写反射）</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">aroundMethod</span><span class="params">(ProceedingJoinPoint pjd, AddUMP addUMP)</span> </span>&#123;</div><div class="line">        <span class="comment">//获取注解中的信息</span></div><div class="line">        String methodName = addUMP.methodName();</div><div class="line">        <span class="keyword">boolean</span> enableHeartBeat = addUMP.enableHeartBeat();</div><div class="line">        <span class="keyword">boolean</span> enableTP = addUMP.enableTP();</div><div class="line">        CallerInfo callerInfo = <span class="keyword">null</span>;</div><div class="line">        Object result;</div><div class="line">        BaseResponseVo responseVo = <span class="keyword">new</span> BaseResponseVo();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            callerInfo = Profiler.registerInfo(methodName, enableHeartBeat, enableTP);</div><div class="line">            <span class="comment">//执行原有逻辑</span></div><div class="line">            result = pjd.proceed();</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">            Profiler.functionError(callerInfo);</div><div class="line">            log.error(<span class="string">"UMP捕获到错误:"</span> + e);</div><div class="line">            responseVo.setErrorCode(<span class="string">""</span>);</div><div class="line">            responseVo.setErrStrSet(<span class="keyword">null</span>);</div><div class="line">            responseVo.setIsSuccess(<span class="keyword">false</span>);</div><div class="line">            responseVo.setMessage(e.getMessage());</div><div class="line">            result = responseVo;</div><div class="line">        &#125;<span class="keyword">finally</span> &#123;</div><div class="line">            Profiler.registerInfoEnd(callerInfo);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <blockquote>
-<p>方法添加注解</p>
+<p>给方法添加注解</p>
+<ul>
+<li>在所需要添加切面的方法上标记@AddUMP即可</li>
+</ul>
 </blockquote>
-<p>在所需要添加切面的方法上标记@AddUMP即可</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -120,7 +125,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/实习相关/">实习相关</a>
+  <a class="article-category-link" href="/categories/AOP/">AOP</a>►<a class="article-category-link" href="/categories/AOP/实习相关/">实习相关</a>
 </div>
 
 
@@ -180,6 +185,10 @@
 		<ul>
 		
 		  
+			<li><a href="/categories/AOP/" title="AOP">AOP<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/APP后台/" title="APP后台">APP后台<sup>1</sup></a></li>
 		  
 		
@@ -208,11 +217,15 @@
 		  
 		
 		  
+			<li><a href="/categories/实习/Spring/" title="Spring">Spring<sup>2</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/Spring/" title="Spring">Spring<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/实习/Spring/" title="Spring">Spring<sup>2</sup></a></li>
+			<li><a href="/categories/实习/分布式/" title="分布式">分布式<sup>1</sup></a></li>
 		  
 		
 		  
@@ -224,7 +237,11 @@
 		  
 		
 		  
-			<li><a href="/categories/实习相关/" title="实习相关">实习相关<sup>14</sup></a></li>
+			<li><a href="/categories/AOP/实习相关/" title="实习相关">实习相关<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/实习相关/" title="实习相关">实习相关<sup>11</sup></a></li>
 		  
 		
 		  
